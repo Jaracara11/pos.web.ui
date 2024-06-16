@@ -1,0 +1,11 @@
+.auth-card {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  min-height: 100vh;
+}
+
+.auth-card mat-card {
+  margin-bottom: 10%;
+}
