@@ -7,3 +7,8 @@ body {
 body {
   margin: 0;
 }
+
+.label-title {
+  justify-content: center;
+  font-size: large;
+}
