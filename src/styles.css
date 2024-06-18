@@ -1,4 +1,9 @@
-@import "bootstrap/dist/css/bootstrap-grid.min.css";
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+}
 
 html,
 body {
@@ -6,9 +11,4 @@ body {
 }
 body {
   margin: 0;
-}
-
-.label-title {
-  justify-content: center;
-  font-size: large;
 }
