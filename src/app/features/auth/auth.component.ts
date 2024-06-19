@@ -1,12 +1,13 @@
-import { Component } from '@angular/core';
-import { UserAuth } from '../../shared/interfaces/user-auth.interface';
 import {
   FormGroup,
   FormsModule,
   ReactiveFormsModule,
 } from '@angular/forms';
+import { Component } from '@angular/core';
+import { UserAuth } from '../../shared/interfaces/user-auth.interface';
 import { FormValidationService } from '../../core/services/form-validation.service';
 import { NgIf } from '@angular/common';
+import { AuthService } from '../../core/services/auth.service';
 @Component({
   selector: 'app-auth',
   standalone: true,
@@ -21,7 +22,7 @@ export class AuthComponent {
     password: '',
   };
 
-  constructor(private formValidationService: FormValidationService) {
+  constructor(private formValidationService: FormValidationService, private authService: AuthService) {
     this.authForm = this.formValidationService.createAuthForm();
   }
 
@@ -33,8 +34,7 @@ export class AuthComponent {
 
   onSubmit(): void {
     if (this.authForm.valid) {
-      this.user = this.authForm.value;
-      console.log(this.user);
+      this.authService.signIn(this.authForm.value);
     }
   }
 }

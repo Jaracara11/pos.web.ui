@@ -1,21 +1,36 @@
 import { Injectable } from '@angular/core';
+import { environment } from '../../../environments/environment';
+import { HttpClient } from '@angular/common/http';
+import { UserAuth } from '../../shared/interfaces/user-auth.interface';
+import { Router } from '@angular/router';
+import { UserInfo } from '../../shared/interfaces/user-Info.interface';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  constructor() {}
+  usersUrl = `${environment.apiUrl}/users/auth`;
 
-  isLoggedIn() {
-    const token: string | null = localStorage.getItem('token');
+  constructor(private http: HttpClient, private router: Router) { }
 
-    if (!token) {
-      return false;
-    }
+  isLoggedIn(): boolean {
+    const token = localStorage.getItem('token');
+    return token ? JSON.parse(atob(token.split('.')[1])).exp > Date.now() / 1000 : false;
+  }
 
-    const payload = atob(token.split('.')[1]);
-    const parsedPayload = JSON.parse(payload);
+  signIn(user: UserAuth): void {
+    const userData = this.authUser(user);
+    localStorage.setItem('user', JSON.stringify(userData));
+    this.router.navigateByUrl('');
+  }
 
-    return parsedPayload.exp > Date.now() / 1000;
+  signOut(): void {
+    localStorage.removeItem('user');
+    this.router.navigateByUrl('/auth');
+  }
+
+  private authUser(user: UserAuth): Observable<UserInfo> {
+    return this.http.post<UserInfo>(this.usersUrl, user);
   }
 }
