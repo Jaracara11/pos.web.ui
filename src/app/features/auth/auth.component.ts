@@ -8,6 +8,10 @@ import { UserAuth } from '../../shared/interfaces/user-auth.interface';
 import { FormValidationService } from '../../core/services/form-validation.service';
 import { NgIf } from '@angular/common';
 import { AuthService } from '../../core/services/auth.service';
+import { Router } from '@angular/router';
+import { SwalAlertService } from '../../core/services/swal-alert.service';
+import { UserInfo } from '../../shared/interfaces/user-Info.interface';
+
 @Component({
   selector: 'app-auth',
   standalone: true,
@@ -17,24 +21,36 @@ import { AuthService } from '../../core/services/auth.service';
 })
 export class AuthComponent {
   authForm: FormGroup;
+  isSubmitting = false;
   user: UserAuth = {
     username: '',
     password: '',
   };
 
-  constructor(private formValidationService: FormValidationService, private authService: AuthService) {
+  constructor(private formValidationService: FormValidationService, private authService: AuthService, private router: Router,
+    private swalAlertService: SwalAlertService) {
     this.authForm = this.formValidationService.createAuthForm();
   }
-
-  ngOnInit(): void { }
 
   getAuthErrorMessage(fieldName: string): string | null {
     return this.formValidationService.getAuthErrorMessage(this.authForm, fieldName);
   }
 
   onSubmit(): void {
-    if (this.authForm.valid) {
-      this.authService.signIn(this.authForm.value);
+    if (this.authForm.invalid || this.isSubmitting) {
+      return;
     }
+
+    this.isSubmitting = true
+    this.authService.signIn(this.authForm.value).subscribe({
+      next: (response: UserInfo) => {
+        localStorage.setItem('user', JSON.stringify(response));
+        this.router.navigateByUrl('');
+      },
+      error: (error: any) => {
+        this.swalAlertService.alertWithError(error.error.message);
+        this.isSubmitting = false;
+      },
+    });
   }
 }

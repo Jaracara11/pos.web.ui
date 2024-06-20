@@ -14,7 +14,7 @@
           {{ getAuthErrorMessage('password') }}
         </small>
       </div>
-      <button type="submit" class="btn btn-primary" [disabled]="authForm.invalid">Sign in</button>
+      <button type="submit" class="btn btn-primary" [disabled]="authForm.invalid || isSubmitting">Sign in</button>
     </div>
   </div>
 </form>
