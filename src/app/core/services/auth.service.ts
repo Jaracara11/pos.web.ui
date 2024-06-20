@@ -20,4 +20,21 @@ export class AuthService {
   signOut(): void {
     localStorage.removeItem('user');
   }
+
+  isUserAuth(): boolean {
+    const userData = localStorage.getItem('user');
+
+    if (!userData) {
+      return false;
+    }
+
+    const user: UserInfo = JSON.parse(userData);
+    const decodedToken = JSON.parse(atob(user.token.split('.')[1]));
+
+    if (decodedToken.exp > Date.now() / 1000) {
+      return true;
+    }
+
+    return false;
+  }
 }

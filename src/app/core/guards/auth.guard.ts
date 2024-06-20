@@ -1,22 +1,15 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
-import { UserInfo } from '../../shared/interfaces/user-Info.interface';
+import { AuthService } from '../services/auth.service';
 
 export const authGuard: CanActivateFn = () => {
   const router = inject(Router);
-  const userString = localStorage.getItem('user');
+  const authService = inject(AuthService);
 
-  if (!userString) {
+  if (!authService.isUserAuth()) {
     router.navigateByUrl('/auth');
     return false;
   }
 
-  const user: UserInfo = JSON.parse(userString);
-  const decodedToken = JSON.parse(atob(user.token.split('.')[1]));
-
-  if (decodedToken.exp > Date.now() / 1000) {
-    return true;
-  }
-
-  return false;
+  return true;
 };
