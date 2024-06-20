@@ -26,8 +26,8 @@ export class AuthComponent {
     password: '',
   };
 
-  constructor(private formValidationService: FormValidationService, private authService: AuthService, private router: Router,
-    private swalAlertService: SwalAlertService) {
+  constructor(private formValidationService: FormValidationService, private authService: AuthService,
+    private router: Router, private swalAlertService: SwalAlertService) {
     this.authForm = this.formValidationService.createAuthForm();
   }
 
