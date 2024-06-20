@@ -47,7 +47,7 @@ export class AuthComponent {
         this.router.navigateByUrl('');
       },
       error: (error: any) => {
-        this.swalAlertService.alertWithError(error.error.message);
+        this.swalAlertService.swalAlertWithTitle(error.statusText, error.error.message, 'error');
         this.isSubmitting = false;
       },
     });

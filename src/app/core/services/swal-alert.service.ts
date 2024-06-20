@@ -1,16 +1,24 @@
 import { Injectable } from '@angular/core';
-import Swal from 'sweetalert2';
+import Swal, { SweetAlertIcon } from 'sweetalert2';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SwalAlertService {
+  SwalObj = Swal.mixin({
+    customClass: {
+      confirmButton: 'btn btn-warning m-3',
+      cancelButton: 'btn btn-outline-dark'
+    },
+    buttonsStyling: false
+  });
 
-  alertWithSuccess(message: string): void {
-    Swal.fire('Thank you...', message, 'success');
-  }
-
-  alertWithError(message: string): void {
-    Swal.fire('Oops...', message, 'error');
+  swalAlertWithTitle(title: string, message: string, alertType: SweetAlertIcon) {
+    return this.SwalObj.fire({
+      title: title,
+      html: message,
+      icon: alertType,
+      showConfirmButton: false
+    });
   }
 }
