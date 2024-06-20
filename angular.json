@@ -18,6 +18,9 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
+            "allowedCommonJsDependencies": [
+              "sweetalert2"
+            ],
             "outputPath": "dist/pos.web.ui",
             "index": "src/index.html",
             "browser": "src/main.ts",
@@ -35,7 +38,6 @@
             ],
             "styles": [
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
-              "node_modules/sweetalert2/src/sweetalert2.scss",
               "src/styles.css"
             ],
             "scripts": []
@@ -52,7 +54,7 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kB",
+                  "maximumWarning": "600kB",
                   "maximumError": "1MB"
                 },
                 {
