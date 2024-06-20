@@ -9,12 +9,12 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class AuthService {
-  usersUrl = `${environment.apiUrl}/users/auth`;
+  private _usersUrl = `${environment.apiUrl}/users/auth`;
 
   constructor(private http: HttpClient) { }
 
   signIn(user: UserAuth): Observable<UserInfo> {
-    return this.http.post<UserInfo>(this.usersUrl, user);
+    return this.http.post<UserInfo>(this._usersUrl, user);
   }
 
   signOut(): void {
