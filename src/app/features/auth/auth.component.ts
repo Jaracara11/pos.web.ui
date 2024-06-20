@@ -10,6 +10,7 @@ import { AuthService } from '../../core/services/auth.service';
 import { Router } from '@angular/router';
 import { SwalAlertService } from '../../core/services/swal-alert.service';
 import { UserInfo } from '../../shared/interfaces/user-Info.interface';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-auth',
@@ -46,7 +47,7 @@ export class AuthComponent {
         localStorage.setItem('user', JSON.stringify(response));
         this.router.navigateByUrl('');
       },
-      error: (error: any) => {
+      error: (error: HttpErrorResponse) => {
         this.swalAlertService.swalAlertWithTitle(error.statusText, error.error.message, 'error');
         this.isSubmitting = false;
       },
