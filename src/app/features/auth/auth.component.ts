@@ -6,7 +6,6 @@ import {
 import { Component } from '@angular/core';
 import { UserAuth } from '../../shared/interfaces/user-auth.interface';
 import { FormValidationService } from '../../core/services/form-validation.service';
-import { NgIf } from '@angular/common';
 import { AuthService } from '../../core/services/auth.service';
 import { Router } from '@angular/router';
 import { SwalAlertService } from '../../core/services/swal-alert.service';
@@ -15,7 +14,7 @@ import { UserInfo } from '../../shared/interfaces/user-Info.interface';
 @Component({
   selector: 'app-auth',
   standalone: true,
-  imports: [FormsModule, ReactiveFormsModule, NgIf],
+  imports: [FormsModule, ReactiveFormsModule],
   templateUrl: './auth.component.html',
   styleUrl: './auth.component.css',
 })
