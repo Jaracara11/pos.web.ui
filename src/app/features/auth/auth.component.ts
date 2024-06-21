@@ -11,12 +11,11 @@ import { Router } from '@angular/router';
 import { SwalAlertService } from '../../core/services/swal-alert.service';
 import { UserInfo } from '../../shared/interfaces/user-Info.interface';
 import { HttpErrorResponse } from '@angular/common/http';
-import { SpinnerComponent } from '../../core/components/spinner/spinner.component';
 
 @Component({
   selector: 'app-auth',
   standalone: true,
-  imports: [FormsModule, ReactiveFormsModule, SpinnerComponent],
+  imports: [FormsModule, ReactiveFormsModule],
   templateUrl: './auth.component.html',
   styleUrl: './auth.component.css',
 })
