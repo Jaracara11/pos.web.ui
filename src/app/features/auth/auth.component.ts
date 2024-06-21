@@ -1,8 +1,4 @@
-import {
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-} from '@angular/forms';
+import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Component } from '@angular/core';
 import { UserAuth } from '../../shared/interfaces/user-auth.interface';
 import { FormValidationService } from '../../core/services/form-validation.service';
@@ -28,13 +24,20 @@ export class AuthComponent {
     password: '',
   };
 
-  constructor(private formValidationService: FormValidationService, private authService: AuthService,
-    private router: Router, private swalAlertService: SwalAlertService) {
+  constructor(
+    private formValidationService: FormValidationService,
+    private authService: AuthService,
+    private router: Router,
+    private swalAlertService: SwalAlertService,
+  ) {
     this.authForm = this.formValidationService.createAuthForm();
   }
 
   getAuthErrorMessage(fieldName: string): string | null {
-    return this.formValidationService.getAuthErrorMessage(this.authForm, fieldName);
+    return this.formValidationService.getAuthErrorMessage(
+      this.authForm,
+      fieldName,
+    );
   }
 
   onSubmit(): void {
@@ -42,14 +45,18 @@ export class AuthComponent {
       return;
     }
 
-    this.isSubmitting = true
+    this.isSubmitting = true;
     this.authService.signIn(this.authForm.value).subscribe({
       next: (response: UserInfo) => {
         localStorage.setItem('user', JSON.stringify(response));
         this.router.navigateByUrl('');
       },
       error: (error: HttpErrorResponse) => {
-        this.swalAlertService.swalAlertWithTitle(error.statusText, error.error.message, 'error');
+        this.swalAlertService.swalAlertWithTitle(
+          error.statusText,
+          error.error.message,
+          'error',
+        );
         this.isSubmitting = false;
       },
     });

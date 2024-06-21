@@ -11,7 +11,7 @@ import { Observable } from 'rxjs';
 export class AuthService {
   private _usersUrl = `${environment.apiUrl}/users/auth`;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   signIn(user: UserAuth): Observable<UserInfo> {
     return this.http.post<UserInfo>(this._usersUrl, user);

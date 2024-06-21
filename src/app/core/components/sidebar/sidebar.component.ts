@@ -7,7 +7,7 @@ import { Subscription } from 'rxjs';
   standalone: true,
   imports: [],
   templateUrl: './sidebar.component.html',
-  styleUrl: './sidebar.component.css'
+  styleUrl: './sidebar.component.css',
 })
 export class SidebarComponent {
   private _routerSubscription: Subscription;
@@ -26,7 +26,7 @@ export class SidebarComponent {
   }
 
   private toggleSidebarVisibility(): void {
-    this._routerSubscription = this.router.events.subscribe(event => {
+    this._routerSubscription = this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
         this.isSidebarVisible = !event.url.includes('/auth');
       }

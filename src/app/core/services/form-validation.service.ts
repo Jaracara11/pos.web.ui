@@ -11,7 +11,7 @@ import {
   providedIn: 'root',
 })
 export class FormValidationService {
-  constructor(private formBuilder: FormBuilder) { }
+  constructor(private formBuilder: FormBuilder) {}
 
   createAuthForm(): FormGroup {
     return this.formBuilder.group({

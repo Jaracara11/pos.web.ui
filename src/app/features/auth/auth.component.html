@@ -1,25 +1,40 @@
 <form [formGroup]="authForm" class="auth-card" (ngSubmit)="onSubmit()">
-  @if (isSubmitting)
-  {
-  <app-spinner></app-spinner>
-  }@else {
-  <div class="card">
-    <div class="card-body">
-      <h5 class="card-title mb-3">Point Of Sale Web</h5>
-      <div class="mb-3">
-        <input class="form-control" type="text" placeholder="Username" formControlName="username" />
-        <small class="text-danger">
-          {{ getAuthErrorMessage('username') }}
-        </small>
+  @if (isSubmitting) {
+    <app-spinner></app-spinner>
+  } @else {
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title mb-3">Point Of Sale Web</h5>
+        <div class="mb-3">
+          <input
+            class="form-control"
+            type="text"
+            placeholder="Username"
+            formControlName="username"
+          />
+          <small class="text-danger">
+            {{ getAuthErrorMessage("username") }}
+          </small>
+        </div>
+        <div class="mb-3">
+          <input
+            class="form-control"
+            type="password"
+            placeholder="Password"
+            formControlName="password"
+          />
+          <small class="text-danger">
+            {{ getAuthErrorMessage("password") }}
+          </small>
+        </div>
+        <button
+          type="submit"
+          class="btn btn-primary"
+          [disabled]="authForm.invalid || isSubmitting"
+        >
+          Sign in
+        </button>
       </div>
-      <div class="mb-3">
-        <input class="form-control" type="password" placeholder="Password" formControlName="password" />
-        <small class="text-danger">
-          {{ getAuthErrorMessage('password') }}
-        </small>
-      </div>
-      <button type="submit" class="btn btn-primary" [disabled]="authForm.invalid || isSubmitting">Sign in</button>
     </div>
-  </div>
   }
 </form>
