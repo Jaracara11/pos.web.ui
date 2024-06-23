@@ -5,3 +5,16 @@
 .sidebar-title {
   font-size: 1.5rem;
 }
+
+.nav-link {
+  font-size: 1.2rem;
+}
+
+.nav-link i {
+  margin-right: 0.5rem;
+}
+
+.nav-link:hover {
+  transform: scale(1.1);
+  font-weight: bolder;
+}
