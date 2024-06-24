@@ -1,5 +1,5 @@
 <form [formGroup]="authForm" class="auth-card" (ngSubmit)="onSubmit()">
-  @if (isSubmitting) {
+  @if (isSubmitting$ | async) {
   <app-loading-spinner></app-loading-spinner>
   } @else {
   <div class="card">
@@ -17,7 +17,7 @@
           {{ getAuthErrorMessage("password") }}
         </small>
       </div>
-      <button type="submit" class="btn btn-dark" [disabled]="authForm.invalid || isSubmitting">
+      <button type="submit" class="btn btn-dark" [disabled]="authForm.invalid">
         Sign in
       </button>
     </div>
