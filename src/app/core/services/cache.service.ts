@@ -8,8 +8,6 @@ import { Observable, of, tap } from 'rxjs';
 export class CacheService {
   private _cache = new Map<string, CacheContent>();
 
-  constructor() { }
-
   get(key: string): Observable<any> | undefined {
     const data = this._cache.get(key);
     if (!data) {
