@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { UserAuth } from '../../shared/interfaces/user-auth.interface';
 import { UserInfo } from '../../shared/interfaces/user-Info.interface';
 import { Observable } from 'rxjs';
@@ -11,7 +11,7 @@ import { Observable } from 'rxjs';
 export class AuthService {
   private _usersUrl = `${environment.apiUrl}/users/auth`;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   signIn(user: UserAuth): Observable<UserInfo> {
     return this.http.post<UserInfo>(this._usersUrl, user);
@@ -36,5 +36,20 @@ export class AuthService {
     }
 
     return false;
+  }
+
+  userAuthorizationHeaders(): HttpHeaders {
+    const userData = localStorage.getItem('user');
+
+    if (!userData) {
+      return new HttpHeaders();
+    }
+
+    const user: UserInfo = JSON.parse(userData);
+
+    return new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${user.token || ''}`
+    });
   }
 }
