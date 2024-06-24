@@ -3,6 +3,8 @@ import { BestSellerProduct } from '../../../shared/interfaces/best-seller-produc
 import { ProductService } from '../../services/product.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { SwalAlertService } from '../../services/swal-alert.service';
+import { CacheService } from '../../services/cache.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-best-seller-products',
@@ -14,14 +16,17 @@ import { SwalAlertService } from '../../services/swal-alert.service';
 export class BestSellerProductsComponent {
   bestSellerProducts: BestSellerProduct[] = [];
 
-  constructor(private productService: ProductService, private swalAlertService: SwalAlertService) { }
+  constructor(private productService: ProductService, private swalAlertService: SwalAlertService, private cacheService: CacheService) { }
 
   ngOnInit(): void {
     this.loadBestSellerProducts();
   }
 
   private loadBestSellerProducts(): void {
-    this.productService.getBestSellerProducts().subscribe({
+    const cacheKey = 'bestSellerProducts';
+    const fallbackObservable: Observable<BestSellerProduct[]> = this.productService.getBestSellerProducts();
+
+    this.cacheService.cacheObservable(cacheKey, fallbackObservable).subscribe({
       next: (response: BestSellerProduct[]) => {
         this.bestSellerProducts = response;
       },

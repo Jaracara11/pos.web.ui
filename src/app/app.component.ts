@@ -11,11 +11,11 @@ import { Subscription } from 'rxjs';
   styleUrl: './app.component.css',
 })
 export class AppComponent {
-  private _routerSubscription: Subscription;
+  private _routerSubscription$: Subscription;
   isSidebarVisible = true;
 
   constructor(private router: Router) {
-    this._routerSubscription = Subscription.EMPTY;
+    this._routerSubscription$ = Subscription.EMPTY;
   }
 
   ngOnInit(): void {
@@ -23,11 +23,11 @@ export class AppComponent {
   }
 
   ngOnDestroy(): void {
-    this._routerSubscription.unsubscribe();
+    this._routerSubscription$.unsubscribe();
   }
 
   private toggleSidebarVisibility(): void {
-    this._routerSubscription = this.router.events.subscribe((event) => {
+    this._routerSubscription$ = this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
         this.isSidebarVisible = !event.url.includes('/auth');
       }
