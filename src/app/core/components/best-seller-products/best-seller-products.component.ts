@@ -16,7 +16,9 @@ import { Observable } from 'rxjs';
 export class BestSellerProductsComponent {
   bestSellerProducts: BestSellerProduct[] = [];
 
-  constructor(private productService: ProductService, private swalAlertService: SwalAlertService, private cacheService: CacheService) { }
+  constructor(private productService: ProductService,
+    private swalAlertService: SwalAlertService,
+    private cacheService: CacheService) { }
 
   ngOnInit(): void {
     this.loadBestSellerProducts();

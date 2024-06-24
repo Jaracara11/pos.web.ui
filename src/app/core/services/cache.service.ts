@@ -10,9 +10,8 @@ export class CacheService {
 
   get(key: string): Observable<any> | undefined {
     const data = this._cache.get(key);
-    if (!data) {
-      return undefined;
-    }
+
+    if (!data) { return undefined; }
 
     const now = new Date().getTime();
 

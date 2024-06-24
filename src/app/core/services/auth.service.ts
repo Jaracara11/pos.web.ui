@@ -24,16 +24,13 @@ export class AuthService {
   isUserAuth(): boolean {
     const userData = localStorage.getItem('user');
 
-    if (!userData) {
-      return false;
-    }
+    if (!userData) { return false; }
 
     const user: UserInfo = JSON.parse(userData);
+
     const decodedToken = JSON.parse(atob(user.token.split('.')[1]));
 
-    if (decodedToken.exp > Date.now() / 1000) {
-      return true;
-    }
+    if (decodedToken.exp > Date.now() / 1000) { return true; }
 
     return false;
   }
@@ -41,9 +38,7 @@ export class AuthService {
   userAuthorizationHeaders(): HttpHeaders {
     const userData = localStorage.getItem('user');
 
-    if (!userData) {
-      return new HttpHeaders();
-    }
+    if (!userData) { return new HttpHeaders(); }
 
     const user: UserInfo = JSON.parse(userData);
 

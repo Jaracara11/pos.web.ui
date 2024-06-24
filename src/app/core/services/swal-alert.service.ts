@@ -13,11 +13,7 @@ export class SwalAlertService {
     buttonsStyling: false,
   });
 
-  swalAlertWithTitle(
-    title: string,
-    message: string,
-    alertType: SweetAlertIcon,
-  ) {
+  swalAlertWithTitle(title: string, message: string, alertType: SweetAlertIcon) {
     return this.SwalObj.fire({
       title: title,
       html: message,

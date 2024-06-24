@@ -44,7 +44,9 @@ export class AuthComponent {
 
   onSubmit(): void {
     if (this.authForm.invalid) { return; }
+
     this.loadingService.setLoadingState = true;
+
     this.authService.signIn(this.authForm.value).pipe(
       finalize(() => this.loadingService.setLoadingState = false)
     ).subscribe({
