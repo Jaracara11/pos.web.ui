@@ -9,7 +9,7 @@ import { UserInfo } from '../../shared/interfaces/user-Info.interface';
 import { HttpErrorResponse } from '@angular/common/http';
 import { LoadingSpinnerComponent } from '../../core/components/loading-spinner/loading-spinner.component';
 import { LoadingService } from '../../core/services/loading.service';
-import { finalize, Observable, take } from 'rxjs';
+import { finalize, Observable } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 
 @Component({
