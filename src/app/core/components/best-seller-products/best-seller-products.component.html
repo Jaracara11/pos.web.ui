@@ -1,1 +1,29 @@
-<p>best-seller-products works!</p>
+<div>
+  <h5 class="title">Most Popular Products</h5>
+  <div class="card">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Product</th>
+          <th>Total Quantity Sold</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (product of bestSellerProducts; track product.productName) {
+        <tr>
+          <td>
+            {{product.productName}}
+            <div><small class="text-muted">
+                {{product.productDescription}}
+              </small></div>
+          </td>
+          <td>
+            {{product.totalQuantitySold}} Units
+          </td>
+        </tr>
+        }
+        @empty {<small class="text-muted">No products to display</small>}
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -11,3 +11,9 @@ body {
   overflow: hidden;
   margin: 0;
 }
+
+.title {
+  text-align: center;
+  font-weight: bold;
+  margin-top: 1rem;
+}
