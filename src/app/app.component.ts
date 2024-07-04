@@ -11,7 +11,7 @@ import { Subscription } from 'rxjs';
   styleUrl: './app.component.css',
 })
 export class AppComponent {
-  private _routerSubscription$ = Subscription.EMPTY;
+  private _routerSub$ = Subscription.EMPTY;
   isSidebarVisible = true;
 
   constructor(private router: Router) { }
@@ -21,11 +21,11 @@ export class AppComponent {
   }
 
   ngOnDestroy(): void {
-    this._routerSubscription$.unsubscribe();
+    this._routerSub$.unsubscribe();
   }
 
   private toggleSidebarVisibility(): void {
-    this._routerSubscription$ = this.router.events.subscribe((event) => {
+    this._routerSub$ = this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
         this.isSidebarVisible = !event.url.includes('/auth');
       }

@@ -14,7 +14,7 @@ import { Observable, Subscription } from 'rxjs';
   styleUrl: './best-seller-products.component.css'
 })
 export class BestSellerProductsComponent {
-  private _bestSellerSubscription$ = Subscription.EMPTY;
+  private _bestSellerSub$ = Subscription.EMPTY;
   bestSellerProducts: BestSellerProduct[] = [];
 
   constructor(private productService: ProductService,
@@ -26,14 +26,14 @@ export class BestSellerProductsComponent {
   }
 
   ngOnDestroy(): void {
-    this._bestSellerSubscription$.unsubscribe();
+    this._bestSellerSub$.unsubscribe();
   }
 
   private loadBestSellerProducts(): void {
     const cacheKey = 'bestSellerProducts';
     const fallbackObservable: Observable<BestSellerProduct[]> = this.productService.getBestSellerProducts();
 
-    this._bestSellerSubscription$ = this.cacheService.cacheObservable(cacheKey, fallbackObservable).subscribe({
+    this._bestSellerSub$ = this.cacheService.cacheObservable(cacheKey, fallbackObservable).subscribe({
       next: (response: BestSellerProduct[]) => {
         this.bestSellerProducts = response;
       },

@@ -1,0 +1,26 @@
+<div>
+  <h5 class="title">Recent Orders</h5>
+  <div class="card">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>User</th>
+          <th>Date</th>
+          <th>Order Total</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (order of recentOrders; track order.orderID) {
+        <tr>
+          <td>{{order.user}}</td>
+          <td>{{ order.orderDate | date:'yyyy-MM-dd HH:mm' }}</td>
+          <td>{{ order.orderTotal | currency }}</td>
+          <td></td>
+        </tr>
+        }
+        @empty {<small class="text-muted">No orders to display</small>}
+      </tbody>
+    </table>
+  </div>
+</div>
