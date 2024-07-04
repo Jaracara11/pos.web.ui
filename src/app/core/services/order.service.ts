@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { AuthService } from './auth.service';
 import { RecentOrder } from '../../shared/interfaces/recent-order.interface';
+import { OrderInfo } from '../../shared/interfaces/oder-info.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -23,5 +24,10 @@ export class OrderService {
   getTotalSalesOfTheDay(): Observable<number> {
     const headers = this.authService.userAuthorizationHeaders();
     return this.http.get<number>(this._salesTodayUrl, { headers });
+  }
+
+  getOrderByID(orderID: string): Observable<OrderInfo> {
+    const headers = this.authService.userAuthorizationHeaders();
+    return this.http.get<OrderInfo>(`${this._ordersUrl}/${orderID}`, { headers });
   }
 }
