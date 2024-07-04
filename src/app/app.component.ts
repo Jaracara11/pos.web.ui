@@ -11,12 +11,10 @@ import { Subscription } from 'rxjs';
   styleUrl: './app.component.css',
 })
 export class AppComponent {
-  private _routerSubscription$: Subscription;
+  private _routerSubscription$ = Subscription.EMPTY;
   isSidebarVisible = true;
 
-  constructor(private router: Router) {
-    this._routerSubscription$ = Subscription.EMPTY;
-  }
+  constructor(private router: Router) { }
 
   ngOnInit(): void {
     this.toggleSidebarVisibility();
