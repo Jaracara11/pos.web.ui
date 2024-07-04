@@ -41,7 +41,7 @@ export class BestSellerProductsComponent {
         this.swalAlertService.swalAlertWithTitle(
           error.statusText,
           error.error.message,
-          'error',
+          'error'
         );
       }
     });

@@ -18,7 +18,7 @@ export class SwalAlertService {
       title: title,
       html: message,
       icon: alertType,
-      showConfirmButton: false,
+      showConfirmButton: false
     });
   }
 }

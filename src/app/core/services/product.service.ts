@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core';
 import { BestSellerProduct } from '../../shared/interfaces/best-seller-product.interface';
 import { Observable } from 'rxjs';
 import { AuthService } from './auth.service';
+import { Product } from '../../shared/interfaces/product.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -14,9 +15,9 @@ export class ProductService {
 
   constructor(private http: HttpClient, private authService: AuthService) { }
 
-  getAllProducts(): Observable<BestSellerProduct[]> {
+  getAllProducts(): Observable<Product[]> {
     const headers = this.authService.userAuthorizationHeaders();
-    return this.http.get<BestSellerProduct[]>(this._productsUrl, { headers });
+    return this.http.get<Product[]>(this._productsUrl, { headers });
   }
 
   getBestSellerProducts(): Observable<BestSellerProduct[]> {

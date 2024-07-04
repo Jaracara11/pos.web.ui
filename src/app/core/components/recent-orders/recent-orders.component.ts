@@ -42,7 +42,7 @@ export class RecentOrdersComponent {
         this.swalAlertService.swalAlertWithTitle(
           error.statusText,
           error.error.message,
-          'error',
+          'error'
         );
       }
     });
