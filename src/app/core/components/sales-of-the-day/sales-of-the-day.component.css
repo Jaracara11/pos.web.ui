@@ -1,0 +1,10 @@
+.sales-today {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.sales-today .card {
+  width: 14rem;
+}

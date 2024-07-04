@@ -31,7 +31,7 @@ export class RecentOrdersComponent {
   }
 
   private loadRecentOrders(): void {
-    const cacheKey = 'bestSellerProducts';
+    const cacheKey = 'orders';
     const fallbackObservable: Observable<RecentOrder[]> = this.orderService.getRecentOrders();
 
     this._recentOrdersSub$ = this.cacheService.cacheObservable(cacheKey, fallbackObservable).subscribe({
