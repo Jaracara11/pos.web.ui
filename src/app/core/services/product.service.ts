@@ -10,11 +10,17 @@ import { AuthService } from './auth.service';
 })
 export class ProductService {
   private _productsUrl = `${environment.apiUrl}/products`;
+  private _bestSellersUrl = `${this._productsUrl}/best-sellers`;
 
   constructor(private http: HttpClient, private authService: AuthService) { }
 
+  getAllProducts(): Observable<BestSellerProduct[]> {
+    const headers = this.authService.userAuthorizationHeaders();
+    return this.http.get<BestSellerProduct[]>(this._productsUrl, { headers });
+  }
+
   getBestSellerProducts(): Observable<BestSellerProduct[]> {
     const headers = this.authService.userAuthorizationHeaders();
-    return this.http.get<BestSellerProduct[]>(`${this._productsUrl}/best-sellers`, { headers });
+    return this.http.get<BestSellerProduct[]>(this._bestSellersUrl, { headers });
   }
 }
