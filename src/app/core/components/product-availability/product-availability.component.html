@@ -10,14 +10,9 @@
       </thead>
       <tbody>
         @for (product of lowStockProducts; track product.productID) {
-        <tr>
-          <td>
-            {{product.productName}}
-          </td>
+        <tr [ngClass]="getTableRowClass($index)">
           <td>{{product.productName}}</td>
-          <td>
-            {{product.productStock}} Unit(s)
-          </td>
+          <td>{{product.productStock}} Unit(s)</td>
         </tr>
         }
         @empty {<small class="text-muted">No products to display</small>}

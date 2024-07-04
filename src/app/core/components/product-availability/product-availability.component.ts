@@ -5,11 +5,12 @@ import { ProductService } from '../../services/product.service';
 import { SwalAlertService } from '../../services/swal-alert.service';
 import { CacheService } from '../../services/cache.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-product-availability',
   standalone: true,
-  imports: [],
+  imports: [NgClass],
   templateUrl: './product-availability.component.html',
   styleUrl: './product-availability.component.css'
 })
@@ -27,6 +28,19 @@ export class ProductAvailabilityComponent {
 
   ngOnDestroy(): void {
     this._productsSub$.unsubscribe();
+  }
+
+  getTableRowClass(index: number): string {
+    switch (index) {
+      case 0:
+        return 'table-danger';
+      case 1:
+        return 'table-warning';
+      case 2:
+        return 'table-info';
+      default:
+        return '';
+    }
   }
 
   private loadAllProducts(): void {
