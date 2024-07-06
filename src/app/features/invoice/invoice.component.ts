@@ -1,4 +1,4 @@
-import { AsyncPipe } from '@angular/common';
+import { AsyncPipe, CurrencyPipe } from '@angular/common';
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
@@ -6,11 +6,12 @@ import { OrderInfo } from '../../shared/interfaces/oder-info.interface';
 import { OrderService } from '../../core/services/order.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { SwalAlertService } from '../../core/services/swal-alert.service';
+import { OrderProduct } from '../../shared/interfaces/order-product.interface';
 
 @Component({
   selector: 'app-invoice',
   standalone: true,
-  imports: [AsyncPipe],
+  imports: [AsyncPipe, CurrencyPipe],
   templateUrl: './invoice.component.html',
   styleUrl: './invoice.component.css'
 })
@@ -31,6 +32,12 @@ export class InvoiceComponent {
     this.destroy$.complete();
   }
 
+  calculateOrderTotal(index: number, productList: OrderProduct[]): number {
+    return productList
+      .slice(0, index + 1)
+      .reduce((total, item) => total + (item.productPrice || 0) * (item.productQuantity || 1), 0)
+  }
+
   private loadOrderInfo(): void {
     const orderId = this.route.snapshot.paramMap.get('orderID');
 
@@ -40,7 +47,7 @@ export class InvoiceComponent {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response: OrderInfo) => {
-          this.orderInfo = response;
+          this.orderInfo = this.parseOrderInfo(response);
         },
         error: (error: HttpErrorResponse) => {
           this.swalAlertService.swalAlertWithTitle(
@@ -50,5 +57,18 @@ export class InvoiceComponent {
           );
         }
       });
+  }
+
+  private parseOrderInfo(orderData: OrderInfo): OrderInfo {
+    if (typeof orderData.products === 'string') {
+      orderData.products = JSON.parse(orderData.products).map((product: any) => ({
+        productName: product.ProductName,
+        productDescription: product.ProductDescription,
+        productQuantity: product.ProductQuantity,
+        productPrice: product.ProductPrice,
+        productCategory: product.ProductCategoryName
+      }));
+    }
+    return orderData;
   }
 }

@@ -1,8 +1,9 @@
 <div class="container-fluid">
   <h1 class="title">Thanks for shopping with us!</h1>
   <div class="card">
+    @if (orderInfo) {
     <div class="card-body">
-      <h4>Invoice # </h4>
+      <h4>Invoice # {{orderInfo.orderID}}</h4>
       <hr>
       <h5>Order Summary</h5>
       <table>
@@ -16,9 +17,19 @@
           </tr>
         </thead>
         <tbody>
-
+          @for (product of orderInfo.products; track product.productName) {
+          <tr>
+            <td>{{$index + 1}}</td>
+            <td>{{product.productName}}</td>
+            <td>{{product.productPrice | currency}}</td>
+            <td>{{product.productQuantity}} unit(s)</td>
+            <td>{{calculateOrderTotal($index, orderInfo.products) | currency}}</td>
+          </tr>
+          }
+          @empty {<small class="text-muted">No invoice data to display</small>}
         </tbody>
       </table>
     </div>
+    }
   </div>
 </div>
