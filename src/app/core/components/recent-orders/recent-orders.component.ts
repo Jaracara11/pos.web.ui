@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Observable, Subscription } from 'rxjs';
+import { Observable, Subject, takeUntil } from 'rxjs';
 import { RecentOrder } from '../../../shared/interfaces/recent-order.interface';
 import { OrderService } from '../../services/order.service';
 import { SwalAlertService } from '../../services/swal-alert.service';
@@ -16,7 +16,7 @@ import { Router } from '@angular/router';
   styleUrl: './recent-orders.component.css'
 })
 export class RecentOrdersComponent {
-  private _recentOrdersSub$ = Subscription.EMPTY;
+  private destroy$ = new Subject<void>();
   recentOrders: RecentOrder[] = [];
 
   constructor(private orderService: OrderService,
@@ -29,7 +29,8 @@ export class RecentOrdersComponent {
   }
 
   ngOnDestroy(): void {
-    this._recentOrdersSub$.unsubscribe();
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   getInvoice(orderID: string): void {
@@ -40,17 +41,19 @@ export class RecentOrdersComponent {
     const cacheKey = 'orders';
     const fallbackObservable: Observable<RecentOrder[]> = this.orderService.getRecentOrders();
 
-    this._recentOrdersSub$ = this.cacheService.cacheObservable(cacheKey, fallbackObservable).subscribe({
-      next: (response: RecentOrder[]) => {
-        this.recentOrders = response;
-      },
-      error: (error: HttpErrorResponse) => {
-        this.swalAlertService.swalAlertWithTitle(
-          error.statusText,
-          error.error.message,
-          'error'
-        );
-      }
-    });
+    this.cacheService.cacheObservable(cacheKey, fallbackObservable)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response: RecentOrder[]) => {
+          this.recentOrders = response;
+        },
+        error: (error: HttpErrorResponse) => {
+          this.swalAlertService.swalAlertWithTitle(
+            error.statusText,
+            error.error.message,
+            'error'
+          );
+        }
+      });
   }
 }

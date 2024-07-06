@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Observable, Subscription } from 'rxjs';
+import { Observable, Subject, takeUntil } from 'rxjs';
 import { OrderService } from '../../services/order.service';
 import { SwalAlertService } from '../../services/swal-alert.service';
 import { CacheService } from '../../services/cache.service';
@@ -14,7 +14,7 @@ import { CurrencyPipe } from '@angular/common';
   styleUrl: './sales-of-the-day.component.css'
 })
 export class SalesOfTheDayComponent {
-  private _salesOfTheDaySub$ = Subscription.EMPTY;
+  private destroy$ = new Subject<void>();
   salesOfTheDay = 0;
 
   constructor(private orderService: OrderService,
@@ -26,24 +26,27 @@ export class SalesOfTheDayComponent {
   }
 
   ngOnDestroy(): void {
-    this._salesOfTheDaySub$.unsubscribe();
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   private loadTotalSalesOfTheDay(): void {
     const cacheKey = 'salesToday';
     const fallbackObservable: Observable<number> = this.orderService.getTotalSalesOfTheDay();
 
-    this._salesOfTheDaySub$ = this.cacheService.cacheObservable(cacheKey, fallbackObservable).subscribe({
-      next: (response: number) => {
-        this.salesOfTheDay = response;
-      },
-      error: (error: HttpErrorResponse) => {
-        this.swalAlertService.swalAlertWithTitle(
-          error.statusText,
-          error.error.message,
-          'error'
-        );
-      }
-    });
+    this.cacheService.cacheObservable(cacheKey, fallbackObservable)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response: number) => {
+          this.salesOfTheDay = response;
+        },
+        error: (error: HttpErrorResponse) => {
+          this.swalAlertService.swalAlertWithTitle(
+            error.statusText,
+            error.error.message,
+            'error'
+          );
+        }
+      });
   }
 }

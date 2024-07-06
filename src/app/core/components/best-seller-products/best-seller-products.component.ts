@@ -4,7 +4,7 @@ import { ProductService } from '../../services/product.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { SwalAlertService } from '../../services/swal-alert.service';
 import { CacheService } from '../../services/cache.service';
-import { Observable, Subscription } from 'rxjs';
+import { Observable, Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-best-seller-products',
@@ -14,7 +14,7 @@ import { Observable, Subscription } from 'rxjs';
   styleUrl: './best-seller-products.component.css'
 })
 export class BestSellerProductsComponent {
-  private _bestSellerSub$ = Subscription.EMPTY;
+  private destroy$ = new Subject<void>();
   bestSellerProducts: BestSellerProduct[] = [];
 
   constructor(private productService: ProductService,
@@ -26,24 +26,27 @@ export class BestSellerProductsComponent {
   }
 
   ngOnDestroy(): void {
-    this._bestSellerSub$.unsubscribe();
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   private loadBestSellerProducts(): void {
     const cacheKey = 'bestSellerProducts';
     const fallbackObservable: Observable<BestSellerProduct[]> = this.productService.getBestSellerProducts();
 
-    this._bestSellerSub$ = this.cacheService.cacheObservable(cacheKey, fallbackObservable).subscribe({
-      next: (response: BestSellerProduct[]) => {
-        this.bestSellerProducts = response;
-      },
-      error: (error: HttpErrorResponse) => {
-        this.swalAlertService.swalAlertWithTitle(
-          error.statusText,
-          error.error.message,
-          'error'
-        );
-      }
-    });
+    this.cacheService.cacheObservable(cacheKey, fallbackObservable)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response: BestSellerProduct[]) => {
+          this.bestSellerProducts = response;
+        },
+        error: (error: HttpErrorResponse) => {
+          this.swalAlertService.swalAlertWithTitle(
+            error.statusText,
+            error.error.message,
+            'error'
+          );
+        }
+      });
   }
 }
