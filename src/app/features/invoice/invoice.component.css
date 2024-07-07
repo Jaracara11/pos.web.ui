@@ -1,0 +1,15 @@
+.order-summary {
+}
+
+.order-summary h5 {
+  font-weight: bold;
+}
+
+.order-summary button {
+  margin-top: 1rem;
+  min-width: 150px;
+}
+
+.total-info {
+  float: right;
+}

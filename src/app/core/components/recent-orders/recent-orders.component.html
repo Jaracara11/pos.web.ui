@@ -16,9 +16,11 @@
           <td>{{order.user}}</td>
           <td>{{ order.orderDate | date:'yyyy-MM-dd HH:mm' }}</td>
           <td>{{ order.orderTotal | currency }}</td>
-          <td class="invoice-td"><button class="btn btn-outline-dark" (click)="getInvoice(order.orderID)">
+          <td>
+            <a [routerLink]="['/invoice', order.orderID]" class="btn btn-outline-dark">
               <i class="bi bi-file-text"></i>&nbsp; Invoice
-            </button></td>
+            </a>
+          </td>
         </tr>
         }
         @empty {<small class="text-muted">No orders to display</small>}

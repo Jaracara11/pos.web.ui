@@ -1,4 +1,4 @@
-import { AsyncPipe, CurrencyPipe } from '@angular/common';
+import { AsyncPipe, CurrencyPipe, DatePipe } from '@angular/common';
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
@@ -11,7 +11,7 @@ import { OrderProduct } from '../../shared/interfaces/order-product.interface';
 @Component({
   selector: 'app-invoice',
   standalone: true,
-  imports: [AsyncPipe, CurrencyPipe],
+  imports: [AsyncPipe, CurrencyPipe, DatePipe],
   templateUrl: './invoice.component.html',
   styleUrl: './invoice.component.css'
 })

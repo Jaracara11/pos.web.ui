@@ -6,12 +6,12 @@ import { SwalAlertService } from '../../services/swal-alert.service';
 import { CacheService } from '../../services/cache.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { CurrencyPipe, DatePipe } from '@angular/common';
-import { Router } from '@angular/router';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-recent-orders',
   standalone: true,
-  imports: [DatePipe, CurrencyPipe],
+  imports: [DatePipe, CurrencyPipe, RouterLink],
   templateUrl: './recent-orders.component.html',
   styleUrl: './recent-orders.component.css'
 })
@@ -21,8 +21,7 @@ export class RecentOrdersComponent {
 
   constructor(private orderService: OrderService,
     private swalAlertService: SwalAlertService,
-    private cacheService: CacheService,
-    private router: Router) { }
+    private cacheService: CacheService) { }
 
   ngOnInit(): void {
     this.loadRecentOrders();
@@ -31,10 +30,6 @@ export class RecentOrdersComponent {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
-  }
-
-  getInvoice(orderID: string): void {
-    this.router.navigateByUrl(`/invoice/${orderID}`);
   }
 
   private loadRecentOrders(): void {
