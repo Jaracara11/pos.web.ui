@@ -1,15 +1,17 @@
-.order-summary {
+.order-info h5 {
+  font-weight: bold;
 }
 
-.order-summary h5 {
-  font-weight: bold;
+.order-info button {
+  margin-top: 1rem;
+  width: 145px;
 }
 
 .order-summary button {
   margin-top: 1rem;
-  min-width: 150px;
+  width: 130px;
 }
 
-.total-info {
+.order-summary div:nth-child(1) {
   float: right;
 }
