@@ -14,6 +14,7 @@ i {
 
 .nav-link {
   font-size: 1.2rem;
+  margin-top: 0.5rem;
 }
 
 .nav-link i {
@@ -27,4 +28,9 @@ i {
 .nav-link:hover {
   transform: scale(1.1);
   font-weight: bolder;
+}
+
+.nav-link .active {
+  font-weight: bolder;
+  font-size: 1.5rem;
 }
