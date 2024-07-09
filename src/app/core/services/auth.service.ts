@@ -35,6 +35,16 @@ export class AuthService {
     return false;
   }
 
+  validateUserRolePermission(roles: string[]): boolean {
+    const userDataStr = localStorage.getItem('user');
+
+    if (!userDataStr) { return false; }
+
+    const userData: UserInfo = JSON.parse(userDataStr);
+
+    return roles.includes(userData.role);
+  }
+
   userAuthorizationHeaders(): HttpHeaders {
     const userData = localStorage.getItem('user');
 

@@ -11,6 +11,10 @@
             class="bi bi-cash-coin"></i><span>Sales</span></a></li>
       <li class="nav-link"><a routerLinkActive="active" routerLink="/auth"><i
             class="bi bi-clipboard-check"></i><span>Inventory</span></a></li>
+      @if (userPagePermission) {
+      <li class="nav-link"><a routerLinkActive="active" routerLink="/auth"><i
+            class="bi bi-person-gear"></i><span>Users</span></a></li>
+      }
     </ul>
   </div>
 </div>
