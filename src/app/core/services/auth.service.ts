@@ -35,6 +35,11 @@ export class AuthService {
     return false;
   }
 
+  getUserInfo(): UserInfo {
+    const userData = localStorage.getItem('user');
+    return userData ? JSON.parse(userData) : null;
+  }
+
   validateUserRolePermission(roles: string[]): boolean {
     const userDataStr = localStorage.getItem('user');
 

@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { UserInfo } from '../../../shared/interfaces/user-Info.interface';
 
 @Component({
   selector: 'app-sidebar',
@@ -11,11 +12,11 @@ import { AuthService } from '../../services/auth.service';
 })
 export class SidebarComponent {
 
-  userPagePermission = false;
+  userPagePermission: boolean;
+  user: UserInfo;
 
-  constructor(private authService: AuthService) { }
-
-  ngOnInit(): void {
+  constructor(private authService: AuthService) {
+    this.user = this.authService.getUserInfo();
     this.userPagePermission = this.authService.validateUserRolePermission(['Admin', 'Manager']);
   }
 }
