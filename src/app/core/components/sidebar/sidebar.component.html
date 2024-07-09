@@ -15,11 +15,14 @@
       <li class="nav-link"><a routerLinkActive="active" routerLink="/auth"><i
             class="bi bi-person-gear"></i><span>Users</span></a></li>
       }
-      <div class="user-profile">
-        <i class="bi bi-person-circle"></i>
-        <span>{{user.username}}</span>
+
+      <li class="nav-link user-info">
+        <div class="col">
+          <i class="bi bi-person-circle"></i>
+          <span>{{user.username}}</span>
+        </div>
         <p>{{user.role}}</p>
-      </div>
+      </li>
     </ul>
   </div>
 </div>

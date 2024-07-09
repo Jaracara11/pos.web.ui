@@ -11,7 +11,6 @@ import { UserInfo } from '../../../shared/interfaces/user-Info.interface';
   styleUrl: './sidebar.component.css',
 })
 export class SidebarComponent {
-
   userPagePermission: boolean;
   user: UserInfo;
 

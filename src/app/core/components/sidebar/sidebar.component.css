@@ -35,13 +35,25 @@ ul i {
   font-size: 1.5rem;
 }
 
-.user-profile {
-  font-size: 1.2rem;
+.user-info {
   bottom: 0;
   position: fixed;
 }
 
-.user-profile :hover {
+.user-info:hover {
   transform: scale(1.2);
-  font-weight: bolder;
+}
+
+.user-info span {
+  font-size: 1.5rem;
+}
+
+.user-info p {
+  color: #fff;
+  font-size: 16px;
+  margin-left: 1.7rem;
+}
+
+.user-info p:hover {
+  transform: scale(1.2);
 }
