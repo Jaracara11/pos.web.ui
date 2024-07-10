@@ -40,10 +40,6 @@ ul i {
   position: fixed;
 }
 
-.user-info:hover {
-  transform: scale(1.2);
-}
-
 .user-info span {
   font-size: 1.5rem;
 }
@@ -54,6 +50,17 @@ ul i {
   margin-left: 1.7rem;
 }
 
-.user-info p:hover {
-  transform: scale(1.2);
+.user-info .options {
+  display: flex;
+  flex-direction: column;
+}
+
+.user-info .options p {
+  margin-left: 0rem;
+  width: 145px;
+}
+
+.user-info .options p:nth-child(1) {
+  margin-top: -0.5rem;
+  margin-bottom: 0.5rem;
 }
