@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { UserInfo } from '../../../shared/interfaces/user-Info.interface';
 
@@ -14,8 +14,13 @@ export class SidebarComponent {
   userPagePermission: boolean;
   user: UserInfo;
 
-  constructor(private authService: AuthService) {
+  constructor(private authService: AuthService, private router: Router) {
     this.user = this.authService.getUserInfo();
     this.userPagePermission = this.authService.validateUserRolePermission(['Admin', 'Manager']);
+  }
+
+  signOut(): void {
+    localStorage.removeItem('user');
+    this.router.navigateByUrl('/auth');
   }
 }
