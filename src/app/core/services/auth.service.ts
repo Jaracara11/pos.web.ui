@@ -59,7 +59,7 @@ export class AuthService {
 
     return new HttpHeaders({
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${user.token || ''}`
+      Authorization: `Bearer ${user.token}`
     });
   }
 }
