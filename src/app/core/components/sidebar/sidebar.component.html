@@ -42,9 +42,7 @@
     <form [formGroup]="passwordChangeForm" (ngSubmit)="onSubmit()">
       <h5 class="modal-title">Change Password</h5>
       @if (isSubmitting$ | async) {
-      <div id="loading-component">
-        <app-loading-spinner></app-loading-spinner>
-      </div>
+      <app-loading-spinner></app-loading-spinner>
       } @else {
       <div>
         <input class="form-control" type="password" placeholder="Old Password" formControlName="oldPassword"
@@ -62,6 +60,9 @@
         <small class="text-danger">
           {{ getPasswordErrorMessage("repeatNewPassword") }}
         </small>
+        @if (getFormErrorMessage()) {
+        <small class="text-danger">{{ getFormErrorMessage() }}</small>
+        }
       </div>
       }
 

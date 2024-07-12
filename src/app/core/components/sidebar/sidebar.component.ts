@@ -52,9 +52,13 @@ export class SidebarComponent {
 
     this.modalService.open(content, modalOptions);
   }
-
+  
   getPasswordErrorMessage(fieldName: string): string | null {
-    return this.formValidationService.getErrorMessage(this.passwordChangeForm, fieldName);
+    return this.formValidationService.getFieldErrorMessage(this.passwordChangeForm, fieldName);
+  }
+
+  getFormErrorMessage(): string | null {
+    return this.formValidationService.getFormErrorMessage(this.passwordChangeForm);
   }
 
   onSubmit(): void {

@@ -26,19 +26,16 @@ export class FormValidationService {
       oldPassword: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(25)]],
       newPassword: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(25)]],
       repeatNewPassword: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(25)]],
-    },
-      {
-        validators: [this.passwordsMatchValidator()],
-      }
-    );
+    }, {
+      validators: [this.passwordsMatchValidator()],
+    });
   }
 
-  getErrorMessage(form: FormGroup, fieldName: string): string | null {
+  getFieldErrorMessage(form: FormGroup, fieldName: string): string | null {
     const field = form.get(fieldName);
 
     if (field && this.isFieldInvalid(field)) {
       const errors = field.errors as ValidationErrors;
-
       for (const errorType in errors) {
         if (errors.hasOwnProperty(errorType)) {
           switch (errorType) {
@@ -48,15 +45,38 @@ export class FormValidationService {
               return `${fieldName} cannot have less than ${errors['minlength'].requiredLength} characters.`;
             case 'maxlength':
               return `${fieldName} cannot exceed ${errors['maxlength'].requiredLength} characters.`;
-            case 'passwordsMismatch':
-              return `New passwords do not match.`;
-            case 'newPasswordSameAsOld':
-              return `New password cannot be the same as the old password.`;
           }
         }
       }
     }
+
     return null;
+  }
+
+  getFormErrorMessage(form: FormGroup): string | null {
+    if (form.errors && this.isFieldInvalid(form)) {
+      return this.customErrorMessage(form);
+    }
+    return null;
+  }
+
+  private customErrorMessage(form: FormGroup): string {
+    if (!form.errors) { return ''; }
+
+    for (const errorType in form.errors) {
+      if (form.errors.hasOwnProperty(errorType)) {
+        switch (errorType) {
+          case 'passwordsMismatch':
+            return `New passwords do not match.`;
+          case 'newPasswordSameAsOld':
+            return `New password cannot be the same as the old password.`;
+          default:
+            return '';
+        }
+      }
+    }
+
+    return '';
   }
 
   private passwordsMatchValidator(): ValidatorFn {
