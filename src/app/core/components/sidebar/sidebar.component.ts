@@ -5,10 +5,12 @@ import { AuthService } from '../../services/auth.service';
 import { UserInfo } from '../../../shared/interfaces/user-Info.interface';
 import { FormValidationService } from '../../services/form-validation.service';
 import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { Observable } from 'rxjs';
+import { finalize, Observable } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { LoadingService } from '../../services/loading.service';
 import { LoadingSpinnerComponent } from '../loading-spinner/loading-spinner.component';
+import { HttpErrorResponse } from '@angular/common/http';
+import { SwalAlertService } from '../../services/swal-alert.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -22,15 +24,14 @@ export class SidebarComponent {
   userPagePermission: boolean;
   user: UserInfo;
   passwordChangeForm: FormGroup;
-  showChangePasswordModal = false;
-  closeResult = '';
 
   constructor(
     private authService: AuthService,
     private router: Router,
     private modalService: NgbModal,
     private formValidationService: FormValidationService,
-    private loadingService: LoadingService) {
+    private loadingService: LoadingService,
+    private swalAlertService: SwalAlertService) {
     this.user = this.authService.getUserInfo();
     this.userPagePermission = this.authService.validateUserRolePermission(['Admin', 'Manager']);
     this.passwordChangeForm = this.formValidationService.createPasswordChangeForm();
@@ -56,7 +57,9 @@ export class SidebarComponent {
     return this.formValidationService.getErrorMessage(this.passwordChangeForm, fieldName);
   }
 
-  onSubmit() {
+  onSubmit(): void {
+    if (this.passwordChangeForm.invalid) { return; }
 
+    this.loadingService.setLoadingState = true;
   }
 }

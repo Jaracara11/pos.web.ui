@@ -26,10 +26,10 @@ export class FormValidationService {
       {
         oldPassword: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(25)]],
         newPassword: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(25)]],
-        repeatNewPassword: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(25)]]
+        repeatNewPassword: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(25)]],
       },
       {
-        validators: [this.passwordsMatchValidator, this.newPasswordNotSameAsOldValidator]
+        validators: [this.passwordsMatchValidator(), this.newPasswordNotSameAsOldValidator()],
       }
     );
   }
@@ -39,6 +39,7 @@ export class FormValidationService {
 
     if (field && this.isFieldInvalid(field)) {
       const errors = field.errors as ValidationErrors;
+
       for (const errorType in errors) {
         if (errors.hasOwnProperty(errorType)) {
           switch (errorType) {
@@ -63,10 +64,7 @@ export class FormValidationService {
     return (group: AbstractControl): ValidationErrors | null => {
       const newPassword = group.get('newPassword')?.value;
       const repeatNewPassword = group.get('repeatNewPassword')?.value;
-
-      return newPassword && repeatNewPassword && newPassword !== repeatNewPassword
-        ? { passwordsMismatch: true }
-        : null;
+      return newPassword !== repeatNewPassword ? { passwordsMismatch: true } : null;
     };
   }
 
@@ -74,10 +72,8 @@ export class FormValidationService {
     return (group: AbstractControl): ValidationErrors | null => {
       const oldPassword = group.get('oldPassword')?.value;
       const newPassword = group.get('newPassword')?.value;
-
-      return oldPassword && newPassword && oldPassword === newPassword
-        ? { newPasswordSameAsOld: true }
-        : null;
+      const isSameAsOld = oldPassword && newPassword && oldPassword === newPassword;
+      return isSameAsOld ? { newPasswordSameAsOld: true } : null;
     };
   }
 

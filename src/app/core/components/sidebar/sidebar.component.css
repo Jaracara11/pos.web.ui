@@ -74,5 +74,6 @@ ul i {
 }
 
 .modal-body button {
+  margin-top: 0.5rem;
   float: right;
 }

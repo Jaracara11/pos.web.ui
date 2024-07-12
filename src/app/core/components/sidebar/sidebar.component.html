@@ -42,7 +42,9 @@
     <form [formGroup]="passwordChangeForm" (ngSubmit)="onSubmit()">
       <h5 class="modal-title">Change Password</h5>
       @if (isSubmitting$ | async) {
-      <app-loading-spinner></app-loading-spinner>
+      <div id="loading-component">
+        <app-loading-spinner></app-loading-spinner>
+      </div>
       } @else {
       <div>
         <input class="form-control" type="password" placeholder="Old Password" formControlName="oldPassword"
