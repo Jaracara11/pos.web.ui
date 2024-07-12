@@ -5,14 +5,14 @@
   <div class="card">
     <div class="card-body">
       <h5 class="card-title">Point Of Sale Web</h5>
-      <input class="form-control" type="text" placeholder="Username" formControlName="username" />
+      <input class="form-control" type="text" placeholder="Username" formControlName="Username" />
       <small class="text-danger">
-        {{ getAuthErrorMessage("username") }}
+        {{ getAuthErrorMessage("Username") }}
       </small>
 
-      <input class="form-control" type="password" placeholder="Password" formControlName="password" />
+      <input class="form-control" type="password" placeholder="Password" formControlName="Password" />
       <small class="text-danger">
-        {{ getAuthErrorMessage("password") }}
+        {{ getAuthErrorMessage("Password") }}
       </small>
       <button type="submit" class="btn btn-dark" [disabled]="authForm.invalid">
         Sign in
