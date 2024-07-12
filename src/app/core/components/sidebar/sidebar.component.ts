@@ -13,8 +13,11 @@ import { UserInfo } from '../../../shared/interfaces/user-Info.interface';
 export class SidebarComponent {
   userPagePermission: boolean;
   user: UserInfo;
+  showChangePasswordModal = false;
 
-  constructor(private authService: AuthService, private router: Router) {
+  constructor(
+    private authService: AuthService,
+    private router: Router) {
     this.user = this.authService.getUserInfo();
     this.userPagePermission = this.authService.validateUserRolePermission(['Admin', 'Manager']);
   }
@@ -22,5 +25,9 @@ export class SidebarComponent {
   signOut(): void {
     localStorage.removeItem('user');
     this.router.navigateByUrl('/auth');
+  }
+
+  toggleChangePasswordModal(): void {
+    this.showChangePasswordModal = !this.showChangePasswordModal;
   }
 }
