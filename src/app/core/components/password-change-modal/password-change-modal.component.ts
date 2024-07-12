@@ -77,10 +77,12 @@ export class PasswordChangeModalComponent {
     this.loadingService.setLoadingState = true;
 
     this.userService.changeUserPassword(userData).pipe(
-      finalize(() => this.loadingService.setLoadingState = false)
+      finalize(() => {
+        this.loadingService.setLoadingState = false;
+        this.modalRef?.close();
+      })
     ).subscribe({
       next: () => {
-        this.modalRef?.close();
         localStorage.removeItem('user');
         this.swalAlertService.swalAlertWithTitle
           ('Password changed successfully!', 'Please sign in again.', 'info').then(
@@ -88,10 +90,7 @@ export class PasswordChangeModalComponent {
       },
       error: (error: HttpErrorResponse) => {
         this.swalAlertService.swalAlertWithTitle(error.statusText, error?.error?.message, 'error');
-        this.modalRef?.close();
       }
     });
-
-    this.loadingService.setLoadingState = false;
   }
 }
