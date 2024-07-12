@@ -32,6 +32,10 @@ export class InvoiceComponent {
     this.destroy$.complete();
   }
 
+  printInvoice(): void {
+    window.print();
+  }
+
   calculateOrderTotal(index: number, productList: OrderProduct[]): number {
     return productList
       .slice(0, index + 1)

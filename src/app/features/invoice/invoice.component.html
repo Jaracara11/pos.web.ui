@@ -66,7 +66,7 @@
               <span class="title">Total: </span>
               <span>{{orderInfo.orderTotal | currency}}</span>
             </div>
-            <button class="btn btn-dark">
+            <button class="btn btn-dark" (click)="printInvoice()">
               <i class="bi bi-printer"></i>&nbsp; Print</button>
           </div>
         </div>
