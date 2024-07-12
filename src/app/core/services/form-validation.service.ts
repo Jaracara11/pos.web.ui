@@ -22,12 +22,11 @@ export class FormValidationService {
   }
 
   createPasswordChangeForm(): FormGroup {
-    return this.formBuilder.group(
-      {
-        oldPassword: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(25)]],
-        newPassword: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(25)]],
-        repeatNewPassword: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(25)]],
-      },
+    return this.formBuilder.group({
+      oldPassword: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(25)]],
+      newPassword: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(25)]],
+      repeatNewPassword: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(25)]],
+    },
       {
         validators: [this.passwordsMatchValidator()],
       }
