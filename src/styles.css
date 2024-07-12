@@ -28,3 +28,13 @@ body {
   font-weight: bold;
   margin-bottom: 0.5rem;
 }
+
+@media print {
+  body {
+    visibility: hidden;
+  }
+
+  .sidebar {
+    display: none;
+  }
+}

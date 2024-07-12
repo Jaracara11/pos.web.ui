@@ -37,9 +37,8 @@ export class InvoiceComponent {
   }
 
   calculateOrderTotal(index: number, productList: OrderProduct[]): number {
-    return productList
-      .slice(0, index + 1)
-      .reduce((total, item) => total + (item.productPrice || 0) * (item.productQuantity || 1), 0)
+    return productList.slice(0, index + 1).reduce((total, item) =>
+      total + (item.productPrice || 0) * (item.productQuantity || 1), 0)
   }
 
   private loadOrderInfo(): void {
