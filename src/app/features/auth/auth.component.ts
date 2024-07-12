@@ -39,7 +39,7 @@ export class AuthComponent {
   }
 
   getAuthErrorMessage(fieldName: string): string | null {
-    return this.formValidationService.getAuthErrorMessage(this.authForm, fieldName);
+    return this.formValidationService.getErrorMessage(this.authForm, fieldName);
   }
 
   onSubmit(): void {
