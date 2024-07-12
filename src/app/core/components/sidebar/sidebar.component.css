@@ -38,6 +38,7 @@ ul i {
 .user-info {
   bottom: 0;
   position: fixed;
+  cursor: pointer;
 }
 
 .user-info:hover {
