@@ -29,7 +29,7 @@ export class FormValidationService {
         repeatNewPassword: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(25)]],
       },
       {
-        validators: [this.passwordsMatchValidator(), this.newPasswordNotSameAsOldValidator()],
+        validators: [this.passwordsMatchValidator()],
       }
     );
   }
@@ -50,7 +50,7 @@ export class FormValidationService {
             case 'maxlength':
               return `${fieldName} cannot exceed ${errors['maxlength'].requiredLength} characters.`;
             case 'passwordsMismatch':
-              return `New password do not match.`;
+              return `New passwords do not match.`;
             case 'newPasswordSameAsOld':
               return `New password cannot be the same as the old password.`;
           }
@@ -64,16 +64,18 @@ export class FormValidationService {
     return (group: AbstractControl): ValidationErrors | null => {
       const newPassword = group.get('newPassword')?.value;
       const repeatNewPassword = group.get('repeatNewPassword')?.value;
-      return newPassword !== repeatNewPassword ? { passwordsMismatch: true } : null;
-    };
-  }
-
-  private newPasswordNotSameAsOldValidator(): ValidatorFn {
-    return (group: AbstractControl): ValidationErrors | null => {
       const oldPassword = group.get('oldPassword')?.value;
-      const newPassword = group.get('newPassword')?.value;
-      const isSameAsOld = oldPassword && newPassword && oldPassword === newPassword;
-      return isSameAsOld ? { newPasswordSameAsOld: true } : null;
+      const errors: ValidationErrors = {};
+
+      if (newPassword !== repeatNewPassword) {
+        errors['passwordsMismatch'] = true;
+      }
+
+      if (oldPassword && newPassword && oldPassword === newPassword) {
+        errors['newPasswordSameAsOld'] = true;
+      }
+
+      return Object.keys(errors).length !== 0 ? errors : null;
     };
   }
 
