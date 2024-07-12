@@ -50,11 +50,7 @@ export class InvoiceComponent {
           this.orderInfo = this.parseOrderInfo(response);
         },
         error: (error: HttpErrorResponse) => {
-          this.swalAlertService.swalAlertWithTitle(
-            error.statusText,
-            error.error.message,
-            'error'
-          );
+          this.swalAlertService.swalAlertWithTitle(error.statusText, error?.error?.message, 'error');
         }
       });
   }

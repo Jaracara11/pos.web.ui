@@ -41,11 +41,7 @@ export class BestSellerProductsComponent {
           this.bestSellerProducts = response;
         },
         error: (error: HttpErrorResponse) => {
-          this.swalAlertService.swalAlertWithTitle(
-            error.statusText,
-            error.error.message,
-            'error'
-          );
+          this.swalAlertService.swalAlertWithTitle(error.statusText, error?.error?.message, 'error');
         }
       });
   }

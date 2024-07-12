@@ -25,7 +25,7 @@ export class SidebarComponent {
     private authService: AuthService,
     private router: Router,
     private formValidationService: FormValidationService) {
-    this.user = this.authService.getUserInfo();
+    this.user = this.authService.getAuthInfo();
     this.userPagePermission = this.authService.validateUserRolePermission(['Admin', 'Manager']);
     this.passwordChangeForm = this.formValidationService.createPasswordChangeForm();
   }
