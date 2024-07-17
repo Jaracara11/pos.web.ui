@@ -30,4 +30,9 @@ export class OrderService {
     const headers = this.authService.userAuthorizationHeaders();
     return this.http.get<OrderInfo>(`${this._ordersUrl}/${orderID}`, { headers });
   }
+
+  cancelOrder(orderID: string): Observable<string> {
+    const headers = this.authService.userAuthorizationHeaders();
+    return this.http.post<string>(`${this._ordersUrl}/${orderID}/cancel`, {}, { headers });
+  }
 }
