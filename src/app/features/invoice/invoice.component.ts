@@ -1,13 +1,13 @@
-import { AsyncPipe, CurrencyPipe, DatePipe } from '@angular/common';
 import { Component } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { finalize, Observable, Subject, takeUntil } from 'rxjs';
+import { finalize, Subject, takeUntil } from 'rxjs';
 import { OrderInfo } from '../../shared/interfaces/oder-info.interface';
 import { OrderService } from '../../core/services/order.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { SwalAlertService } from '../../core/services/swal-alert.service';
 import { OrderProduct } from '../../shared/interfaces/order-product.interface';
 import { RecentOrder } from '../../shared/interfaces/recent-order.interface';
+import { ActivatedRoute, Router } from '@angular/router';
+import { AsyncPipe, CurrencyPipe, DatePipe } from '@angular/common';
 import { CacheService } from '../../core/services/cache.service';
 
 @Component({
@@ -23,11 +23,13 @@ export class InvoiceComponent {
   orderId: string | null = '';
   recentOrders: RecentOrder[] = [];
 
-  constructor(private route: ActivatedRoute,
+  constructor(
+    private route: ActivatedRoute,
     private swalAlertService: SwalAlertService,
     private orderService: OrderService,
     private router: Router,
-    private cacheService: CacheService) { }
+    private cacheService: CacheService
+  ) { }
 
   ngOnInit() {
     this.loadOrderInfo();
@@ -45,18 +47,22 @@ export class InvoiceComponent {
       .then((isConfirmed: boolean) => {
         if (isConfirmed && this.orderId) {
           this.orderService.cancelOrder(this.orderId).pipe(
+            takeUntil(this.destroy$),
             finalize(() => {
               this.swalAlertService.swalMessageAlert('Order cancelled successfully', 'info')
-                .then(() => this.router.navigateByUrl('/'))
+                .then(() => {
+                  this.cacheService.clearCache('orders');
+                  this.router.navigateByUrl('/');
+                });
             })
           ).subscribe({
             next: () => { },
             error: (error: HttpErrorResponse) => {
               this.swalAlertService.swalAlertWithTitle(error.statusText, error?.error?.message, 'error');
             }
-          })
+          });
         }
-      })
+      });
   }
 
   printInvoice(): void {
@@ -65,7 +71,7 @@ export class InvoiceComponent {
 
   calculateOrderTotal(index: number, productList: OrderProduct[]): number {
     return productList.slice(0, index + 1).reduce((total, item) =>
-      total + (item.productPrice || 0) * (item.productQuantity || 1), 0)
+      total + (item.productPrice || 0) * (item.productQuantity || 1), 0);
   }
 
   private loadOrderInfo(): void {

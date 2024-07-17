@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { CacheContent } from '../../shared/interfaces/cache-content.interface';
 import { Observable, of, tap } from 'rxjs';
+import { CacheContent } from '../../shared/interfaces/cache-content.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -40,5 +40,9 @@ export class CacheService {
         })
       );
     }
+  }
+
+  clearCache(key: string): void {
+    this._cache.delete(key);
   }
 }
