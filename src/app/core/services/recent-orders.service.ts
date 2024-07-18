@@ -6,7 +6,6 @@ import { RecentOrder } from '../../shared/interfaces/recent-order.interface';
   providedIn: 'root'
 })
 export class RecentOrdersService {
-  private recentOrders: RecentOrder[] = [];
   private recentOrdersSubject = new Subject<RecentOrder[]>();
 
   getRecentOrders(): Observable<RecentOrder[]> {
@@ -14,7 +13,6 @@ export class RecentOrdersService {
   }
 
   setRecentOrders(orders: RecentOrder[]): void {
-    this.recentOrders = orders;
-    this.recentOrdersSubject.next(this.recentOrders);
+    this.recentOrdersSubject.next(orders);
   }
 }
