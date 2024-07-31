@@ -17,7 +17,7 @@ import { PasswordChangeModalComponent } from '../password-change-modal/password-
 })
 export class SidebarComponent {
   @ViewChild(PasswordChangeModalComponent) passwordChangeModal!: PasswordChangeModalComponent;
-  userPagePermission: boolean;
+  validateRolePermission: boolean;
   user: UserInfo;
   passwordChangeForm: FormGroup;
 
@@ -26,7 +26,7 @@ export class SidebarComponent {
     private router: Router,
     private formValidationService: FormValidationService) {
     this.user = this.authService.getAuthInfo();
-    this.userPagePermission = this.authService.validateUserRolePermission(['Admin', 'Manager']);
+    this.validateRolePermission = this.authService.validateUserRolePermission(['Admin', 'Manager']);
     this.passwordChangeForm = this.formValidationService.createPasswordChangeForm();
   }
 

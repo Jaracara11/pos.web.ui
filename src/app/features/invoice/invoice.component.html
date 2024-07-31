@@ -3,7 +3,7 @@
   <div class="card">
     @if (orderInfo) {
     <div class="card-body">
-      <h4>Invoice # {{orderInfo.orderID}}</h4>
+      <h4>Invoice # {{formatOrderID(orderInfo.orderID)}}</h4>
       <hr>
       <h5>Order Summary</h5>
       <table class="table">

@@ -74,6 +74,11 @@ export class InvoiceComponent {
       total + (item.productPrice || 0) * (item.productQuantity || 1), 0);
   }
 
+  formatOrderID(orderID: string): string {
+    const formattedOrderID = orderID.split('-');
+    return formattedOrderID[formattedOrderID.length - 1];
+  }
+
   private loadOrderInfo(): void {
     this.orderId = this.route.snapshot.paramMap.get('orderID');
 

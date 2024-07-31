@@ -1,0 +1,15 @@
+<div class="container-fluid">
+  <div class="row">
+    <h3 class="title">Products</h3>
+  </div>
+  <div class="row">
+    @if (validateRolePermission){
+    <button class="btn btn-dark">
+      <i class="bi bi-plus-lg"></i>
+      &nbsp;Add New Product
+    </button>
+    }
+    <a class="btn btn-outline-dark" routerLink="/auth"><i class="bi bi-globe"></i>
+      &nbsp;Show All Categories</a>
+  </div>
+</div>
