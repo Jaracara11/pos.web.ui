@@ -1,4 +1,4 @@
-export interface CacheContent {
+export interface CacheContent<T> {
     expiry: number;
-    value: any;
+    value: T;
 }

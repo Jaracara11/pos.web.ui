@@ -12,4 +12,34 @@
     <a class="btn btn-outline-dark" routerLink="/auth"><i class="bi bi-globe"></i>
       &nbsp;Show All Categories</a>
   </div>
+  <div class="row">
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Description</th>
+          <th>Stock</th>
+          <th>Cost</th>
+          <th>Price</th>
+          <th>Category</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+          <!-- @for (order of recentOrders; track order.orderID) {
+          <tr>
+            <td>{{order.user}}</td>
+            <td>{{ order.orderDate | date:'yyyy-MM-dd HH:mm' }}</td>
+            <td>{{ order.orderTotal | currency }}</td>
+            <td>
+              <a [routerLink]="['/invoice', order.orderID]" class="btn btn-outline-dark">
+                <i class="bi bi-file-text"></i>&nbsp; Invoice
+              </a>
+            </td>
+          </tr>
+          }
+          @empty {<small class="text-muted">No products to display</small>} -->
+      </tbody>
+    </table>
+  </div>
 </div>

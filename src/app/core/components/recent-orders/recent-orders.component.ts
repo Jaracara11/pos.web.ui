@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
-import { Observable, Subject, takeUntil } from 'rxjs';
+import { Observable, Subject, switchMap, takeUntil } from 'rxjs';
 import { RecentOrder } from '../../../shared/interfaces/recent-order.interface';
 import { OrderService } from '../../services/order.service';
 import { SwalAlertService } from '../../services/swal-alert.service';
 import { CacheService } from '../../services/cache.service';
 import { HttpErrorResponse } from '@angular/common/http';
-import { RecentOrdersService } from '../../services/recent-orders.service';
+import { OrderCacheService } from '../../services/orders-cache.service';
 import { RouterLink } from '@angular/router';
 import { CurrencyPipe, DatePipe } from '@angular/common';
 
@@ -24,7 +24,7 @@ export class RecentOrdersComponent {
     private orderService: OrderService,
     private swalAlertService: SwalAlertService,
     private cacheService: CacheService,
-    private recentOrdersService: RecentOrdersService
+    private orderCacheService: OrderCacheService
   ) { }
 
   ngOnInit(): void {
@@ -40,22 +40,21 @@ export class RecentOrdersComponent {
     const cacheKey = 'orders';
     const fallbackObservable: Observable<RecentOrder[]> = this.orderService.getRecentOrders();
 
-    this.cacheService.cacheObservable(cacheKey, fallbackObservable)
-      .pipe(takeUntil(this.destroy$))
+    this.cacheService.cacheObservable<RecentOrder[]>(cacheKey, fallbackObservable)
+      .pipe(
+        takeUntil(this.destroy$),
+        switchMap(orders => {
+          this.orderCacheService.setRecentOrders(orders);
+          return this.orderCacheService.getRecentOrders();
+        })
+      )
       .subscribe({
-        next: (response: RecentOrder[]) => {
-          this.recentOrders = response;
-          this.recentOrdersService.setRecentOrders(response);
+        next: (orders: RecentOrder[]) => {
+          this.recentOrders = orders;
         },
         error: (error: HttpErrorResponse) => {
-          this.swalAlertService.swalAlertWithTitle(error.statusText, error?.error?.message, 'error');
+          this.swalAlertService.swalAlertWithTitle(error.statusText, error.error?.message || 'An error occurred', 'error');
         }
-      });
-
-    this.recentOrdersService.getRecentOrders()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(orders => {
-        this.recentOrders = orders;
       });
   }
 }

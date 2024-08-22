@@ -18,9 +18,11 @@ export class ProductAvailabilityComponent {
   private destroy$ = new Subject<void>();
   lowStockProducts: Product[] = [];
 
-  constructor(private productService: ProductService,
+  constructor(
+    private productService: ProductService,
     private swalAlertService: SwalAlertService,
-    private cacheService: CacheService) { }
+    private cacheService: CacheService
+  ) { }
 
   ngOnInit(): void {
     this.loadAllProducts();
@@ -48,7 +50,7 @@ export class ProductAvailabilityComponent {
     const cacheKey = 'products';
     const fallbackObservable: Observable<Product[]> = this.productService.getAllProducts();
 
-    this.cacheService.cacheObservable(cacheKey, fallbackObservable)
+    this.cacheService.cacheObservable<Product[]>(cacheKey, fallbackObservable)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response: Product[]) => {
@@ -57,7 +59,7 @@ export class ProductAvailabilityComponent {
           }
         },
         error: (error: HttpErrorResponse) => {
-          this.swalAlertService.swalAlertWithTitle(error.statusText, error?.error?.message, 'error');
+          this.swalAlertService.swalAlertWithTitle(error.statusText, error.error?.message || 'An error occurred', 'error');
         }
       });
   }

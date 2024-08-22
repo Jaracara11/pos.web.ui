@@ -6,9 +6,9 @@ import { CacheContent } from '../../shared/interfaces/cache-content.interface';
   providedIn: 'root'
 })
 export class CacheService {
-  private _cache = new Map<string, CacheContent>();
+  private _cache = new Map<string, CacheContent<any>>();
 
-  get(key: string): Observable<any> | undefined {
+  get<T>(key: string): Observable<T> | undefined {
     const data = this._cache.get(key);
 
     if (!data) { return undefined; }
@@ -20,17 +20,17 @@ export class CacheService {
       return undefined;
     }
 
-    return of(data.value);
+    return of(data.value as T);
   }
 
-  set(key: string, value: any, ttl: number = 300000): Observable<any> {
+  set<T>(key: string, value: T, ttl: number = 300000): Observable<T> {
     const expiry = new Date().getTime() + ttl;
     this._cache.set(key, { expiry, value });
     return of(value);
   }
 
-  cacheObservable(key: string, fallback: Observable<any>, ttl?: number): Observable<any> {
-    const cached = this.get(key);
+  cacheObservable<T>(key: string, fallback: Observable<T>, ttl?: number): Observable<T> {
+    const cached = this.get<T>(key);
     if (cached) {
       return cached;
     } else {

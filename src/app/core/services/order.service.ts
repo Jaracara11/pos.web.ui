@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 import { Observable, tap } from 'rxjs';
 import { AuthService } from './auth.service';
 import { RecentOrder } from '../../shared/interfaces/recent-order.interface';
-import { RecentOrdersService } from './recent-orders.service';
+import { OrderCacheService } from './orders-cache.service';
 import { OrderInfo } from '../../shared/interfaces/oder-info.interface';
 
 @Injectable({
@@ -18,14 +18,14 @@ export class OrderService {
   constructor(
     private http: HttpClient,
     private authService: AuthService,
-    private recentOrdersService: RecentOrdersService
+    private orderCacheService: OrderCacheService
   ) { }
 
   getRecentOrders(): Observable<RecentOrder[]> {
     const headers = this.authService.userAuthorizationHeaders();
     return this.http.get<RecentOrder[]>(this._recentOrdersUrl, { headers })
       .pipe(
-        tap(response => this.recentOrdersService.setRecentOrders(response))
+        tap(response => this.orderCacheService.setRecentOrders(response))
       );
   }
 

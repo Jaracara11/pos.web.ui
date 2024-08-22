@@ -17,9 +17,11 @@ export class SalesOfTheDayComponent {
   private destroy$ = new Subject<void>();
   salesOfTheDay = 0;
 
-  constructor(private orderService: OrderService,
+  constructor(
+    private orderService: OrderService,
     private swalAlertService: SwalAlertService,
-    private cacheService: CacheService) { }
+    private cacheService: CacheService
+  ) { }
 
   ngOnInit(): void {
     this.loadTotalSalesOfTheDay();
@@ -34,14 +36,18 @@ export class SalesOfTheDayComponent {
     const cacheKey = 'salesToday';
     const fallbackObservable: Observable<number> = this.orderService.getTotalSalesOfTheDay();
 
-    this.cacheService.cacheObservable(cacheKey, fallbackObservable)
+    this.cacheService.cacheObservable<number>(cacheKey, fallbackObservable)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response: number) => {
           this.salesOfTheDay = response;
         },
         error: (error: HttpErrorResponse) => {
-          this.swalAlertService.swalAlertWithTitle(error.statusText, error?.error?.message, 'error');
+          this.swalAlertService.swalAlertWithTitle(
+            error.statusText,
+            error.error?.message || 'An error occurred',
+            'error'
+          );
         }
       });
   }

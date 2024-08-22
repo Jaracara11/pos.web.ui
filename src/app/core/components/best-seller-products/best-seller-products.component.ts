@@ -17,9 +17,11 @@ export class BestSellerProductsComponent {
   private destroy$ = new Subject<void>();
   bestSellerProducts: BestSellerProduct[] = [];
 
-  constructor(private productService: ProductService,
+  constructor(
+    private productService: ProductService,
     private swalAlertService: SwalAlertService,
-    private cacheService: CacheService) { }
+    private cacheService: CacheService
+  ) { }
 
   ngOnInit(): void {
     this.loadBestSellerProducts();
@@ -34,14 +36,18 @@ export class BestSellerProductsComponent {
     const cacheKey = 'bestSellerProducts';
     const fallbackObservable: Observable<BestSellerProduct[]> = this.productService.getBestSellerProducts();
 
-    this.cacheService.cacheObservable(cacheKey, fallbackObservable)
+    this.cacheService.cacheObservable<BestSellerProduct[]>(cacheKey, fallbackObservable)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response: BestSellerProduct[]) => {
           this.bestSellerProducts = response;
         },
         error: (error: HttpErrorResponse) => {
-          this.swalAlertService.swalAlertWithTitle(error.statusText, error?.error?.message, 'error');
+          this.swalAlertService.swalAlertWithTitle(
+            error.statusText,
+            error.error?.message || 'An error occurred',
+            'error'
+          );
         }
       });
   }
