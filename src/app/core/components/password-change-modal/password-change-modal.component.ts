@@ -89,7 +89,8 @@ export class PasswordChangeModalComponent {
             () => this.router.navigateByUrl('/auth'));
       },
       error: (error: HttpErrorResponse) => {
-        this.swalAlertService.swalAlertWithTitle(error.statusText, error?.error?.message, 'error');
+        const errorMessage = error?.error?.message || 'An error occurred';
+        this.swalAlertService.swalAlertWithTitle(error.statusText, errorMessage, 'error');
       }
     });
   }

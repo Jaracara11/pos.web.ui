@@ -52,7 +52,8 @@ export class ProductAvailabilityComponent {
           this.lowStockProducts = this.getLowStockProducts(response);
         },
         error: (error: HttpErrorResponse) => {
-          this.swalAlertService.swalAlertWithTitle(error.statusText, error.error?.message || 'An error occurred', 'error');
+          const errorMessage = error?.error?.message || 'An error occurred';
+          this.swalAlertService.swalAlertWithTitle(error.statusText, errorMessage, 'error');
         }
       });
   }
