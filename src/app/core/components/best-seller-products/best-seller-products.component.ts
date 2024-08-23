@@ -3,8 +3,7 @@ import { BestSellerProduct } from '../../../shared/interfaces/best-seller-produc
 import { ProductService } from '../../services/product.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { SwalAlertService } from '../../services/swal-alert.service';
-import { CacheService } from '../../services/cache.service';
-import { Observable, Subject, takeUntil } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-best-seller-products',
@@ -19,8 +18,7 @@ export class BestSellerProductsComponent {
 
   constructor(
     private productService: ProductService,
-    private swalAlertService: SwalAlertService,
-    private cacheService: CacheService
+    private swalAlertService: SwalAlertService
   ) { }
 
   ngOnInit(): void {
@@ -33,21 +31,14 @@ export class BestSellerProductsComponent {
   }
 
   private loadBestSellerProducts(): void {
-    const cacheKey = 'bestSellerProducts';
-    const fallbackObservable: Observable<BestSellerProduct[]> = this.productService.getBestSellerProducts();
-
-    this.cacheService.cacheObservable<BestSellerProduct[]>(cacheKey, fallbackObservable)
+    this.productService.getBestSellerProducts()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: (response: BestSellerProduct[]) => {
-          this.bestSellerProducts = response;
+        next: (bestSellerProducts: BestSellerProduct[]) => {
+          this.bestSellerProducts = bestSellerProducts;
         },
         error: (error: HttpErrorResponse) => {
-          this.swalAlertService.swalAlertWithTitle(
-            error.statusText,
-            error.error?.message || 'An error occurred',
-            'error'
-          );
+          this.swalAlertService.swalAlertWithTitle(error.statusText, error.error?.message || 'An error occurred', 'error');
         }
       });
   }
