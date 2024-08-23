@@ -8,6 +8,7 @@ import { OrderProduct } from '../../shared/interfaces/order-product.interface';
 import { RecentOrder } from '../../shared/interfaces/recent-order.interface';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AsyncPipe, CurrencyPipe, DatePipe } from '@angular/common';
+import { ProductService } from '../../core/services/product.service';
 
 @Component({
   selector: 'app-invoice',
@@ -26,6 +27,7 @@ export class InvoiceComponent {
     private route: ActivatedRoute,
     private swalAlertService: SwalAlertService,
     private orderService: OrderService,
+    private productService: ProductService,
     private router: Router
   ) { }
 
@@ -46,7 +48,10 @@ export class InvoiceComponent {
         if (isConfirmed && this.orderId) {
           this.orderService.cancelOrder(this.orderId).pipe(
             takeUntil(this.destroy$),
-            finalize(() => this.orderService.clearOrdersCache())
+            finalize(() => {
+              this.productService.clearProductsCache();
+              this.orderService.clearOrdersCache();
+            })
           ).subscribe({
             next: () => {
               this.swalAlertService.swalMessageAlert('Order cancelled successfully', 'info')
