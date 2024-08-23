@@ -1,11 +1,9 @@
 import { Component } from '@angular/core';
-import { Observable, Subject, switchMap, takeUntil } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { RecentOrder } from '../../../shared/interfaces/recent-order.interface';
 import { OrderService } from '../../services/order.service';
 import { SwalAlertService } from '../../services/swal-alert.service';
-import { CacheService } from '../../services/cache.service';
 import { HttpErrorResponse } from '@angular/common/http';
-import { OrderCacheService } from '../../services/orders-cache.service';
 import { RouterLink } from '@angular/router';
 import { CurrencyPipe, DatePipe } from '@angular/common';
 
@@ -22,9 +20,7 @@ export class RecentOrdersComponent {
 
   constructor(
     private orderService: OrderService,
-    private swalAlertService: SwalAlertService,
-    private cacheService: CacheService,
-    private orderCacheService: OrderCacheService
+    private swalAlertService: SwalAlertService
   ) { }
 
   ngOnInit(): void {
@@ -37,20 +33,11 @@ export class RecentOrdersComponent {
   }
 
   private loadRecentOrders(): void {
-    const cacheKey = 'orders';
-    const fallbackObservable: Observable<RecentOrder[]> = this.orderService.getRecentOrders();
-
-    this.cacheService.cacheObservable<RecentOrder[]>(cacheKey, fallbackObservable)
-      .pipe(
-        takeUntil(this.destroy$),
-        switchMap(orders => {
-          this.orderCacheService.setRecentOrders(orders);
-          return this.orderCacheService.getRecentOrders();
-        })
-      )
+    this.orderService.getRecentOrders()
+      .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: (orders: RecentOrder[]) => {
-          this.recentOrders = orders;
+        next: (recentOrders: RecentOrder[]) => {
+          this.recentOrders = recentOrders;
         },
         error: (error: HttpErrorResponse) => {
           this.swalAlertService.swalAlertWithTitle(error.statusText, error.error?.message || 'An error occurred', 'error');

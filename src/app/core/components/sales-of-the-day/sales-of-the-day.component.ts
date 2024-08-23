@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
-import { Observable, Subject, takeUntil } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { OrderService } from '../../services/order.service';
 import { SwalAlertService } from '../../services/swal-alert.service';
-import { CacheService } from '../../services/cache.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { CurrencyPipe } from '@angular/common';
 
@@ -19,8 +18,7 @@ export class SalesOfTheDayComponent {
 
   constructor(
     private orderService: OrderService,
-    private swalAlertService: SwalAlertService,
-    private cacheService: CacheService
+    private swalAlertService: SwalAlertService
   ) { }
 
   ngOnInit(): void {
@@ -33,21 +31,14 @@ export class SalesOfTheDayComponent {
   }
 
   private loadTotalSalesOfTheDay(): void {
-    const cacheKey = 'salesToday';
-    const fallbackObservable: Observable<number> = this.orderService.getTotalSalesOfTheDay();
-
-    this.cacheService.cacheObservable<number>(cacheKey, fallbackObservable)
+    this.orderService.getTotalSalesOfTheDay()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: (response: number) => {
-          this.salesOfTheDay = response;
+        next: (salesOfTheDay: number) => {
+          this.salesOfTheDay = salesOfTheDay;
         },
         error: (error: HttpErrorResponse) => {
-          this.swalAlertService.swalAlertWithTitle(
-            error.statusText,
-            error.error?.message || 'An error occurred',
-            'error'
-          );
+          this.swalAlertService.swalAlertWithTitle(error.statusText, error.error?.message || 'An error occurred', 'error');
         }
       });
   }

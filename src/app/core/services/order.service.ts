@@ -13,7 +13,10 @@ export class OrderService {
   private _ordersUrl = `${environment.apiUrl}/orders`;
   private _recentOrdersUrl = `${this._ordersUrl}/recent-orders`;
   private _salesTodayUrl = `${this._ordersUrl}/sales-today`;
+
   private recentOrdersCache$: Observable<RecentOrder[]> | null = null;
+  private totalSalesCache$: Observable<number> | null = null;;
+
 
   constructor(
     private http: HttpClient,
@@ -31,8 +34,13 @@ export class OrderService {
   }
 
   getTotalSalesOfTheDay(): Observable<number> {
-    const headers = this.authService.userAuthorizationHeaders();
-    return this.http.get<number>(this._salesTodayUrl, { headers });
+    if (!this.totalSalesCache$) {
+      const headers = this.authService.userAuthorizationHeaders();
+      this.totalSalesCache$ = this.http.get<number>(this._salesTodayUrl, { headers }).pipe(
+        shareReplay(1)
+      );
+    }
+    return this.totalSalesCache$;
   }
 
   getOrderByID(orderID: string): Observable<OrderInfo> {
@@ -43,5 +51,10 @@ export class OrderService {
   cancelOrder(orderID: string): Observable<string> {
     const headers = this.authService.userAuthorizationHeaders();
     return this.http.post<string>(`${this._ordersUrl}/${orderID}/cancel`, {}, { headers });
+  }
+
+  clearOrdersCache(): void {
+    this.recentOrdersCache$ = null;
+    this.totalSalesCache$ = null;
   }
 }

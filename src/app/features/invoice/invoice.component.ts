@@ -8,7 +8,6 @@ import { OrderProduct } from '../../shared/interfaces/order-product.interface';
 import { RecentOrder } from '../../shared/interfaces/recent-order.interface';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AsyncPipe, CurrencyPipe, DatePipe } from '@angular/common';
-import { CacheService } from '../../core/services/cache.service';
 
 @Component({
   selector: 'app-invoice',
@@ -27,8 +26,7 @@ export class InvoiceComponent {
     private route: ActivatedRoute,
     private swalAlertService: SwalAlertService,
     private orderService: OrderService,
-    private router: Router,
-    private cacheService: CacheService
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -48,17 +46,15 @@ export class InvoiceComponent {
         if (isConfirmed && this.orderId) {
           this.orderService.cancelOrder(this.orderId).pipe(
             takeUntil(this.destroy$),
-            finalize(() => {
-              this.swalAlertService.swalMessageAlert('Order cancelled successfully', 'info')
-                .then(() => {
-                  this.cacheService.clearCache('orders');
-                  this.router.navigateByUrl('/');
-                });
-            })
+            finalize(() => this.orderService.clearOrdersCache())
           ).subscribe({
-            next: () => { },
+            next: () => {
+              this.swalAlertService.swalMessageAlert('Order cancelled successfully', 'info')
+                .then(() => this.router.navigateByUrl('/'));
+            },
             error: (error: HttpErrorResponse) => {
-              this.swalAlertService.swalAlertWithTitle(error.statusText, error?.error?.message, 'error');
+              const errorMessage = error?.error?.message || 'An error occurred';
+              this.swalAlertService.swalAlertWithTitle(error.statusText, errorMessage, 'error');
             }
           });
         }
@@ -69,8 +65,8 @@ export class InvoiceComponent {
     window.print();
   }
 
-  calculateOrderTotal(index: number, productList: OrderProduct[]): number {
-    return productList.slice(0, index + 1).reduce((total, item) =>
+  calculateOrderTotal(productList: OrderProduct[]): number {
+    return productList.reduce((total, item) =>
       total + (item.productPrice || 0) * (item.productQuantity || 1), 0);
   }
 
@@ -98,13 +94,17 @@ export class InvoiceComponent {
 
   private parseOrderInfo(orderData: OrderInfo): OrderInfo {
     if (typeof orderData.products === 'string') {
-      orderData.products = JSON.parse(orderData.products).map((product: any) => ({
-        productName: product.ProductName,
-        productDescription: product.ProductDescription,
-        productQuantity: product.ProductQuantity,
-        productPrice: product.ProductPrice,
-        productCategory: product.ProductCategoryName
-      }));
+      try {
+        orderData.products = JSON.parse(orderData.products).map((product: any) => ({
+          productName: product.ProductName,
+          productDescription: product.ProductDescription,
+          productQuantity: product.ProductQuantity,
+          productPrice: product.ProductPrice,
+          productCategory: product.ProductCategoryName
+        }));
+      } catch (error) {
+        this.swalAlertService.swalAlertWithTitle('Parsing Error', 'Failed to load products for the order', 'error');
+      }
     }
     return orderData;
   }

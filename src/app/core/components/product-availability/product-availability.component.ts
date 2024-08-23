@@ -1,9 +1,8 @@
 import { Component } from '@angular/core';
-import { Observable, Subject, takeUntil } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { Product } from '../../../shared/interfaces/product.interface';
 import { ProductService } from '../../services/product.service';
 import { SwalAlertService } from '../../services/swal-alert.service';
-import { CacheService } from '../../services/cache.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { NgClass } from '@angular/common';
 
@@ -20,8 +19,7 @@ export class ProductAvailabilityComponent {
 
   constructor(
     private productService: ProductService,
-    private swalAlertService: SwalAlertService,
-    private cacheService: CacheService
+    private swalAlertService: SwalAlertService
   ) { }
 
   ngOnInit(): void {
@@ -47,16 +45,11 @@ export class ProductAvailabilityComponent {
   }
 
   private loadAllProducts(): void {
-    const cacheKey = 'products';
-    const fallbackObservable: Observable<Product[]> = this.productService.getAllProducts();
-
-    this.cacheService.cacheObservable<Product[]>(cacheKey, fallbackObservable)
+    this.productService.getAllProducts()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: (response: Product[]) => {
-          if (response) {
-            this.lowStockProducts = this.getLowStockProducts(response);
-          }
+        next: (products: Product[]) => {
+          this.lowStockProducts = this.getLowStockProducts(products);
         },
         error: (error: HttpErrorResponse) => {
           this.swalAlertService.swalAlertWithTitle(error.statusText, error.error?.message || 'An error occurred', 'error');

@@ -12,7 +12,9 @@ import { Product } from '../../shared/interfaces/product.interface';
 export class ProductService {
   private _productsUrl = `${environment.apiUrl}/products`;
   private _bestSellersUrl = `${this._productsUrl}/best-sellers`;
+
   private productsCache$: Observable<Product[]> | null = null;
+  private bestSellersCache$: Observable<BestSellerProduct[]> | null = null;
 
   constructor(private http: HttpClient, private authService: AuthService) { }
 
@@ -26,12 +28,18 @@ export class ProductService {
     return this.productsCache$;
   }
 
-  clearProductsCache(): void {
-    this.productsCache$ = null;
+  getBestSellerProducts(): Observable<BestSellerProduct[]> {
+    if (!this.bestSellersCache$) {
+      const headers = this.authService.userAuthorizationHeaders();
+      this.bestSellersCache$ = this.http.get<BestSellerProduct[]>(this._bestSellersUrl, { headers }).pipe(
+        shareReplay(1)
+      );
+    }
+    return this.bestSellersCache$;
   }
 
-  getBestSellerProducts(): Observable<BestSellerProduct[]> {
-    const headers = this.authService.userAuthorizationHeaders();
-    return this.http.get<BestSellerProduct[]>(this._bestSellersUrl, { headers });
+  clearProductsCache(): void {
+    this.productsCache$ = null;
+    this.bestSellersCache$ = null;
   }
 }
