@@ -34,8 +34,8 @@ export class SalesOfTheDayComponent {
     this.orderService.getTotalSalesOfTheDay()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: (salesOfTheDay: number) => {
-          this.salesOfTheDay = salesOfTheDay;
+        next: (response: number) => {
+          this.salesOfTheDay = response;
         },
         error: (error: HttpErrorResponse) => {
           this.swalAlertService.swalAlertWithTitle(error.statusText, error.error?.message || 'An error occurred', 'error');

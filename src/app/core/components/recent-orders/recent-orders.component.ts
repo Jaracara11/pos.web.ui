@@ -36,8 +36,8 @@ export class RecentOrdersComponent {
     this.orderService.getRecentOrders()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: (recentOrders: RecentOrder[]) => {
-          this.recentOrders = recentOrders;
+        next: (response: RecentOrder[]) => {
+          this.recentOrders = response;
         },
         error: (error: HttpErrorResponse) => {
           this.swalAlertService.swalAlertWithTitle(error.statusText, error.error?.message || 'An error occurred', 'error');

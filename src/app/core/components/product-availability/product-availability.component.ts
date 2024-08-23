@@ -48,8 +48,8 @@ export class ProductAvailabilityComponent {
     this.productService.getAllProducts()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: (products: Product[]) => {
-          this.lowStockProducts = this.getLowStockProducts(products);
+        next: (response: Product[]) => {
+          this.lowStockProducts = this.getLowStockProducts(response);
         },
         error: (error: HttpErrorResponse) => {
           this.swalAlertService.swalAlertWithTitle(error.statusText, error.error?.message || 'An error occurred', 'error');

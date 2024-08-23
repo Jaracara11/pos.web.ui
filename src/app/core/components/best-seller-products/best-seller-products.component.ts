@@ -34,8 +34,8 @@ export class BestSellerProductsComponent {
     this.productService.getBestSellerProducts()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: (bestSellerProducts: BestSellerProduct[]) => {
-          this.bestSellerProducts = bestSellerProducts;
+        next: (response: BestSellerProduct[]) => {
+          this.bestSellerProducts = response;
         },
         error: (error: HttpErrorResponse) => {
           this.swalAlertService.swalAlertWithTitle(error.statusText, error.error?.message || 'An error occurred', 'error');

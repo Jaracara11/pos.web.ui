@@ -40,8 +40,8 @@ export class InventoryComponent {
     this.productService.getAllProducts()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: (products: Product[]) => {
-          this.products = products;
+        next: (response: Product[]) => {
+          this.products = response;
         },
         error: (error: HttpErrorResponse) => {
           this.swalAlertService.swalAlertWithTitle(error.statusText, error.error?.message || 'An error occurred', 'error');
