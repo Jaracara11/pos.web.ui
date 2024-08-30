@@ -6,11 +6,12 @@ import { Product } from '../../shared/interfaces/product.interface';
 import { Subject, takeUntil } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 import { SwalAlertService } from '../../core/services/swal-alert.service';
+import { CurrencyPipe } from '@angular/common';
 
 @Component({
   selector: 'app-inventory',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, CurrencyPipe],
   templateUrl: './inventory.component.html',
   styleUrl: './inventory.component.css'
 })

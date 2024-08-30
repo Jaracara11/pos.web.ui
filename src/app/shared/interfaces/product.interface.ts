@@ -5,6 +5,6 @@ export interface Product {
   productStock: number;
   productCost: number;
   productPrice: number;
-  productCategoryID: number;
   productQuantity?: number;
+  productCategoryName: string;
 }

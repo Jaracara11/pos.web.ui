@@ -1,0 +1,12 @@
+.btn-dark {
+  margin-right: 1rem;
+}
+
+table {
+  margin-top: 1rem;
+}
+
+tbody tr td:nth-child(7) {
+  display: flex;
+  justify-content: center;
+}

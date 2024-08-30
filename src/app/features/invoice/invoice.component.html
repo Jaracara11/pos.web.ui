@@ -23,7 +23,7 @@
             <td>{{product.productName}}</td>
             <td>{{product.productPrice | currency}}</td>
             <td>{{product.productQuantity}} unit(s)</td>
-            <td>{{calculateOrderTotal($index, orderInfo.products) | currency}}</td>
+            <td>{{calculateOrderTotal(orderInfo.products) | currency}}</td>
           </tr>
           }
           @empty {<small class="text-muted">No invoice data to display</small>}
