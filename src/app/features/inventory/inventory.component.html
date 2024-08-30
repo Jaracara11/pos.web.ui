@@ -11,6 +11,8 @@
       </button>
       <a class="btn btn-outline-dark" routerLink="/auth"><i class="bi bi-globe"></i>
         &nbsp;Show All Categories</a>
+      <app-search-input [searchQuery]="searchQuery"
+        (searchQueryChange)="onSearchQueryChange($event)"></app-search-input>
     </div>
     }
   </div>
@@ -28,7 +30,7 @@
         </tr>
       </thead>
       <tbody>
-        @for (product of products; track product.productID) {
+        @for (product of filteredProducts; track product.productID) {
         <tr>
           <td>{{product.productName}}</td>
           <td>{{product.productDescription}}</td>
