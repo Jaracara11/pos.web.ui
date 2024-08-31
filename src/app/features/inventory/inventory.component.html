@@ -42,12 +42,12 @@
           <td>{{product.productCost | currency}}</td>
           <td>{{product.productPrice | currency}}</td>
           <td>{{product.productCategoryName}}</td>
-          <td>@if (validateRolePermission){<button class="btn btn-outline-dark">
+          <td>@if (validateRolePermission) {
+            <button class="btn btn-outline-dark">
               <i class="bi bi-pencil"></i>&nbsp;
               Edit</button>}
           </td>
-        </tr>
-        }
+        </tr>}
         @empty {<small class="text-muted">No products to display</small>}
       </tbody>
     </table>
