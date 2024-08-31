@@ -20,8 +20,6 @@ export class InventoryComponent {
   private destroy$ = new Subject<void>();
   products: Product[] = [];
   filteredProducts: Product[] = [];
-  searchQuery: string = '';
-  searchQuery$ = new Subject<string>();
   validateRolePermission: boolean;
 
   constructor(
@@ -34,12 +32,19 @@ export class InventoryComponent {
 
   ngOnInit(): void {
     this.loadProducts();
-    this.handleSearchQueryChanges();
   }
 
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  onFilteredProductsChange(filteredProducts: Product[]): void {
+    this.filteredProducts = filteredProducts;
+  }
+
+  getSearchProperty(item: Product): string {
+    return `${item.productName} ${item.productDescription} ${item.productCategoryName}`;
   }
 
   private loadProducts(): void {
@@ -55,29 +60,5 @@ export class InventoryComponent {
           this.swalAlertService.swalAlertWithTitle(error.statusText, errorMessage, 'error');
         }
       });
-  }
-
-  onSearchQueryChange(query: string): void {
-    this.searchQuery$.next(query);
-  }
-
-  private handleSearchQueryChanges(): void {
-    this.searchQuery$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(query => {
-        this.filterProducts(query);
-      });
-  }
-
-  private filterProducts(query: string): void {
-    if (!query) {
-      this.filteredProducts = this.products;
-    } else {
-      this.filteredProducts = this.products.filter(product =>
-        product.productName.toLowerCase().includes(query.toLowerCase()) ||
-        product.productDescription.toLowerCase().includes(query.toLowerCase()) ||
-        product.productCategoryName.toLowerCase().includes(query.toLowerCase())
-      );
-    }
   }
 }

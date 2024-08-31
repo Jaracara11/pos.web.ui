@@ -1,5 +1,7 @@
-<div class="search-input">
-  <input type="search" placeholder="Search..." [value]="searchQuery" (input)="onSearchInputChange($event)"
-    class="form-control" />
-  <i [ngClass]="searchQuery ? 'bi-x-lg' : 'bi-search'" (click)="clearSearchQuery()"></i>
+<div class="input-group">
+  <input class="form-control" type="search" [ngModel]="searchQuery" (ngModelChange)="onSearchQueryChange($event)"
+    placeholder="Search..." />
+  <span class="input-group-text">
+    <i class="bi" [ngClass]="searchQuery ? 'bi-x-lg' : 'bi-search'" (click)="onSearchQueryChange('')"></i>
+  </span>
 </div>

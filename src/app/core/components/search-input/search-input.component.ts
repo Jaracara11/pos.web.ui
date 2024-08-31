@@ -1,23 +1,33 @@
 import { NgClass } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-search-input',
   standalone: true,
-  imports: [NgClass],
+  imports: [NgClass, FormsModule],
   templateUrl: './search-input.component.html',
   styleUrl: './search-input.component.css'
 })
-export class SearchInputComponent {
-  @Input() searchQuery: string = '';
-  @Output() searchQueryChange = new EventEmitter<string>();
+export class SearchInputComponent<T> {
+  @Input() items: T[] = [];
+  @Input() searchProperty: (item: T) => string = () => '';
+  @Output() filteredItemsChange = new EventEmitter<T[]>();
+  searchQuery: string = '';
 
-  onSearchInputChange(event: Event): void {
-    const value = (event.target as HTMLInputElement).value;
-    this.searchQueryChange.emit(value);
+  onSearchQueryChange(query: string): void {
+    this.searchQuery = query;
+    this.filterItems(query);
   }
 
-  clearSearchQuery(): void {
-    this.searchQueryChange.emit('');
+  private filterItems(query: string): void {
+    if (!query) {
+      this.filteredItemsChange.emit(this.items);
+    } else {
+      const filtered = this.items.filter(item =>
+        this.searchProperty(item).toLowerCase().includes(query.toLowerCase())
+      );
+      this.filteredItemsChange.emit(filtered);
+    }
   }
 }
