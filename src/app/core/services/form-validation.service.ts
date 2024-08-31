@@ -31,6 +31,19 @@ export class FormValidationService {
     });
   }
 
+  upsertProductForm(): FormGroup {
+    return this.formBuilder.group({
+      productID: ['', [Validators.minLength(3), Validators.maxLength(50)]],
+      productName: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
+      productDescription: ['', [Validators.maxLength(100)]],
+      productStock: ['', [Validators.required, Validators.min(0)]],
+      productQuantity: ['', [Validators.min(0)]],
+      productCost: ['', [Validators.required, Validators.min(0.01)]],
+      productPrice: ['', [Validators.required, Validators.min(0.01)]],
+      productCategoryName: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(50)]],
+    });
+  }
+
   getFieldErrorMessage(form: FormGroup, fieldName: string): string | null {
     const field = form.get(fieldName);
 

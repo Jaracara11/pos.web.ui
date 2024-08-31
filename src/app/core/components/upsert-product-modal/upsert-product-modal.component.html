@@ -1,0 +1,15 @@
+<ng-template #upsertProductModal let-modal>
+  <div class="modal-body modal-sm">
+    <form [formGroup]="productUpsertForm" (ngSubmit)="onSubmit()">
+      <h5 class="title">{{product ? 'Edit Product' : 'Add New Product'}}</h5>
+
+      @if (isSubmitting$ | async) {
+      <app-loading-spinner></app-loading-spinner>
+      } @else {
+      <div>
+
+      </div>
+      }
+    </form>
+  </div>
+</ng-template>
