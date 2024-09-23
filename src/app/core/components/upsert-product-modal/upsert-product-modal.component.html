@@ -2,12 +2,39 @@
   <div class="modal-body modal-sm">
     <form [formGroup]="productUpsertForm" (ngSubmit)="onSubmit()">
       <h5 class="title">{{product ? 'Edit Product' : 'Add New Product'}}</h5>
-
       @if (isSubmitting$ | async) {
       <app-loading-spinner></app-loading-spinner>
       } @else {
       <div>
-
+        <div class="product-input">
+          <input class="form-control" type="text" placeholder="Product Name" formControlName="productName"
+            autocomplete="off" />
+          <small class="text-danger">
+            {{ getProductErrorMessage("productName") }}
+          </small>
+        </div>
+        <div class="product-input">
+          <input class="form-control" type="text" placeholder="Product Description" formControlName="productDescription"
+            autocomplete="off" />
+          <small class="text-danger">
+            {{ getProductErrorMessage("productDescription") }}
+          </small>
+        </div>
+        <!-- <div class="product-input">
+          <input class="form-control" type="text" placeholder="Product Category" formControlName="productCategory"
+            autocomplete="off" />
+          <label for="productCategory">Product Category</label>
+          <select id="productCategory" class="form-control" formControlName="productCategory">
+            <option *ngFor="let category of categories" [value]="category">
+              {{ category }}
+            </option>
+            @for (category of categories; track category.categoryID) {
+            <option [value]="category">
+              {{ category }}
+            </option>
+            }
+          </select>
+        </div> -->
       </div>
       }
     </form>
