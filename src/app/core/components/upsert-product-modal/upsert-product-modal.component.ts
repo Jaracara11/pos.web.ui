@@ -1,4 +1,4 @@
-import { Component, Input, TemplateRef, ViewChild } from '@angular/core';
+import { Component, TemplateRef, ViewChild } from '@angular/core';
 import { Product } from '../../../shared/interfaces/product.interface';
 import { NgbModal, NgbModalOptions, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Observable } from 'rxjs';
@@ -18,11 +18,11 @@ import { AsyncPipe } from '@angular/common';
 })
 export class UpsertProductModalComponent {
   @ViewChild('upsertProductModal') upsertProductModal!: TemplateRef<any>;
-  @Input() product: Product | null = null;
 
   modalRef: NgbModalRef | undefined;
   isSubmitting$: Observable<boolean>;
   productUpsertForm: FormGroup;
+  product: Product | null = null;
 
   constructor(private modalService: NgbModal,
     private formValidationService: FormValidationService,
@@ -40,12 +40,22 @@ export class UpsertProductModalComponent {
     return this.formValidationService.getFormErrorMessage(this.productUpsertForm);
   }
 
-  openModal(): void {
+  openModal(selectedProduct: Product | null): void {
+    this.product = selectedProduct;
     const modalOptions: NgbModalOptions = {
       centered: true,
       size: 'sm',
       windowClass: 'modal-centered'
     };
+
+    if (selectedProduct) {
+      this.productUpsertForm.patchValue({
+        productName: selectedProduct.productName,
+        productDescription: selectedProduct.productDescription,
+      });
+    } else {
+      this.productUpsertForm.reset();
+    }
 
     this.modalRef = this.modalService.open(this.upsertProductModal, modalOptions);
     this.modalRef.result.then(() => this.productUpsertForm.reset(), () => this.productUpsertForm.reset());

@@ -56,7 +56,7 @@ export class InventoryComponent {
     } else {
       this.selectedProduct = null;
     }
-    this.upsertProductModal.openModal();
+    this.upsertProductModal.openModal(this.selectedProduct);
   }
 
   private loadProducts(): void {
