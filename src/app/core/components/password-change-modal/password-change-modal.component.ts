@@ -54,7 +54,7 @@ export class PasswordChangeModalComponent {
     const errorType = this.passwordChangeForm.errors ? Object.keys(this.passwordChangeForm.errors)[0] : null;
 
     const errorMessages: Record<string, string> = {
-      passwordsMismatch: 'New passwords do not match.',
+      passwordsMismatch: 'New password do not match.',
       newPasswordSameAsOld: 'New password cannot be the same as the old password.'
     };
 
@@ -77,32 +77,38 @@ export class PasswordChangeModalComponent {
       return;
     }
 
-    const userData: PasswordChange = {
-      username: this.user.username,
-      oldpassword: this.passwordChangeForm.value.oldPassword,
-      newPassword: this.passwordChangeForm.value.newPassword
-    };
+    this.swalAlertService.swalConfirmationAlert
+      ('Are you sure you want to change your password?', 'Yes, change it', 'warning')
+      .then((isConfirmed) => {
+        if (isConfirmed) {
+          const userData: PasswordChange = {
+            username: this.user.username,
+            oldpassword: this.passwordChangeForm.value.oldPassword,
+            newPassword: this.passwordChangeForm.value.newPassword
+          };
 
-    this.loadingService.setLoadingState = true;
+          this.loadingService.setLoadingState = true;
 
-    this.userService.changeUserPassword(userData).pipe(
-      finalize(() => {
-        this.loadingService.setLoadingState = false;
-        this.modalRef?.close();
-      })
-    ).subscribe({
-      next: () => {
-        localStorage.removeItem('user');
-        this.swalAlertService.swalAlertWithTitle(
-          'Password changed successfully!',
-          'Please sign in again.',
-          'info'
-        ).then(() => this.router.navigateByUrl('/auth'));
-      },
-      error: (error: HttpErrorResponse) => {
-        const errorMessage = error?.error?.message || 'An error occurred';
-        this.swalAlertService.swalAlertWithTitle(error.statusText, errorMessage, 'error');
-      }
-    });
+          this.userService.changeUserPassword(userData).pipe(
+            finalize(() => {
+              this.loadingService.setLoadingState = false;
+              this.modalRef?.close();
+            })
+          ).subscribe({
+            next: () => {
+              localStorage.removeItem('user');
+              this.swalAlertService.swalAlertWithTitle(
+                'Password changed successfully!',
+                'Please sign in again.',
+                'info'
+              ).then(() => this.router.navigateByUrl('/auth'));
+            },
+            error: (error: HttpErrorResponse) => {
+              const errorMessage = error?.error?.message || 'An error occurred';
+              this.swalAlertService.swalAlertWithTitle(error.statusText, errorMessage, 'error');
+            }
+          });
+        }
+      });
   }
 }
