@@ -41,7 +41,7 @@
           <label class="modal-label" for="productCategoryName">Product Category</label>
           }
           <select class="form-control" formControlName="productCategoryName">
-            @if (!product){
+            @if (!product) {
             <option value="" disabled>Select a category...</option>
             }
             <option *ngFor="let category of categories" [value]="category.categoryName">
@@ -52,7 +52,26 @@
             {{ getProductErrorMessage("productCategoryName") }}
           </small>
         </div>
-
+        <div class="product-input">
+          @if (product) {
+          <label class="modal-label" for="productStock">Product Stock</label>
+          }
+          <input class="form-control" type="number" placeholder="Product Stock" formControlName="productStock"
+            autocomplete="off" />
+          <small class="text-danger">
+            {{ getProductErrorMessage("productStock") }}
+          </small>
+        </div>
+        <div class="product-input">
+          @if (product) {
+          <label class="modal-label" for="productPrice">Product Price</label>
+          }
+          <input class="form-control" type="number" placeholder="Product Price" formControlName="productPrice"
+            autocomplete="off" />
+          <small class="text-danger">
+            {{ getProductErrorMessage("productPrice") }}
+          </small>
+        </div>
       </div>
       }
     </form>

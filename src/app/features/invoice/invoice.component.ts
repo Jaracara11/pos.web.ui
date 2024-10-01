@@ -70,11 +70,6 @@ export class InvoiceComponent {
     window.print();
   }
 
-  calculateOrderTotal(productList: OrderProduct[]): number {
-    return productList.reduce((total, item) =>
-      total + (item.productPrice || 0) * (item.productQuantity || 1), 0);
-  }
-
   formatOrderID(orderID: string): string {
     const formattedOrderID = orderID.split('-');
     return formattedOrderID[formattedOrderID.length - 1];

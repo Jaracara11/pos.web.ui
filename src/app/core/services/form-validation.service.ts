@@ -58,6 +58,8 @@ export class FormValidationService {
               return `${fieldName} cannot have less than ${errors['minlength'].requiredLength} characters.`;
             case 'maxlength':
               return `${fieldName} cannot exceed ${errors['maxlength'].requiredLength} characters.`;
+            case 'min':
+              return `${fieldName} cannot be a negative number.`;
           }
         }
       }

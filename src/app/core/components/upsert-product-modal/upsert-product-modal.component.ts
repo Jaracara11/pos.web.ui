@@ -57,7 +57,9 @@ export class UpsertProductModalComponent {
         productID: selectedProduct.productID,
         productName: selectedProduct.productName,
         productDescription: selectedProduct.productDescription,
-        productCategoryName: selectedProduct.productCategory.categoryName
+        productCategoryName: selectedProduct.productCategory.categoryName,
+        productStock: selectedProduct.productStock,
+        productPrice: selectedProduct.productPrice
       });
     } else {
       this.productUpsertForm.reset();
