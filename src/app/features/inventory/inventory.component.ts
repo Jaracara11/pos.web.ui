@@ -9,6 +9,8 @@ import { SwalAlertService } from '../../core/services/swal-alert.service';
 import { CurrencyPipe } from '@angular/common';
 import { SearchInputComponent } from '../../core/components/search-input/search-input.component';
 import { UpsertProductModalComponent } from '../../core/components/upsert-product-modal/upsert-product-modal.component';
+import { Category } from '../../shared/interfaces/category.interface';
+import { CategoryService } from '../../core/services/category.service';
 
 @Component({
   selector: 'app-inventory',
@@ -21,6 +23,7 @@ export class InventoryComponent {
   @ViewChild(UpsertProductModalComponent) upsertProductModal!: UpsertProductModalComponent;
   private destroy$ = new Subject<void>();
   products: Product[] = [];
+  categories: Category[] = [];
   filteredProducts: Product[] = [];
   selectedProduct: Product | null = null;
   validateRolePermission: boolean;
@@ -28,6 +31,7 @@ export class InventoryComponent {
   constructor(
     private authService: AuthService,
     private productService: ProductService,
+    private categoryService: CategoryService,
     private swalAlertService: SwalAlertService
   ) {
     this.validateRolePermission = this.authService.validateUserRolePermission(['Admin', 'Manager']);
@@ -35,6 +39,7 @@ export class InventoryComponent {
 
   ngOnInit(): void {
     this.loadProducts();
+    this.loadCategories();
   }
 
   ngOnDestroy(): void {
@@ -56,7 +61,7 @@ export class InventoryComponent {
     } else {
       this.selectedProduct = null;
     }
-    this.upsertProductModal.openModal(this.selectedProduct);
+    this.upsertProductModal.openModal(this.selectedProduct, this.categories);
   }
 
   private loadProducts(): void {
@@ -66,6 +71,21 @@ export class InventoryComponent {
         next: (response: Product[]) => {
           this.products = response;
           this.filteredProducts = this.products;
+        },
+        error: (error: HttpErrorResponse) => {
+          const errorMessage = error?.error?.message || 'An error occurred';
+          this.swalAlertService.swalAlertWithTitle(error.statusText, errorMessage, 'error');
+        }
+      });
+  }
+
+  private loadCategories(): void {
+    this.categoryService.getAllCategories()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response: Category[]) => {
+          this.categories = response;
+          console.log(this.categories);
         },
         error: (error: HttpErrorResponse) => {
           const errorMessage = error?.error?.message || 'An error occurred';

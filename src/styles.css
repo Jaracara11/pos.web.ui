@@ -29,6 +29,11 @@ body {
   margin-bottom: 0.5rem;
 }
 
+.modal-label {
+  font-weight: bold;
+  font-size: small;
+}
+
 @media print {
   body {
     visibility: hidden;

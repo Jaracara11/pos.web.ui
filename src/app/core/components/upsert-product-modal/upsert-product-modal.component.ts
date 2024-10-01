@@ -8,6 +8,7 @@ import { LoadingService } from '../../services/loading.service';
 import { SwalAlertService } from '../../services/swal-alert.service';
 import { LoadingSpinnerComponent } from '../loading-spinner/loading-spinner.component';
 import { AsyncPipe } from '@angular/common';
+import { Category } from '../../../shared/interfaces/category.interface';
 
 @Component({
   selector: 'app-upsert-product-modal',
@@ -23,6 +24,7 @@ export class UpsertProductModalComponent {
   isSubmitting$: Observable<boolean>;
   productUpsertForm: FormGroup;
   product: Product | null = null;
+  categories: Category[] = [];
 
   constructor(private modalService: NgbModal,
     private formValidationService: FormValidationService,
@@ -40,18 +42,22 @@ export class UpsertProductModalComponent {
     return this.formValidationService.getFormErrorMessage(this.productUpsertForm);
   }
 
-  openModal(selectedProduct: Product | null): void {
+  openModal(selectedProduct: Product | null, categoriesList: Category[]): void {
     this.product = selectedProduct;
+    this.categories = categoriesList;
     const modalOptions: NgbModalOptions = {
       centered: true,
-      size: 'sm',
+      size: 'md',
       windowClass: 'modal-centered'
     };
 
     if (selectedProduct) {
+      this.productUpsertForm.get('productID')?.disable();
       this.productUpsertForm.patchValue({
+        productID: selectedProduct.productID,
         productName: selectedProduct.productName,
         productDescription: selectedProduct.productDescription,
+        productCategoryName: selectedProduct.productCategoryName
       });
     } else {
       this.productUpsertForm.reset();

@@ -7,6 +7,19 @@
       } @else {
       <div>
         <div class="product-input">
+          @if (product) {
+          <label class="modal-label" for="productID">Product ID</label>
+          }
+          <input class="form-control" type="text" placeholder="Product ID" formControlName="productID"
+            autocomplete="off" />
+          <small class="text-danger">
+            {{ getProductErrorMessage("productID") }}
+          </small>
+        </div>
+        <div class="product-input">
+          @if (product) {
+          <label class="modal-label" for="productName">Product Name</label>
+          }
           <input class="form-control" type="text" placeholder="Product Name" formControlName="productName"
             autocomplete="off" />
           <small class="text-danger">
@@ -14,27 +27,28 @@
           </small>
         </div>
         <div class="product-input">
+          @if (product) {
+          <label class="modal-label" for="productDescription">Product Description</label>
+          }
           <input class="form-control" type="text" placeholder="Product Description" formControlName="productDescription"
             autocomplete="off" />
           <small class="text-danger">
             {{ getProductErrorMessage("productDescription") }}
           </small>
         </div>
-        <!-- <div class="product-input">
-          <input class="form-control" type="text" placeholder="Product Category" formControlName="productCategory"
-            autocomplete="off" />
+        <div class="product-input">
           <label for="productCategory">Product Category</label>
           <select id="productCategory" class="form-control" formControlName="productCategory">
             <option *ngFor="let category of categories" [value]="category">
               {{ category }}
             </option>
             @for (category of categories; track category.categoryID) {
-            <option [value]="category">
-              {{ category }}
+            <option [value]="category.categoryName">
+              {{ category.categoryName }}
             </option>
             }
           </select>
-        </div> -->
+        </div>
       </div>
       }
     </form>
