@@ -37,8 +37,13 @@
           </small>
         </div>
         <div class="product-input">
-          <label class="modal-label" for="productCategory">Product Category</label>
+          @if (product) {
+          <label class="modal-label" for="productCategoryName">Product Category</label>
+          }
           <select class="form-control" formControlName="productCategoryName">
+            @if (!product){
+            <option value="" disabled>Select a category...</option>
+            }
             <option *ngFor="let category of categories" [value]="category.categoryName">
               {{ category.categoryName }}
             </option>
@@ -47,6 +52,7 @@
             {{ getProductErrorMessage("productCategoryName") }}
           </small>
         </div>
+
       </div>
       }
     </form>

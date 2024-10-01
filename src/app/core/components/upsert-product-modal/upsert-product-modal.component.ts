@@ -61,6 +61,9 @@ export class UpsertProductModalComponent {
       });
     } else {
       this.productUpsertForm.reset();
+      this.productUpsertForm.patchValue({
+        productCategoryName: ''
+      });
     }
 
     this.modalRef = this.modalService.open(this.upsertProductModal, modalOptions);
