@@ -51,7 +51,14 @@ export class PasswordChangeModalComponent {
   }
 
   getFormErrorMessage(): string | null {
-    return this.formValidationService.getFormErrorMessage(this.passwordChangeForm);
+    const errorType = this.passwordChangeForm.errors ? Object.keys(this.passwordChangeForm.errors)[0] : null;
+
+    const errorMessages: Record<string, string> = {
+      passwordsMismatch: 'New passwords do not match.',
+      newPasswordSameAsOld: 'New password cannot be the same as the old password.'
+    };
+
+    return errorType ? errorMessages[errorType] : null;
   }
 
   openModal(): void {
@@ -66,7 +73,9 @@ export class PasswordChangeModalComponent {
   }
 
   onSubmit(): void {
-    if (this.passwordChangeForm.invalid) { return; }
+    if (this.passwordChangeForm.invalid) {
+      return;
+    }
 
     const userData: PasswordChange = {
       username: this.user.username,
@@ -84,9 +93,11 @@ export class PasswordChangeModalComponent {
     ).subscribe({
       next: () => {
         localStorage.removeItem('user');
-        this.swalAlertService.swalAlertWithTitle
-          ('Password changed successfully!', 'Please sign in again.', 'info').then(
-            () => this.router.navigateByUrl('/auth'));
+        this.swalAlertService.swalAlertWithTitle(
+          'Password changed successfully!',
+          'Please sign in again.',
+          'info'
+        ).then(() => this.router.navigateByUrl('/auth'));
       },
       error: (error: HttpErrorResponse) => {
         const errorMessage = error?.error?.message || 'An error occurred';

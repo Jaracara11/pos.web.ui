@@ -16,82 +16,52 @@ export class FormValidationService {
 
   createAuthForm(): FormGroup {
     return this.formBuilder.group({
-      username: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(25)]],
-      password: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(25)]],
+      username: this.getRequiredField(3, 25),
+      password: this.getRequiredField(4, 25),
     });
   }
 
   createPasswordChangeForm(): FormGroup {
-    return this.formBuilder.group({
-      oldPassword: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(25)]],
-      newPassword: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(25)]],
-      repeatNewPassword: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(25)]],
-    }, {
-      validators: [this.passwordsMatchValidator()],
-    });
+    return this.formBuilder.group(
+      {
+        oldPassword: this.getRequiredField(4, 25),
+        newPassword: this.getRequiredField(4, 25),
+        repeatNewPassword: this.getRequiredField(4, 25),
+      },
+      { validators: [this.passwordsMatchValidator()] }
+    );
   }
 
   upsertProductForm(): FormGroup {
     return this.formBuilder.group({
       productID: ['', [Validators.minLength(3), Validators.maxLength(50)]],
-      productName: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
+      productName: this.getRequiredField(3, 50),
       productDescription: ['', [Validators.maxLength(100)]],
       productStock: ['', [Validators.required, Validators.min(0)]],
       productQuantity: ['', [Validators.min(0)]],
       productCost: ['', [Validators.required, Validators.min(0.01)]],
       productPrice: ['', [Validators.required, Validators.min(0.01)]],
-      productCategoryName: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(50)]],
+      productCategoryName: this.getRequiredField(4, 50),
     });
   }
 
   getFieldErrorMessage(form: FormGroup, fieldName: string): string | null {
     const field = form.get(fieldName);
-
     if (field && this.isFieldInvalid(field)) {
-      const errors = field.errors as ValidationErrors;
-      for (const errorType in errors) {
-        if (errors.hasOwnProperty(errorType)) {
-          switch (errorType) {
-            case 'required':
-              return `${fieldName} is required.`;
-            case 'minlength':
-              return `${fieldName} cannot have less than ${errors['minlength'].requiredLength} characters.`;
-            case 'maxlength':
-              return `${fieldName} cannot exceed ${errors['maxlength'].requiredLength} characters.`;
-            case 'min':
-              return `${fieldName} cannot be a negative number.`;
-          }
-        }
-      }
-    }
-
-    return null;
-  }
-
-  getFormErrorMessage(form: FormGroup): string | null {
-    if (form.errors && this.isFieldInvalid(form)) {
-      return this.customErrorMessage(form);
+      const error = Object.keys(field.errors || {})[0];
+      return this.getErrorMessage(fieldName, error, field.errors?.[error]);
     }
     return null;
   }
 
-  private customErrorMessage(form: FormGroup): string {
-    if (!form.errors) { return ''; }
-
-    for (const errorType in form.errors) {
-      if (form.errors.hasOwnProperty(errorType)) {
-        switch (errorType) {
-          case 'passwordsMismatch':
-            return `New passwords do not match.`;
-          case 'newPasswordSameAsOld':
-            return `New password cannot be the same as the old password.`;
-          default:
-            return '';
-        }
-      }
-    }
-
-    return '';
+  private getErrorMessage(fieldName: string, errorType: string, errorValue?: any): string {
+    const errorMessages: { [key: string]: string } = {
+      required: `${fieldName} is required.`,
+      minlength: `${fieldName} cannot have less than ${errorValue?.requiredLength} characters.`,
+      maxlength: `${fieldName} cannot exceed ${errorValue?.requiredLength} characters.`,
+      min: `${fieldName} cannot be a negative number.`,
+    };
+    return errorMessages[errorType] || '';
   }
 
   private passwordsMatchValidator(): ValidatorFn {
@@ -99,21 +69,20 @@ export class FormValidationService {
       const newPassword = group.get('newPassword')?.value;
       const repeatNewPassword = group.get('repeatNewPassword')?.value;
       const oldPassword = group.get('oldPassword')?.value;
+
       const errors: ValidationErrors = {};
+      if (newPassword !== repeatNewPassword) errors['passwordsMismatch'] = true;
+      if (oldPassword && newPassword === oldPassword) errors['newPasswordSameAsOld'] = true;
 
-      if (newPassword !== repeatNewPassword) {
-        errors['passwordsMismatch'] = true;
-      }
-
-      if (oldPassword && newPassword && oldPassword === newPassword) {
-        errors['newPasswordSameAsOld'] = true;
-      }
-
-      return Object.keys(errors).length !== 0 ? errors : null;
+      return Object.keys(errors).length ? errors : null;
     };
   }
 
+  private getRequiredField(minLength: number, maxLength: number) {
+    return ['', [Validators.required, Validators.minLength(minLength), Validators.maxLength(maxLength)]];
+  }
+
   private isFieldInvalid(field: AbstractControl): boolean {
-    return field && field.invalid && (field.dirty || field.touched);
+    return field.invalid && (field.dirty || field.touched);
   }
 }

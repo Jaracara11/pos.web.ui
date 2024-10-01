@@ -38,10 +38,6 @@ export class UpsertProductModalComponent {
     return this.formValidationService.getFieldErrorMessage(this.productUpsertForm, fieldName);
   }
 
-  getFormErrorMessage(): string | null {
-    return this.formValidationService.getFormErrorMessage(this.productUpsertForm);
-  }
-
   openModal(selectedProduct: Product | null, categoriesList: Category[]): void {
     this.product = selectedProduct;
     this.categories = categoriesList;
