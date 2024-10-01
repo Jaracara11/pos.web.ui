@@ -1,10 +1,9 @@
 import { Component } from '@angular/core';
-import { finalize, Subject, takeUntil } from 'rxjs';
+import { Subject, takeUntil, tap } from 'rxjs';
 import { OrderInfo } from '../../shared/interfaces/oder-info.interface';
 import { OrderService } from '../../core/services/order.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { SwalAlertService } from '../../core/services/swal-alert.service';
-import { OrderProduct } from '../../shared/interfaces/order-product.interface';
 import { RecentOrder } from '../../shared/interfaces/recent-order.interface';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AsyncPipe, CurrencyPipe, DatePipe } from '@angular/common';
@@ -48,20 +47,17 @@ export class InvoiceComponent {
         if (isConfirmed && this.orderId) {
           this.orderService.cancelOrder(this.orderId).pipe(
             takeUntil(this.destroy$),
-            finalize(() => {
-              this.productService.clearProductsCache();
-              this.orderService.clearOrdersCache();
-            })
-          ).subscribe({
-            next: () => {
-              this.swalAlertService.swalMessageAlert('Order cancelled successfully', 'info')
-                .then(() => this.router.navigateByUrl('/'));
-            },
-            error: (error: HttpErrorResponse) => {
-              const errorMessage = error?.error?.message || 'An error occurred';
-              this.swalAlertService.swalAlertWithTitle(error.statusText, errorMessage, 'error');
-            }
-          });
+            tap(() =>
+              this.productService.clearProductsCache())).subscribe({
+                next: () => {
+                  this.swalAlertService.swalMessageAlert('Order cancelled successfully', 'info')
+                    .then(() => this.router.navigateByUrl('/'));
+                },
+                error: (error: HttpErrorResponse) => {
+                  const errorMessage = error?.error?.message || 'An error occurred';
+                  this.swalAlertService.swalAlertWithTitle(error.statusText, errorMessage, 'error');
+                }
+              });
         }
       });
   }

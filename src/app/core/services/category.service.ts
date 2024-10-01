@@ -24,7 +24,7 @@ export class CategoryService {
     }
     return this.categoriesCache$;
   }
-
+  
   clearCategoriesCache(): void {
     this.categoriesCache$ = null;
   }

@@ -9,6 +9,7 @@ import { SwalAlertService } from '../../services/swal-alert.service';
 import { LoadingSpinnerComponent } from '../loading-spinner/loading-spinner.component';
 import { AsyncPipe, NgFor } from '@angular/common';
 import { Category } from '../../../shared/interfaces/category.interface';
+import { CategoryService } from '../../services/category.service';
 
 @Component({
   selector: 'app-upsert-product-modal',
@@ -29,7 +30,8 @@ export class UpsertProductModalComponent {
   constructor(private modalService: NgbModal,
     private formValidationService: FormValidationService,
     private loadingService: LoadingService,
-    private swalAlertService: SwalAlertService) {
+    private swalAlertService: SwalAlertService,
+    private categoryService: CategoryService) {
     this.productUpsertForm = this.formValidationService.upsertProductForm();
     this.isSubmitting$ = loadingService.getLoadingState;
   }
@@ -71,5 +73,11 @@ export class UpsertProductModalComponent {
     this.modalRef.result.then(() => this.productUpsertForm.reset(), () => this.productUpsertForm.reset());
   }
 
-  onSubmit(): void { }
+  onSubmit(): void {
+
+  }
+
+  onDelete(): void {
+
+  }
 }

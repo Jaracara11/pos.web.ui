@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { Injectable } from '@angular/core';
-import { Observable, shareReplay } from 'rxjs';
+import { Observable, shareReplay, tap } from 'rxjs';
 import { AuthService } from './auth.service';
 import { RecentOrder } from '../../shared/interfaces/recent-order.interface';
 import { OrderInfo } from '../../shared/interfaces/oder-info.interface';
@@ -15,8 +15,7 @@ export class OrderService {
   private _salesTodayUrl = `${this._ordersUrl}/sales-today`;
 
   private recentOrdersCache$: Observable<RecentOrder[]> | null = null;
-  private totalSalesCache$: Observable<number> | null = null;;
-
+  private totalSalesCache$: Observable<number> | null = null;
 
   constructor(
     private http: HttpClient,
@@ -50,7 +49,9 @@ export class OrderService {
 
   cancelOrder(orderID: string): Observable<string> {
     const headers = this.authService.userAuthorizationHeaders();
-    return this.http.post<string>(`${this._ordersUrl}/${orderID}/cancel`, {}, { headers });
+    return this.http.post<string>(`${this._ordersUrl}/${orderID}/cancel`, {}, { headers }).pipe(
+      tap(() => this.clearOrdersCache())
+    );
   }
 
   clearOrdersCache(): void {

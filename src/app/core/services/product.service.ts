@@ -38,6 +38,12 @@ export class ProductService {
     return this.bestSellersCache$;
   }
 
+  updateProduct(product: Product): Observable<Product> {
+    const headers = this.authService.userAuthorizationHeaders();
+    return this.http.put<Product>(this._productsUrl, product, { headers }).pipe(
+      tap(() => this.clearProductsCache()));
+  }
+
   clearProductsCache(): void {
     this.productsCache$ = null;
     this.bestSellersCache$ = null;
