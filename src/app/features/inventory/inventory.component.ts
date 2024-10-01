@@ -52,7 +52,7 @@ export class InventoryComponent {
   }
 
   getSearchProperty(item: Product): string {
-    return `${item.productName} ${item.productDescription} ${item.productCategoryName}`;
+    return `${item.productName} ${item.productDescription} ${item.productCategory.categoryName}`;
   }
 
   openUpsertProductModal(product?: Product): void {
@@ -85,7 +85,6 @@ export class InventoryComponent {
       .subscribe({
         next: (response: Category[]) => {
           this.categories = response;
-          console.log(this.categories);
         },
         error: (error: HttpErrorResponse) => {
           const errorMessage = error?.error?.message || 'An error occurred';

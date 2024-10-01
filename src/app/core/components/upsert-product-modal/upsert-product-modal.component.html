@@ -37,17 +37,15 @@
           </small>
         </div>
         <div class="product-input">
-          <label for="productCategory">Product Category</label>
-          <select id="productCategory" class="form-control" formControlName="productCategory">
-            <option *ngFor="let category of categories" [value]="category">
-              {{ category }}
-            </option>
-            @for (category of categories; track category.categoryID) {
-            <option [value]="category.categoryName">
+          <label class="modal-label" for="productCategory">Product Category</label>
+          <select class="form-control" formControlName="productCategoryName">
+            <option *ngFor="let category of categories" [value]="category.categoryName">
               {{ category.categoryName }}
             </option>
-            }
           </select>
+          <small class="text-danger">
+            {{ getProductErrorMessage("productCategoryName") }}
+          </small>
         </div>
       </div>
       }

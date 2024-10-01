@@ -7,13 +7,13 @@ import { FormValidationService } from '../../services/form-validation.service';
 import { LoadingService } from '../../services/loading.service';
 import { SwalAlertService } from '../../services/swal-alert.service';
 import { LoadingSpinnerComponent } from '../loading-spinner/loading-spinner.component';
-import { AsyncPipe } from '@angular/common';
+import { AsyncPipe, NgFor } from '@angular/common';
 import { Category } from '../../../shared/interfaces/category.interface';
 
 @Component({
   selector: 'app-upsert-product-modal',
   standalone: true,
-  imports: [LoadingSpinnerComponent, FormsModule, ReactiveFormsModule, AsyncPipe],
+  imports: [LoadingSpinnerComponent, FormsModule, ReactiveFormsModule, AsyncPipe, NgFor],
   templateUrl: './upsert-product-modal.component.html',
   styleUrl: './upsert-product-modal.component.css'
 })
@@ -57,7 +57,7 @@ export class UpsertProductModalComponent {
         productID: selectedProduct.productID,
         productName: selectedProduct.productName,
         productDescription: selectedProduct.productDescription,
-        productCategoryName: selectedProduct.productCategoryName
+        productCategoryName: selectedProduct.productCategory.categoryName
       });
     } else {
       this.productUpsertForm.reset();
