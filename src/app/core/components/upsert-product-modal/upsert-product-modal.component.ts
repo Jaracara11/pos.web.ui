@@ -47,8 +47,10 @@ export class UpsertProductModalComponent {
       windowClass: 'modal-centered'
     };
 
+    const productIdField = this.productUpsertForm.get('productID');
+
     if (selectedProduct) {
-      this.productUpsertForm.get('productID')?.disable();
+      productIdField?.disable();
       this.productUpsertForm.patchValue({
         productID: selectedProduct.productID,
         productName: selectedProduct.productName,
@@ -62,6 +64,7 @@ export class UpsertProductModalComponent {
       this.productUpsertForm.patchValue({
         productCategoryName: ''
       });
+      productIdField?.enable();
     }
 
     this.modalRef = this.modalService.open(this.upsertProductModal, modalOptions);
