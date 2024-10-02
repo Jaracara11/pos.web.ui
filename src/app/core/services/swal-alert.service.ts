@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import Swal, { SweetAlertIcon, SweetAlertResult } from 'sweetalert2';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
@@ -43,5 +44,30 @@ export class SwalAlertService {
     }).catch(() => {
       return false;
     });
+  }
+
+  swalValidationErrorAlert(error: HttpErrorResponse): void {
+    const errorTitle = error?.error?.title || 'Error';
+    const errorMessages: string[] = this.extractErrorMessages(error);
+
+    const message = errorMessages.length
+      ? errorMessages.map(msg => `<small>${msg}</small>`).join('<br>')
+      : 'An unknown error occurred.';
+
+    this.swalAlertWithTitle(errorTitle, message, 'error');
+  }
+
+  private extractErrorMessages(error: HttpErrorResponse): string[] {
+    const messages: string[] = [];
+
+    if (error.error && typeof error.error.errors === 'object') {
+      for (const key in error.error.errors) {
+        if (error.error.errors[key]) {
+          messages.push(...error.error.errors[key]);
+        }
+      }
+    }
+
+    return messages;
   }
 }

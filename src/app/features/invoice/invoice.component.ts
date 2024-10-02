@@ -54,8 +54,7 @@ export class InvoiceComponent {
                     .then(() => this.router.navigateByUrl('/'));
                 },
                 error: (error: HttpErrorResponse) => {
-                  const errorMessage = error?.error?.message || 'An error occurred';
-                  this.swalAlertService.swalAlertWithTitle(error.statusText, errorMessage, 'error');
+                  this.swalAlertService.swalValidationErrorAlert(error);
                 }
               });
         }
@@ -83,7 +82,7 @@ export class InvoiceComponent {
           this.orderInfo = this.parseOrderInfo(response);
         },
         error: (error: HttpErrorResponse) => {
-          this.swalAlertService.swalAlertWithTitle(error.statusText, error?.error?.message, 'error');
+          this.swalAlertService.swalValidationErrorAlert(error);
         }
       });
   }

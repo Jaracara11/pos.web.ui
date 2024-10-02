@@ -74,6 +74,7 @@ export class PasswordChangeModalComponent {
 
   onSubmit(): void {
     if (this.passwordChangeForm.invalid) {
+      this.swalAlertService.swalAlertWithTitle('Form Invalid', 'Please check the form fields for errors.', 'error');
       return;
     }
 
@@ -104,8 +105,7 @@ export class PasswordChangeModalComponent {
               ).then(() => this.router.navigateByUrl('/auth'));
             },
             error: (error: HttpErrorResponse) => {
-              const errorMessage = error?.error?.message || 'An error occurred';
-              this.swalAlertService.swalAlertWithTitle(error.statusText, errorMessage, 'error');
+              this.swalAlertService.swalValidationErrorAlert(error);
             }
           });
         }

@@ -10,6 +10,8 @@ import { LoadingSpinnerComponent } from '../loading-spinner/loading-spinner.comp
 import { AsyncPipe, NgFor } from '@angular/common';
 import { Category } from '../../../shared/interfaces/category.interface';
 import { CategoryService } from '../../services/category.service';
+import { ProductService } from '../../services/product.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-upsert-product-modal',
@@ -27,11 +29,14 @@ export class UpsertProductModalComponent {
   product: Product | null = null;
   categories: Category[] = [];
 
-  constructor(private modalService: NgbModal,
+  constructor(
+    private modalService: NgbModal,
     private formValidationService: FormValidationService,
     private loadingService: LoadingService,
     private swalAlertService: SwalAlertService,
-    private categoryService: CategoryService) {
+    private productService: ProductService,
+    private categoryService: CategoryService
+  ) {
     this.productUpsertForm = this.formValidationService.upsertProductForm();
     this.isSubmitting$ = loadingService.getLoadingState;
   }
@@ -59,6 +64,7 @@ export class UpsertProductModalComponent {
         productDescription: selectedProduct.productDescription,
         productCategoryName: selectedProduct.productCategory.categoryName,
         productStock: selectedProduct.productStock,
+        productCost: selectedProduct.productCost,
         productPrice: selectedProduct.productPrice
       });
     } else {
@@ -74,10 +80,53 @@ export class UpsertProductModalComponent {
   }
 
   onSubmit(): void {
+    if (this.productUpsertForm.invalid) {
+      this.swalAlertService.swalAlertWithTitle('Form Invalid', 'Please check the form fields for errors.', 'error');
+      return;
+    }
 
+    const productData: Product = this.productUpsertForm.value;
+
+    const confirmTitle = this.product
+      ? 'Are you sure you want to update this product?'
+      : 'Are you sure you want to create this new product?';
+
+    this.swalAlertService.swalConfirmationAlert(confirmTitle, 'Confirm', 'warning')
+      .then((isConfirmed: boolean) => {
+        if (isConfirmed) {
+          const request = this.product ? this.productService.updateProduct(productData) : this.productService.addProduct(productData);
+          request.subscribe({
+            next: () => {
+              const successMessage = this.product ? 'Product updated successfully' : 'Product created successfully';
+              this.swalAlertService.swalMessageAlert(successMessage, 'success');
+              this.modalRef?.close();
+            },
+            error: (error: HttpErrorResponse) => {
+              this.swalAlertService.swalValidationErrorAlert(error);
+            }
+          });
+        }
+      });
   }
 
   onDelete(): void {
+    if (!this.product || !this.product.productID) return;
 
+    const confirmTitle = 'Are you sure you want to delete this product?';
+
+    this.swalAlertService.swalConfirmationAlert(confirmTitle, 'Confirm', 'warning')
+      .then((isConfirmed: boolean) => {
+        if (isConfirmed && this.product && this.product.productID) {
+          this.productService.deleteProduct(this.product.productID).subscribe({
+            next: () => {
+              this.swalAlertService.swalMessageAlert('Product deleted successfully', 'info');
+              this.modalRef?.close();
+            },
+            error: (error: HttpErrorResponse) => {
+              this.swalAlertService.swalValidationErrorAlert(error);
+            }
+          });
+        }
+      });
   }
 }

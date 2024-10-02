@@ -43,7 +43,10 @@ export class AuthComponent {
   }
 
   onSubmit(): void {
-    if (this.authForm.invalid) { return; }
+    if (this.authForm.invalid) {
+      this.swalAlertService.swalAlertWithTitle('Form Invalid', 'Please check the form fields for errors.', 'error');
+      return;
+    }
 
     this.loadingService.setLoadingState = true;
 
@@ -55,7 +58,7 @@ export class AuthComponent {
         this.router.navigateByUrl('');
       },
       error: (error: HttpErrorResponse) => {
-        this.swalAlertService.swalAlertWithTitle(error.statusText, error?.error?.message, 'error');
+        this.swalAlertService.swalValidationErrorAlert(error);
       }
     });
   }

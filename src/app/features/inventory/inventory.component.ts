@@ -73,8 +73,7 @@ export class InventoryComponent {
           this.filteredProducts = this.products;
         },
         error: (error: HttpErrorResponse) => {
-          const errorMessage = error?.error?.message || 'An error occurred';
-          this.swalAlertService.swalAlertWithTitle(error.statusText, errorMessage, 'error');
+          this.swalAlertService.swalValidationErrorAlert(error);
         }
       });
   }
@@ -87,8 +86,7 @@ export class InventoryComponent {
           this.categories = response;
         },
         error: (error: HttpErrorResponse) => {
-          const errorMessage = error?.error?.message || 'An error occurred';
-          this.swalAlertService.swalAlertWithTitle(error.statusText, errorMessage, 'error');
+          this.swalAlertService.swalValidationErrorAlert(error);
         }
       });
   }

@@ -38,9 +38,27 @@ export class ProductService {
     return this.bestSellersCache$;
   }
 
+  addProduct(newProduct: Product): Observable<Product> {
+    const headers = this.authService.userAuthorizationHeaders();
+
+    if (newProduct.productQuantity === null) {
+      newProduct.productQuantity = 0;
+    }
+
+    return this.http.post<Product>(this._productsUrl, newProduct, { headers }).pipe(
+      tap(() => this.clearProductsCache())
+    );
+  }
+
   updateProduct(product: Product): Observable<Product> {
     const headers = this.authService.userAuthorizationHeaders();
     return this.http.put<Product>(this._productsUrl, product, { headers }).pipe(
+      tap(() => this.clearProductsCache()));
+  }
+
+  deleteProduct(productID: string): Observable<void> {
+    const headers = this.authService.userAuthorizationHeaders();
+    return this.http.delete<void>(`${this._productsUrl}/${productID}/delete`, { headers }).pipe(
       tap(() => this.clearProductsCache()));
   }
 

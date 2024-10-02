@@ -64,6 +64,16 @@
         </div>
         <div class="product-input">
           @if (product) {
+          <label class="modal-label" for="productCost">Product Cost</label>
+          }
+          <input class="form-control" type="number" placeholder="Product Cost" formControlName="productCost"
+            autocomplete="off" />
+          <small class="text-danger">
+            {{ getProductErrorMessage("productCost") }}
+          </small>
+        </div>
+        <div class="product-input">
+          @if (product) {
           <label class="modal-label" for="productPrice">Product Price</label>
           }
           <input class="form-control" type="number" placeholder="Product Price" formControlName="productPrice"
