@@ -61,6 +61,7 @@ export class InventoryComponent {
     } else {
       this.selectedProduct = null;
     }
+
     this.upsertProductModal.openModal(this.selectedProduct, this.categories);
   }
 

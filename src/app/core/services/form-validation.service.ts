@@ -37,11 +37,11 @@ export class FormValidationService {
       productID: ['', [Validators.minLength(3), Validators.maxLength(50)]],
       productName: this.getRequiredField(3, 50),
       productDescription: ['', [Validators.maxLength(100)]],
-      productStock: ['', [Validators.required, Validators.min(0)]],
-      productQuantity: ['', [Validators.min(0)]],
-      productCost: ['', [Validators.required, Validators.min(0.01)]],
-      productPrice: ['', [Validators.required, Validators.min(0.01)]],
-      productCategoryName: this.getRequiredField(4, 50),
+      productStock: [0, [Validators.required, Validators.min(0)]],
+      productQuantity: [0, [Validators.min(0)]],
+      productCost: [0, [Validators.required, Validators.min(0.01)]],
+      productPrice: [0, [Validators.required, Validators.min(0.01)]],
+      productCategory: [null, [Validators.required, this.categorySelectedValidator()]],
     });
   }
 
@@ -64,6 +64,14 @@ export class FormValidationService {
     return errorMessages[errorType] || '';
   }
 
+  private getRequiredField(minLength: number, maxLength: number) {
+    return ['', [Validators.required, Validators.minLength(minLength), Validators.maxLength(maxLength)]];
+  }
+
+  private isFieldInvalid(field: AbstractControl): boolean {
+    return field.invalid && (field.dirty || field.touched);
+  }
+
   private passwordsMatchValidator(): ValidatorFn {
     return (group: AbstractControl): ValidationErrors | null => {
       const newPassword = group.get('newPassword')?.value;
@@ -78,11 +86,9 @@ export class FormValidationService {
     };
   }
 
-  private getRequiredField(minLength: number, maxLength: number) {
-    return ['', [Validators.required, Validators.minLength(minLength), Validators.maxLength(maxLength)]];
-  }
-
-  private isFieldInvalid(field: AbstractControl): boolean {
-    return field.invalid && (field.dirty || field.touched);
+  private categorySelectedValidator(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      return control.value ? null : { required: true };
+    };
   }
 }

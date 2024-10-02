@@ -40,11 +40,6 @@ export class ProductService {
 
   addProduct(newProduct: Product): Observable<Product> {
     const headers = this.authService.userAuthorizationHeaders();
-
-    if (newProduct.productQuantity === null) {
-      newProduct.productQuantity = 0;
-    }
-
     return this.http.post<Product>(this._productsUrl, newProduct, { headers }).pipe(
       tap(() => this.clearProductsCache())
     );

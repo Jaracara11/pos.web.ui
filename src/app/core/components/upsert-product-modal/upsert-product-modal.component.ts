@@ -16,7 +16,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 @Component({
   selector: 'app-upsert-product-modal',
   standalone: true,
-  imports: [LoadingSpinnerComponent, FormsModule, ReactiveFormsModule, AsyncPipe, NgFor],
+  imports: [LoadingSpinnerComponent, FormsModule, ReactiveFormsModule, AsyncPipe],
   templateUrl: './upsert-product-modal.component.html',
   styleUrl: './upsert-product-modal.component.css'
 })
@@ -62,16 +62,13 @@ export class UpsertProductModalComponent {
         productID: selectedProduct.productID,
         productName: selectedProduct.productName,
         productDescription: selectedProduct.productDescription,
-        productCategoryName: selectedProduct.productCategory.categoryName,
+        productCategory: selectedProduct.productCategory,
         productStock: selectedProduct.productStock,
         productCost: selectedProduct.productCost,
         productPrice: selectedProduct.productPrice
       });
     } else {
       this.productUpsertForm.reset();
-      this.productUpsertForm.patchValue({
-        productCategoryName: ''
-      });
       productIdField?.enable();
     }
 
@@ -86,6 +83,11 @@ export class UpsertProductModalComponent {
     }
 
     const productData: Product = this.productUpsertForm.value;
+
+    console.log(JSON.stringify(productData, null, 2));
+
+    console.log(productData.productCategory.categoryName);
+
 
     const confirmTitle = this.product
       ? 'Are you sure you want to update this product?'

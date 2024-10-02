@@ -38,18 +38,18 @@
         </div>
         <div class="product-input">
           @if (product) {
-          <label class="modal-label" for="productCategoryName">Product Category</label>
+          <label class="modal-label" for="productCategory">Product Category</label>
           }
-          <select class="form-control" formControlName="productCategoryName">
+          <select class="form-select" formControlName="productCategory">
             @if (!product) {
             <option value="" disabled>Select a category...</option>
             }
             <option *ngFor="let category of categories" [value]="category.categoryName">
-              {{ category.categoryName }}
+              {{ product ? product.productCategory.categoryName : category.categoryName }}
             </option>
           </select>
           <small class="text-danger">
-            {{ getProductErrorMessage("productCategoryName") }}
+            {{ getProductErrorMessage("productCategory") }}
           </small>
         </div>
         <div class="product-input">
