@@ -44,7 +44,7 @@
             @if (!product) {
             <option value="" disabled>Select a category...</option>
             }
-            <option *ngFor="let category of categories" [value]="category.categoryName">
+            <option *ngFor="let category of categories" [value]="category">
               {{ product ? product.productCategory.categoryName : category.categoryName }}
             </option>
           </select>

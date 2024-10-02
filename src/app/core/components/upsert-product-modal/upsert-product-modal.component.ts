@@ -7,7 +7,7 @@ import { FormValidationService } from '../../services/form-validation.service';
 import { LoadingService } from '../../services/loading.service';
 import { SwalAlertService } from '../../services/swal-alert.service';
 import { LoadingSpinnerComponent } from '../loading-spinner/loading-spinner.component';
-import { AsyncPipe, NgFor } from '@angular/common';
+import { AsyncPipe, CommonModule } from '@angular/common';
 import { Category } from '../../../shared/interfaces/category.interface';
 import { CategoryService } from '../../services/category.service';
 import { ProductService } from '../../services/product.service';
@@ -16,7 +16,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 @Component({
   selector: 'app-upsert-product-modal',
   standalone: true,
-  imports: [LoadingSpinnerComponent, FormsModule, ReactiveFormsModule, AsyncPipe],
+  imports: [LoadingSpinnerComponent, FormsModule, ReactiveFormsModule, AsyncPipe, CommonModule],
   templateUrl: './upsert-product-modal.component.html',
   styleUrl: './upsert-product-modal.component.css'
 })
@@ -55,7 +55,7 @@ export class UpsertProductModalComponent {
     };
 
     const productIdField = this.productUpsertForm.get('productID');
-
+    console.log('Submitting productID: ', this.productUpsertForm.get('productID')?.value);
     if (selectedProduct) {
       productIdField?.disable();
       this.productUpsertForm.patchValue({
@@ -83,11 +83,6 @@ export class UpsertProductModalComponent {
     }
 
     const productData: Product = this.productUpsertForm.value;
-
-    console.log(JSON.stringify(productData, null, 2));
-
-    console.log(productData.productCategory.categoryName);
-
 
     const confirmTitle = this.product
       ? 'Are you sure you want to update this product?'

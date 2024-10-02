@@ -47,7 +47,7 @@ export class ProductService {
 
   updateProduct(product: Product): Observable<Product> {
     const headers = this.authService.userAuthorizationHeaders();
-    return this.http.put<Product>(this._productsUrl, product, { headers }).pipe(
+    return this.http.put<Product>(`${this._productsUrl}/edit`, product, { headers }).pipe(
       tap(() => this.clearProductsCache()));
   }
 
