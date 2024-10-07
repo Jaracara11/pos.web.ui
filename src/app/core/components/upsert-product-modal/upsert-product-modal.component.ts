@@ -9,7 +9,6 @@ import { SwalAlertService } from '../../services/swal-alert.service';
 import { LoadingSpinnerComponent } from '../loading-spinner/loading-spinner.component';
 import { AsyncPipe, CommonModule } from '@angular/common';
 import { Category } from '../../../shared/interfaces/category.interface';
-import { CategoryService } from '../../services/category.service';
 import { ProductService } from '../../services/product.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { finalize } from 'rxjs/operators';
@@ -35,8 +34,7 @@ export class UpsertProductModalComponent {
     private formValidationService: FormValidationService,
     private loadingService: LoadingService,
     private swalAlertService: SwalAlertService,
-    private productService: ProductService,
-    private categoryService: CategoryService
+    private productService: ProductService
   ) {
     this.productUpsertForm = this.formValidationService.upsertProductForm();
     this.isSubmitting$ = loadingService.getLoadingState;
