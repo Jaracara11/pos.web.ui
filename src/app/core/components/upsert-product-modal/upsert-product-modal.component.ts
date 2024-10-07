@@ -55,7 +55,7 @@ export class UpsertProductModalComponent {
     };
 
     const productIdField = this.productUpsertForm.get('productID');
-    console.log('Submitting productID: ', this.productUpsertForm.get('productID')?.value);
+
     if (selectedProduct) {
       productIdField?.disable();
       this.productUpsertForm.patchValue({
@@ -83,6 +83,7 @@ export class UpsertProductModalComponent {
     }
 
     const productData: Product = this.productUpsertForm.value;
+    productData.productID = this.productUpsertForm.get('productID')?.value
 
     const confirmTitle = this.product
       ? 'Are you sure you want to update this product?'
