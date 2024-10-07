@@ -73,7 +73,12 @@ export class UpsertProductModalComponent {
     }
 
     this.modalRef = this.modalService.open(this.upsertProductModal, modalOptions);
-    this.modalRef.result.finally(() => this.productUpsertForm.reset());
+
+    this.modalRef.result.finally(() => {
+      if (this.productUpsertForm.dirty) {
+        this.productUpsertForm.reset();
+      }
+    });
   }
 
   onSubmit(): void {

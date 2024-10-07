@@ -86,8 +86,9 @@
       }
     </form>
     <div>
-      <button type="submit" class="btn btn-dark" (click)="onSubmit()">
-        <i class="bi bi-database"></i>&nbsp;{{product ? 'Update' : 'Save'}}
+      <button type="submit" class="btn btn-dark" (click)="onSubmit()"
+        [disabled]="!productUpsertForm.dirty || (isSubmitting$ | async)">
+        <i class="bi bi-database"></i>&nbsp;{{ product ? 'Update' : 'Save' }}
       </button>
 
       @if (product) {
