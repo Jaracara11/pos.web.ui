@@ -48,10 +48,10 @@ export class AuthComponent {
       return;
     }
 
-    this.loadingService.setLoadingState = true;
+    this.loadingService.setLoadingState(true);
 
     this.authService.signIn(this.authForm.value).pipe(
-      finalize(() => this.loadingService.setLoadingState = false)
+      finalize(() => this.loadingService.setLoadingState(false))
     ).subscribe({
       next: (response: UserInfo) => {
         localStorage.setItem('user', JSON.stringify(response));

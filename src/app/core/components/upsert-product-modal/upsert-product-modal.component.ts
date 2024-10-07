@@ -12,6 +12,7 @@ import { Category } from '../../../shared/interfaces/category.interface';
 import { CategoryService } from '../../services/category.service';
 import { ProductService } from '../../services/product.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-upsert-product-modal',
@@ -87,8 +88,10 @@ export class UpsertProductModalComponent {
       return;
     }
 
+    this.loadingService.setLoadingState(true);
+
     const productData: Product = this.productUpsertForm.value;
-    productData.productID = this.productUpsertForm.get('productID')?.value
+    productData.productID = this.productUpsertForm.get('productID')?.value;
 
     const confirmTitle = this.product
       ? 'Are you sure you want to update this product?'
@@ -101,7 +104,11 @@ export class UpsertProductModalComponent {
             ? this.productService.updateProduct(productData)
             : this.productService.addProduct(productData);
 
-          request.subscribe({
+          request.pipe(
+            finalize(() => {
+              this.loadingService.setLoadingState(false);
+            })
+          ).subscribe({
             next: () => {
               const successMessage = this.product ? 'Product updated successfully' : 'Product created successfully';
               this.swalAlertService.swalMessageAlert(successMessage, 'success');
@@ -111,6 +118,8 @@ export class UpsertProductModalComponent {
               this.swalAlertService.swalValidationErrorAlert(error);
             }
           });
+        } else {
+          this.loadingService.setLoadingState(false);
         }
       });
   }
@@ -123,7 +132,12 @@ export class UpsertProductModalComponent {
     this.swalAlertService.swalConfirmationAlert(confirmTitle, 'Confirm', 'warning')
       .then((isConfirmed: boolean) => {
         if (isConfirmed && this.product?.productID) {
-          this.productService.deleteProduct(this.product.productID).subscribe({
+          this.loadingService.setLoadingState(true);
+          this.productService.deleteProduct(this.product.productID).pipe(
+            finalize(() => {
+              this.loadingService.setLoadingState(false);
+            })
+          ).subscribe({
             next: () => {
               this.swalAlertService.swalMessageAlert('Product deleted successfully', 'info');
               this.modalRef?.close();
