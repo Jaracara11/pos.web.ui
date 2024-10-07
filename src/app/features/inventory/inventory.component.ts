@@ -56,12 +56,7 @@ export class InventoryComponent {
   }
 
   openUpsertProductModal(product?: Product): void {
-    if (product) {
-      this.selectedProduct = { ...product };
-    } else {
-      this.selectedProduct = null;
-    }
-
+    this.selectedProduct = product ? { ...product } : null;
     this.upsertProductModal.openModal(this.selectedProduct, this.categories);
   }
 
@@ -76,6 +71,22 @@ export class InventoryComponent {
         error: (error: HttpErrorResponse) => {
           this.swalAlertService.swalValidationErrorAlert(error);
         }
+      });
+
+    this.productService.onProductChange()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+        this.productService.getAllProducts()
+          .pipe(takeUntil(this.destroy$))
+          .subscribe({
+            next: (response: Product[]) => {
+              this.products = response;
+              this.filteredProducts = this.products;
+            },
+            error: (error: HttpErrorResponse) => {
+              this.swalAlertService.swalValidationErrorAlert(error);
+            }
+          });
       });
   }
 

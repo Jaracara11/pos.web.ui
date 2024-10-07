@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { Injectable } from '@angular/core';
 import { BestSellerProduct } from '../../shared/interfaces/best-seller-product.interface';
-import { Observable, shareReplay, tap } from 'rxjs';
+import { Observable, shareReplay, tap, Subject } from 'rxjs';
 import { AuthService } from './auth.service';
 import { Product } from '../../shared/interfaces/product.interface';
 
@@ -15,6 +15,7 @@ export class ProductService {
 
   private productsCache$: Observable<Product[]> | null = null;
   private bestSellersCache$: Observable<BestSellerProduct[]> | null = null;
+  private productChangeSubject = new Subject<void>();
 
   constructor(private http: HttpClient, private authService: AuthService) { }
 
@@ -41,24 +42,39 @@ export class ProductService {
   addProduct(newProduct: Product): Observable<Product> {
     const headers = this.authService.userAuthorizationHeaders();
     return this.http.post<Product>(this._productsUrl, newProduct, { headers }).pipe(
-      tap(() => this.clearProductsCache())
+      tap(() => {
+        this.clearProductsCache();
+        this.productChangeSubject.next();
+      })
     );
   }
 
   updateProduct(product: Product): Observable<Product> {
     const headers = this.authService.userAuthorizationHeaders();
     return this.http.put<Product>(`${this._productsUrl}/edit`, product, { headers }).pipe(
-      tap(() => this.clearProductsCache()));
+      tap(() => {
+        this.clearProductsCache();
+        this.productChangeSubject.next();
+      })
+    );
   }
 
   deleteProduct(productID: string): Observable<void> {
     const headers = this.authService.userAuthorizationHeaders();
     return this.http.delete<void>(`${this._productsUrl}/${productID}/delete`, { headers }).pipe(
-      tap(() => this.clearProductsCache()));
+      tap(() => {
+        this.clearProductsCache();
+        this.productChangeSubject.next();
+      })
+    );
   }
 
   clearProductsCache(): void {
     this.productsCache$ = null;
     this.bestSellersCache$ = null;
+  }
+
+  onProductChange(): Observable<void> {
+    return this.productChangeSubject.asObservable();
   }
 }
