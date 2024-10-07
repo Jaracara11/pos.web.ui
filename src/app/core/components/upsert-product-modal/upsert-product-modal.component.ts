@@ -81,9 +81,11 @@ export class UpsertProductModalComponent {
       this.categories = [...categoriesList];
     } else {
       productIdField?.enable();
+      this.categories = [this.defaultCategory, ...this.categories];
       this.productUpsertForm.patchValue({
         productCategory: this.defaultCategory
       });
+
     }
 
     this.modalRef = this.modalService.open(this.upsertProductModal, modalOptions);
