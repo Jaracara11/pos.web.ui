@@ -48,10 +48,9 @@ export class InvoiceComponent {
           this.orderService.cancelOrder(this.orderId).pipe(
             takeUntil(this.destroy$),
             tap(() =>
-              this.productService.clearProductsCache())).subscribe({
+              this.productService.clearCacheAndNotify())).subscribe({
                 next: () => {
-                  this.swalAlertService.swalMessageAlert('Order cancelled successfully', 'info')
-                    .then(() => this.router.navigateByUrl('/'));
+                  this.swalAlertService.swalMessageAlert('Order cancelled successfully', 'info');
                 },
                 error: (error: HttpErrorResponse) => {
                   this.swalAlertService.swalValidationErrorAlert(error);

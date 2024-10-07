@@ -49,11 +49,14 @@ export class UpsertProductModalComponent {
   openModal(selectedProduct: Product | null, categoriesList: Category[]): void {
     this.product = selectedProduct;
     this.categories = categoriesList;
+
     const modalOptions: NgbModalOptions = {
       centered: true,
       size: 'md',
       windowClass: 'modal-centered'
     };
+
+    this.productUpsertForm.reset();
 
     const productIdField = this.productUpsertForm.get('productID');
 
@@ -66,20 +69,14 @@ export class UpsertProductModalComponent {
         productCategory: selectedProduct.productCategory,
         productStock: selectedProduct.productStock,
         productCost: selectedProduct.productCost,
-        productPrice: selectedProduct.productPrice
+        productPrice: selectedProduct.productPrice,
+        productQuantity: selectedProduct.productQuantity || 0
       });
     } else {
-      this.productUpsertForm.reset();
       productIdField?.enable();
     }
 
     this.modalRef = this.modalService.open(this.upsertProductModal, modalOptions);
-
-    this.modalRef.result.finally(() => {
-      if (this.productUpsertForm.dirty) {
-        this.productUpsertForm.reset();
-      }
-    });
   }
 
   onSubmit(): void {
@@ -90,12 +87,12 @@ export class UpsertProductModalComponent {
 
     this.loadingService.setLoadingState(true);
 
-    const productData: Product = this.productUpsertForm.value;
+    const productData: Product = { ...this.productUpsertForm.value };
     productData.productID = this.productUpsertForm.get('productID')?.value;
 
-    const confirmTitle = this.product
-      ? 'Are you sure you want to update this product?'
-      : 'Are you sure you want to create this new product?';
+    const confirmTitle = this.product ?
+      'Are you sure you want to update this product?' :
+      'Are you sure you want to create this new product?';
 
     this.swalAlertService.swalConfirmationAlert(confirmTitle, 'Confirm', 'warning')
       .then((isConfirmed: boolean) => {
@@ -107,12 +104,13 @@ export class UpsertProductModalComponent {
           request.pipe(
             finalize(() => {
               this.loadingService.setLoadingState(false);
+              this.modalRef?.close();
             })
           ).subscribe({
             next: () => {
               const successMessage = this.product ? 'Product updated successfully' : 'Product created successfully';
               this.swalAlertService.swalMessageAlert(successMessage, 'success');
-              this.modalRef?.close();
+              this.productUpsertForm.reset();
             },
             error: (error: HttpErrorResponse) => {
               this.swalAlertService.swalValidationErrorAlert(error);
@@ -136,11 +134,11 @@ export class UpsertProductModalComponent {
           this.productService.deleteProduct(this.product.productID).pipe(
             finalize(() => {
               this.loadingService.setLoadingState(false);
+              this.modalRef?.close();
             })
           ).subscribe({
             next: () => {
               this.swalAlertService.swalMessageAlert('Product deleted successfully', 'info');
-              this.modalRef?.close();
             },
             error: (error: HttpErrorResponse) => {
               this.swalAlertService.swalValidationErrorAlert(error);
