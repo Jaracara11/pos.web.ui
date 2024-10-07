@@ -73,7 +73,7 @@ export class UpsertProductModalComponent {
     }
 
     this.modalRef = this.modalService.open(this.upsertProductModal, modalOptions);
-    this.modalRef.result.then(() => this.productUpsertForm.reset(), () => this.productUpsertForm.reset());
+    this.modalRef.result.finally(() => this.productUpsertForm.reset());
   }
 
   onSubmit(): void {
@@ -92,7 +92,10 @@ export class UpsertProductModalComponent {
     this.swalAlertService.swalConfirmationAlert(confirmTitle, 'Confirm', 'warning')
       .then((isConfirmed: boolean) => {
         if (isConfirmed) {
-          const request = this.product ? this.productService.updateProduct(productData) : this.productService.addProduct(productData);
+          const request = this.product
+            ? this.productService.updateProduct(productData)
+            : this.productService.addProduct(productData);
+
           request.subscribe({
             next: () => {
               const successMessage = this.product ? 'Product updated successfully' : 'Product created successfully';
@@ -108,13 +111,13 @@ export class UpsertProductModalComponent {
   }
 
   onDelete(): void {
-    if (!this.product || !this.product.productID) return;
+    if (!this.product?.productID) return;
 
     const confirmTitle = 'Are you sure you want to delete this product?';
 
     this.swalAlertService.swalConfirmationAlert(confirmTitle, 'Confirm', 'warning')
       .then((isConfirmed: boolean) => {
-        if (isConfirmed && this.product && this.product.productID) {
+        if (isConfirmed && this.product?.productID) {
           this.productService.deleteProduct(this.product.productID).subscribe({
             next: () => {
               this.swalAlertService.swalMessageAlert('Product deleted successfully', 'info');
