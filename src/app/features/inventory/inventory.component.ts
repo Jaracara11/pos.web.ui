@@ -17,7 +17,7 @@ import { CategoryService } from '../../core/services/category.service';
   standalone: true,
   imports: [RouterLink, CurrencyPipe, SearchInputComponent, UpsertProductModalComponent],
   templateUrl: './inventory.component.html',
-  styleUrl: './inventory.component.css'
+  styleUrl: './inventory.component.css',
 })
 export class InventoryComponent {
   @ViewChild(UpsertProductModalComponent) upsertProductModal!: UpsertProductModalComponent;
@@ -61,6 +61,16 @@ export class InventoryComponent {
   }
 
   private loadProducts(): void {
+    this.fetchProducts();
+
+    this.productService.onProductChange()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+        this.fetchProducts();
+      });
+  }
+
+  private fetchProducts(): void {
     this.productService.getAllProducts()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
@@ -71,22 +81,6 @@ export class InventoryComponent {
         error: (error: HttpErrorResponse) => {
           this.swalAlertService.swalValidationErrorAlert(error);
         }
-      });
-
-    this.productService.onProductChange()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(() => {
-        this.productService.getAllProducts()
-          .pipe(takeUntil(this.destroy$))
-          .subscribe({
-            next: (response: Product[]) => {
-              this.products = response;
-              this.filteredProducts = this.products;
-            },
-            error: (error: HttpErrorResponse) => {
-              this.swalAlertService.swalValidationErrorAlert(error);
-            }
-          });
       });
   }
 

@@ -5,6 +5,7 @@ import { BestSellerProduct } from '../../shared/interfaces/best-seller-product.i
 import { Observable, shareReplay, tap, Subject } from 'rxjs';
 import { AuthService } from './auth.service';
 import { Product } from '../../shared/interfaces/product.interface';
+import { CacheService } from './cache.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,39 +13,41 @@ import { Product } from '../../shared/interfaces/product.interface';
 export class ProductService {
   private _productsUrl = `${environment.apiUrl}/products`;
   private _bestSellersUrl = `${this._productsUrl}/best-sellers`;
-
-  private productsCache$: Observable<Product[]> | null = null;
-  private bestSellersCache$: Observable<BestSellerProduct[]> | null = null;
   private productChangeSubject = new Subject<void>();
+  private productsCache$: Observable<Product[]> | null = null;
 
-  constructor(private http: HttpClient, private authService: AuthService) { }
+  constructor(
+    private http: HttpClient,
+    private authService: AuthService,
+    private cacheService: CacheService<Product[]>
+  ) { }
 
   getAllProducts(): Observable<Product[]> {
-    if (!this.productsCache$) {
-      const headers = this.authService.userAuthorizationHeaders();
-      this.productsCache$ = this.http.get<Product[]>(this._productsUrl, { headers }).pipe(
-        shareReplay(1)
-      );
+    if (this.productsCache$) {
+      return this.productsCache$;
     }
+
+    const headers = this.authService.userAuthorizationHeaders();
+    this.productsCache$ = this.http.get<Product[]>(this._productsUrl, { headers }).pipe(
+      tap((products) => this.cacheService.setData(products)),
+      shareReplay(1)
+    );
+
     return this.productsCache$;
   }
 
   getBestSellerProducts(): Observable<BestSellerProduct[]> {
-    if (!this.bestSellersCache$) {
-      const headers = this.authService.userAuthorizationHeaders();
-      this.bestSellersCache$ = this.http.get<BestSellerProduct[]>(this._bestSellersUrl, { headers }).pipe(
-        shareReplay(1)
-      );
-    }
-    return this.bestSellersCache$;
+    const headers = this.authService.userAuthorizationHeaders();
+    return this.http.get<BestSellerProduct[]>(this._bestSellersUrl, { headers }).pipe(
+      shareReplay(1)
+    );
   }
 
   addProduct(newProduct: Product): Observable<Product> {
     const headers = this.authService.userAuthorizationHeaders();
     return this.http.post<Product>(this._productsUrl, newProduct, { headers }).pipe(
       tap(() => {
-        this.clearProductsCache();
-        this.productChangeSubject.next();
+        this.clearCacheAndNotify();
       })
     );
   }
@@ -53,8 +56,7 @@ export class ProductService {
     const headers = this.authService.userAuthorizationHeaders();
     return this.http.put<Product>(`${this._productsUrl}/edit`, product, { headers }).pipe(
       tap(() => {
-        this.clearProductsCache();
-        this.productChangeSubject.next();
+        this.clearCacheAndNotify();
       })
     );
   }
@@ -63,15 +65,15 @@ export class ProductService {
     const headers = this.authService.userAuthorizationHeaders();
     return this.http.delete<void>(`${this._productsUrl}/${productID}/delete`, { headers }).pipe(
       tap(() => {
-        this.clearProductsCache();
-        this.productChangeSubject.next();
+        this.clearCacheAndNotify();
       })
     );
   }
 
-  clearProductsCache(): void {
+  clearCacheAndNotify(): void {
+    this.cacheService.clearCache();
     this.productsCache$ = null;
-    this.bestSellersCache$ = null;
+    this.productChangeSubject.next();
   }
 
   onProductChange(): Observable<void> {
