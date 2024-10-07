@@ -27,7 +27,6 @@
           <th>Name</th>
           <th>Description</th>
           <th>Stock</th>
-          <th>Cost</th>
           <th>Price</th>
           <th>Category</th>
           <th></th>
@@ -39,7 +38,6 @@
           <td>{{product.productName}}</td>
           <td>{{product.productDescription}}</td>
           <td>{{product.productStock}}</td>
-          <td>{{product.productCost | currency}}</td>
           <td>{{product.productPrice | currency}}</td>
           <td>{{product.productCategory.categoryName}}</td>
           <td>@if (validateRolePermission) {
@@ -52,5 +50,8 @@
       </tbody>
     </table>
   </div>
+
+  @if (categories.length) {
+  <app-upsert-product-modal [categories]="categories" />
+  }
 </div>
-<app-upsert-product-modal><app-upsert-product-modal />

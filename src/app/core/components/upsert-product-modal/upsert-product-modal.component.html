@@ -41,12 +41,9 @@
           <label class="modal-label" for="productCategory">Product Category</label>
           }
           <select class="form-select" formControlName="productCategory">
-            @if (!product) {
-            <option value="" disabled>Select a category...</option>
+            @for (category of categories; track category.categoryID) {
+            <option [ngValue]="category">{{ category.categoryName }}</option>
             }
-            <option *ngFor="let category of categories" [value]="category">
-              {{ product ? product.productCategory.categoryName : category.categoryName }}
-            </option>
           </select>
           <small class="text-danger">
             {{ getProductErrorMessage("productCategory") }}

@@ -6,7 +6,7 @@ import { Product } from '../../shared/interfaces/product.interface';
 import { Subject, takeUntil } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 import { SwalAlertService } from '../../core/services/swal-alert.service';
-import { CurrencyPipe } from '@angular/common';
+import { AsyncPipe, CurrencyPipe } from '@angular/common';
 import { SearchInputComponent } from '../../core/components/search-input/search-input.component';
 import { UpsertProductModalComponent } from '../../core/components/upsert-product-modal/upsert-product-modal.component';
 import { Category } from '../../shared/interfaces/category.interface';
@@ -15,7 +15,7 @@ import { CategoryService } from '../../core/services/category.service';
 @Component({
   selector: 'app-inventory',
   standalone: true,
-  imports: [RouterLink, CurrencyPipe, SearchInputComponent, UpsertProductModalComponent],
+  imports: [RouterLink, CurrencyPipe, SearchInputComponent, UpsertProductModalComponent, AsyncPipe],
   templateUrl: './inventory.component.html',
   styleUrl: './inventory.component.css',
 })

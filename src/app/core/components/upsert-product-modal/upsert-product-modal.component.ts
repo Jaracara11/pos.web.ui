@@ -1,4 +1,4 @@
-import { Component, TemplateRef, ViewChild } from '@angular/core';
+import { Component, Input, TemplateRef, ViewChild } from '@angular/core';
 import { Product } from '../../../shared/interfaces/product.interface';
 import { NgbModal, NgbModalOptions, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Observable } from 'rxjs';
@@ -22,12 +22,12 @@ import { finalize } from 'rxjs/operators';
 })
 export class UpsertProductModalComponent {
   @ViewChild('upsertProductModal') upsertProductModal!: TemplateRef<any>;
-
+  @Input() categories: Category[] = [];
   modalRef: NgbModalRef | undefined;
   isSubmitting$: Observable<boolean>;
   productUpsertForm: FormGroup;
   product: Product | null = null;
-  categories: Category[] = [];
+  defaultCategory: Category = { categoryID: 0, categoryName: 'Select a Category...' }
 
   constructor(
     private modalService: NgbModal,
@@ -40,13 +40,16 @@ export class UpsertProductModalComponent {
     this.isSubmitting$ = loadingService.getLoadingState;
   }
 
+  ngOnInit(): void {
+    this.categories = [this.defaultCategory, ...this.categories];
+  }
+
   getProductErrorMessage(fieldName: string): string | null {
     return this.formValidationService.getFieldErrorMessage(this.productUpsertForm, fieldName);
   }
 
   openModal(selectedProduct: Product | null, categoriesList: Category[]): void {
     this.product = selectedProduct;
-    this.categories = categoriesList;
 
     const modalOptions: NgbModalOptions = {
       centered: true,
@@ -55,23 +58,32 @@ export class UpsertProductModalComponent {
     };
 
     this.productUpsertForm.reset();
-
     const productIdField = this.productUpsertForm.get('productID');
 
     if (selectedProduct) {
       productIdField?.disable();
+
+      const selectedCategory = categoriesList.find(category =>
+        category.categoryID === selectedProduct.productCategory.categoryID
+      );
+
       this.productUpsertForm.patchValue({
         productID: selectedProduct.productID,
         productName: selectedProduct.productName,
         productDescription: selectedProduct.productDescription,
-        productCategory: selectedProduct.productCategory,
+        productCategory: selectedCategory,
         productStock: selectedProduct.productStock,
         productCost: selectedProduct.productCost,
         productPrice: selectedProduct.productPrice,
         productQuantity: selectedProduct.productQuantity || 0
       });
+
+      this.categories = [...categoriesList];
     } else {
       productIdField?.enable();
+      this.productUpsertForm.patchValue({
+        productCategory: this.defaultCategory
+      });
     }
 
     this.modalRef = this.modalService.open(this.upsertProductModal, modalOptions);
