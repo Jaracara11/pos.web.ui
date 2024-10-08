@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, OnInit, OnDestroy } from '@angular/core';
 import { AuthService } from '../../core/services/auth.service';
 import { RouterLink } from '@angular/router';
 import { ProductService } from '../../core/services/product.service';
@@ -19,7 +19,7 @@ import { CategoryService } from '../../core/services/category.service';
   templateUrl: './inventory.component.html',
   styleUrl: './inventory.component.css',
 })
-export class InventoryComponent {
+export class InventoryComponent implements OnInit, OnDestroy {
   @ViewChild(UpsertProductModalComponent) upsertProductModal!: UpsertProductModalComponent;
   private destroy$ = new Subject<void>();
   products: Product[] = [];

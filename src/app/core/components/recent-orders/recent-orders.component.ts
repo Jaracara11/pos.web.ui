@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { RecentOrder } from '../../../shared/interfaces/recent-order.interface';
 import { OrderService } from '../../services/order.service';
@@ -14,7 +14,7 @@ import { CurrencyPipe, DatePipe } from '@angular/common';
   templateUrl: './recent-orders.component.html',
   styleUrl: './recent-orders.component.css'
 })
-export class RecentOrdersComponent {
+export class RecentOrdersComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
   recentOrders: RecentOrder[] = [];
 

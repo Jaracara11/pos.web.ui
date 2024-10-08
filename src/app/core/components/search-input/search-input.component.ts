@@ -13,7 +13,7 @@ export class SearchInputComponent<T> {
   @Input() items: T[] = [];
   @Input() searchProperty: (item: T) => string = () => '';
   @Output() filteredItemsChange = new EventEmitter<T[]>();
-  searchQuery: string = '';
+  searchQuery = '';
 
   onSearchQueryChange(query: string): void {
     this.searchQuery = query;

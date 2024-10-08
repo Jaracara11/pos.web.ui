@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subject, takeUntil, tap } from 'rxjs';
 import { OrderInfo } from '../../shared/interfaces/oder-info.interface';
 import { OrderService } from '../../core/services/order.service';
@@ -16,7 +16,7 @@ import { ProductService } from '../../core/services/product.service';
   templateUrl: './invoice.component.html',
   styleUrl: './invoice.component.css'
 })
-export class InvoiceComponent {
+export class InvoiceComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
   orderInfo: OrderInfo | null = null;
   orderId: string | null = '';

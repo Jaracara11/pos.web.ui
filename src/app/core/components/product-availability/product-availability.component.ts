@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { Product } from '../../../shared/interfaces/product.interface';
 import { ProductService } from '../../services/product.service';
@@ -13,7 +13,7 @@ import { NgClass } from '@angular/common';
   templateUrl: './product-availability.component.html',
   styleUrl: './product-availability.component.css'
 })
-export class ProductAvailabilityComponent {
+export class ProductAvailabilityComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
   lowStockProducts: Product[] = [];
 

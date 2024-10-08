@@ -1,4 +1,4 @@
-import { Component, Input, TemplateRef, ViewChild } from '@angular/core';
+import { Component, Input, TemplateRef, ViewChild, OnInit } from '@angular/core';
 import { Product } from '../../../shared/interfaces/product.interface';
 import { NgbModal, NgbModalOptions, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Observable } from 'rxjs';
@@ -20,7 +20,7 @@ import { finalize } from 'rxjs/operators';
   templateUrl: './upsert-product-modal.component.html',
   styleUrl: './upsert-product-modal.component.css'
 })
-export class UpsertProductModalComponent {
+export class UpsertProductModalComponent implements OnInit {
   @ViewChild('upsertProductModal') upsertProductModal!: TemplateRef<any>;
   @Input() categories: Category[] = [];
   modalRef: NgbModalRef | undefined;

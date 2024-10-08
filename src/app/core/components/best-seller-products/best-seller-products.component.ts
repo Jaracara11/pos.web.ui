@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { BestSellerProduct } from '../../../shared/interfaces/best-seller-product.interface';
 import { ProductService } from '../../services/product.service';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -12,7 +12,7 @@ import { Subject, takeUntil } from 'rxjs';
   templateUrl: './best-seller-products.component.html',
   styleUrl: './best-seller-products.component.css'
 })
-export class BestSellerProductsComponent {
+export class BestSellerProductsComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
   bestSellerProducts: BestSellerProduct[] = [];
 

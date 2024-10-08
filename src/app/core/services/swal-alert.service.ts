@@ -14,7 +14,7 @@ export class SwalAlertService {
     buttonsStyling: false,
   });
 
-  swalMessageAlert(msg: string, alertType: SweetAlertIcon, timer: number = 3000) {
+  swalMessageAlert(msg: string, alertType: SweetAlertIcon, timer = 3000) {
     return this.SwalObj.fire({
       title: msg,
       icon: alertType,

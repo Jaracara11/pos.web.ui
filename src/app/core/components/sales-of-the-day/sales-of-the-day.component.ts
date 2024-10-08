@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { OrderService } from '../../services/order.service';
 import { SwalAlertService } from '../../services/swal-alert.service';
@@ -12,7 +12,7 @@ import { CurrencyPipe } from '@angular/common';
   templateUrl: './sales-of-the-day.component.html',
   styleUrl: './sales-of-the-day.component.css'
 })
-export class SalesOfTheDayComponent {
+export class SalesOfTheDayComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
   salesOfTheDay = 0;
 

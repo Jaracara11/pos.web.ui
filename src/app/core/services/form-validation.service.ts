@@ -55,7 +55,7 @@ export class FormValidationService {
   }
 
   private getErrorMessage(fieldName: string, errorType: string, errorValue?: any): string {
-    const errorMessages: { [key: string]: string } = {
+    const errorMessages: Record<string, string> = {
       required: `${fieldName} is required.`,
       minlength: `${fieldName} cannot have less than ${errorValue?.requiredLength} characters.`,
       maxlength: `${fieldName} cannot exceed ${errorValue?.requiredLength} characters.`,
