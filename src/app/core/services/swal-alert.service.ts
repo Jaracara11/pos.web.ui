@@ -68,6 +68,10 @@ export class SwalAlertService {
       }
     }
 
+    if (messages.length === 0 && error.error?.message) {
+      messages.push(error.error.message);
+    }
+
     return messages;
   }
 }

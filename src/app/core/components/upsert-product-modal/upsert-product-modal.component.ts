@@ -21,7 +21,7 @@ import { finalize } from 'rxjs/operators';
   styleUrl: './upsert-product-modal.component.css'
 })
 export class UpsertProductModalComponent implements OnInit {
-  @ViewChild('upsertProductModal') upsertProductModal!: TemplateRef<any>;
+  @ViewChild('upsertProductModal') upsertProductModal!: TemplateRef<unknown>;
   @Input() categories: Category[] = [];
   modalRef: NgbModalRef | undefined;
   isSubmitting$: Observable<boolean>;

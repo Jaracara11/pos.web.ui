@@ -21,7 +21,7 @@ import { SwalAlertService } from '../../services/swal-alert.service';
   styleUrl: './password-change-modal.component.css'
 })
 export class PasswordChangeModalComponent {
-  @ViewChild('changePasswordModal') changePasswordModal!: TemplateRef<any>;
+  @ViewChild('changePasswordModal') changePasswordModal!: TemplateRef<unknown>;
   @Input() user: UserInfo = {
     username: '',
     name: '',
@@ -78,8 +78,10 @@ export class PasswordChangeModalComponent {
       return;
     }
 
-    this.swalAlertService.swalConfirmationAlert
-      ('Are you sure you want to change your password?', 'Yes, change it', 'warning')
+    this.swalAlertService.swalConfirmationAlert(
+      'Are you sure you want to change your password?',
+      'Yes, change it',
+      'warning')
       .then((isConfirmed) => {
         if (isConfirmed) {
           const userData: PasswordChange = {

@@ -7,8 +7,7 @@
       <li class="nav-link"><a routerLinkActive="active" routerLink=""><i class="bi bi-house"></i><span>Home</span></a>
       </li>
       <li class="nav-link"><a routerLinkActive="active" routerLink="/auth"><i
-            class="bi bi-cart"></i><span>Orders</span></a>
-      </li>
+            class="bi bi-cart"></i><span>Orders</span></a></li>
       <li class="nav-link"><a routerLinkActive="active" routerLink="/auth"><i
             class="bi bi-cash-coin"></i><span>Sales</span></a></li>
       <li class="nav-link"><a routerLinkActive="active" routerLink="/inventory"><i
@@ -26,9 +25,10 @@
         <div class="row">
           <p>{{user.role}}</p>
           <div class="options">
-            <p class="btn btn-secondary btn-sm" (click)="signOut()">Sign Out</p>
-            <p class="btn btn-secondary btn-sm" (click)="openChangePasswordModal()">Change Password
+            <p class="btn btn-secondary btn-sm" (click)="signOut()" (keydown.enter)="signOut()" tabindex="0">Sign Out
             </p>
+            <p class="btn btn-secondary btn-sm" (click)="openChangePasswordModal()"
+              (keydown.enter)="openChangePasswordModal()" tabindex="0">Change Password</p>
           </div>
         </div>
       </li>

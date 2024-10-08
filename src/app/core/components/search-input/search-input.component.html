@@ -2,6 +2,7 @@
   <input class="form-control" type="search" [ngModel]="searchQuery" (ngModelChange)="onSearchQueryChange($event)"
     placeholder="Search..." />
   <span class="input-group-text">
-    <i class="bi" [ngClass]="searchQuery ? 'bi-x-lg' : 'bi-search'" (click)="onSearchQueryChange('')"></i>
+    <i class="bi" [ngClass]="searchQuery ? 'bi-x-lg' : 'bi-search'" (click)="onSearchQueryChange('')"
+      (keydown.enter)="onSearchQueryChange('')" tabindex="0" role="button"></i>
   </span>
 </div>

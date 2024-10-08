@@ -8,6 +8,7 @@ import { RecentOrder } from '../../shared/interfaces/recent-order.interface';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AsyncPipe, CurrencyPipe, DatePipe } from '@angular/common';
 import { ProductService } from '../../core/services/product.service';
+import { OrderProduct } from '../../shared/interfaces/order-product.interface';
 
 @Component({
   selector: 'app-invoice',
@@ -89,14 +90,20 @@ export class InvoiceComponent implements OnInit, OnDestroy {
   private parseOrderInfo(orderData: OrderInfo): OrderInfo {
     if (typeof orderData.products === 'string') {
       try {
-        orderData.products = JSON.parse(orderData.products).map((product: any) => ({
+        const parsedProducts: OrderProduct[] = JSON.parse(orderData.products).map((product: {
+          ProductName: string;
+          ProductDescription: string;
+          ProductQuantity: number;
+          ProductPrice: number;
+        }) => ({
           productName: product.ProductName,
           productDescription: product.ProductDescription,
           productQuantity: product.ProductQuantity,
-          productPrice: product.ProductPrice,
-          productCategory: product.ProductCategoryName
+          productPrice: product.ProductPrice
         }));
-      } catch (error) {
+
+        orderData.products = parsedProducts;
+      } catch {
         this.swalAlertService.swalAlertWithTitle('Parsing Error', 'Failed to load products for the order', 'error');
       }
     }
