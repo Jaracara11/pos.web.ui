@@ -86,7 +86,8 @@ export class UpsertProductModalComponent implements OnInit, OnDestroy {
     } else {
       productIdField?.enable();
       this.productUpsertForm.patchValue({
-        productCategory: this.defaultCategory
+        productCategory: this.defaultCategory,
+        productQuantity: 0
       });
     }
 
@@ -101,16 +102,14 @@ export class UpsertProductModalComponent implements OnInit, OnDestroy {
     const productData: Product = { ...this.productUpsertForm.value };
     productData.productID = this.productUpsertForm.get('productID')?.value;
 
-    const confirmTitle = this.product ?
-      'Are you sure you want to update this product?' :
-      'Are you sure you want to create this new product?';
+    const confirmTitle = this.product ? 'Are you sure you want to update this product?' : 'Are you sure you want to create this new product?';
 
     const isConfirmed = await this.swalAlertService.swalConfirmationAlert(confirmTitle, 'Confirm', 'warning');
 
     if (isConfirmed) {
-      const request = this.product ?
-        this.productService.updateProduct(productData) :
-        this.productService.addProduct(productData);
+      const request = this.product
+        ? this.productService.updateProduct(productData)
+        : this.productService.addProduct(productData);
 
       request.pipe(takeUntil(this.destroy$)).subscribe(() => {
         const successMessage = this.product ? 'Product updated successfully' : 'Product created successfully';

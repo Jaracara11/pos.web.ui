@@ -26,8 +26,8 @@ export class ProductRepository {
     return this.http.post<Product>(this._productsUrl, newProduct);
   }
 
-  updateProduct(product: Product): Observable<Product> {
-    return this.http.put<Product>(`${this._productsUrl}/edit`, product);
+  updateProduct(updatedProduct: Product): Observable<Product> {
+    return this.http.put<Product>(`${this._productsUrl}/edit`, updatedProduct);
   }
 
   deleteProduct(productID: string): Observable<void> {
