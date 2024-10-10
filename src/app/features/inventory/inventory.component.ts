@@ -15,7 +15,7 @@ import { CategoryService } from '../../core/services/category.service';
   standalone: true,
   imports: [RouterLink, CurrencyPipe, SearchInputComponent, UpsertProductModalComponent],
   templateUrl: './inventory.component.html',
-  styleUrl: './inventory.component.css',
+  styleUrl: './inventory.component.css'
 })
 export class InventoryComponent implements OnInit, OnDestroy {
   @ViewChild(UpsertProductModalComponent) upsertProductModal!: UpsertProductModalComponent;
@@ -58,12 +58,13 @@ export class InventoryComponent implements OnInit, OnDestroy {
   }
 
   private loadProducts(): void {
-    this.productService.getAllProducts()
+    this.productService.productsSubject
       .pipe(takeUntil(this.destroy$))
       .subscribe(products => {
         this.products = products || [];
         this.filteredProducts = this.products;
       });
+    this.productService.getAllProducts().subscribe();
   }
 
   private loadCategories(): void {
