@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { UserAuth } from '../../shared/interfaces/user-auth.interface';
 import { UserInfo } from '../../shared/interfaces/user-Info.interface';
 import { Observable } from 'rxjs';
@@ -48,18 +48,5 @@ export class AuthService {
     const userData: UserInfo = JSON.parse(userDataStr);
 
     return roles.includes(userData.role);
-  }
-
-  userAuthorizationHeaders(): HttpHeaders {
-    const userData = localStorage.getItem('user');
-
-    if (!userData) { return new HttpHeaders(); }
-
-    const user: UserInfo = JSON.parse(userData);
-
-    return new HttpHeaders({
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${user.token}`
-    });
   }
 }

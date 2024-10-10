@@ -4,7 +4,7 @@ import { RouterLink } from '@angular/router';
 import { ProductService } from '../../core/services/product.service';
 import { Product } from '../../shared/interfaces/product.interface';
 import { Subject, takeUntil } from 'rxjs';
-import { AsyncPipe, CurrencyPipe } from '@angular/common';
+import { CurrencyPipe } from '@angular/common';
 import { SearchInputComponent } from '../../core/components/search-input/search-input.component';
 import { UpsertProductModalComponent } from '../../core/components/upsert-product-modal/upsert-product-modal.component';
 import { Category } from '../../shared/interfaces/category.interface';
@@ -13,7 +13,7 @@ import { CategoryService } from '../../core/services/category.service';
 @Component({
   selector: 'app-inventory',
   standalone: true,
-  imports: [RouterLink, CurrencyPipe, SearchInputComponent, UpsertProductModalComponent, AsyncPipe],
+  imports: [RouterLink, CurrencyPipe, SearchInputComponent, UpsertProductModalComponent],
   templateUrl: './inventory.component.html',
   styleUrl: './inventory.component.css',
 })
@@ -58,7 +58,7 @@ export class InventoryComponent implements OnInit, OnDestroy {
   }
 
   private loadProducts(): void {
-    this.productService.productsSubject
+    this.productService.getAllProducts()
       .pipe(takeUntil(this.destroy$))
       .subscribe(products => {
         this.products = products || [];

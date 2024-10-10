@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { Observable } from 'rxjs';
 import { Category } from '../../shared/interfaces/category.interface';
-import { AuthService } from '../services/auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,10 +10,9 @@ import { AuthService } from '../services/auth.service';
 export class CategoryRepository {
   private _categoriesUrl = `${environment.apiUrl}/categories`;
 
-  constructor(private http: HttpClient, private authService: AuthService) { }
+  constructor(private http: HttpClient) { }
 
   getAllCategories(): Observable<Category[]> {
-    const headers = this.authService.userAuthorizationHeaders();
-    return this.http.get<Category[]>(this._categoriesUrl, { headers });
+    return this.http.get<Category[]>(this._categoriesUrl);
   }
 }

@@ -1,40 +1,42 @@
-import { Injectable } from '@angular/core';
 import {
   HttpEvent,
-  HttpHandler,
-  HttpInterceptor,
+  HttpHandlerFn,
+  HttpInterceptorFn,
   HttpRequest,
-  HttpResponse,
-  HttpErrorResponse,
+  HttpErrorResponse
 } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { tap, finalize } from 'rxjs/operators';
+import { inject } from '@angular/core';
 import { LoadingService } from '../services/loading.service';
 import { SwalAlertService } from '../services/swal-alert.service';
+import { UserInfo } from '../../shared/interfaces/user-Info.interface';
 
-@Injectable()
-export class HttpRequestInterceptor implements HttpInterceptor {
-  constructor(
-    private loadingService: LoadingService,
-    private swalAlertService: SwalAlertService
-  ) { }
+export const httpRequestInterceptor: HttpInterceptorFn =
+  (req: HttpRequest<unknown>, next: HttpHandlerFn): Observable<HttpEvent<unknown>> => {
+    const loadingService = inject(LoadingService);
+    const swalAlertService = inject(SwalAlertService);
+    const userData = localStorage.getItem('user');
+    let headers = req.headers;
 
-  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    this.loadingService.setLoadingState(true);
-    return next.handle(req).pipe(
+    if (userData) {
+      const user: UserInfo = JSON.parse(userData);
+      headers = headers.set('Content-Type', 'application/json');
+      headers = headers.set('Authorization', `Bearer ${user.token}`);
+    }
+
+    const authReq = req.clone({ headers });
+
+    loadingService.setLoadingState(true);
+
+    return next(authReq).pipe(
       tap({
-        next: (event) => {
-          if (event instanceof HttpResponse) {
-            console.log(event);
-          }
-        },
         error: (error: HttpErrorResponse) => {
-          this.swalAlertService.swalValidationErrorAlert(error);
-        },
+          swalAlertService.swalValidationErrorAlert(error);
+        }
       }),
       finalize(() => {
-        this.loadingService.setLoadingState(false);
+        loadingService.setLoadingState(false);
       })
     );
-  }
-}
+  };

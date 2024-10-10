@@ -4,7 +4,6 @@ import { Observable } from 'rxjs';
 import { Product } from '../../shared/interfaces/product.interface';
 import { BestSellerProduct } from '../../shared/interfaces/best-seller-product.interface';
 import { environment } from '../../../environments/environment';
-import { AuthService } from '../services/auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -13,30 +12,25 @@ export class ProductRepository {
   private _productsUrl = `${environment.apiUrl}/products`;
   private _bestSellersUrl = `${this._productsUrl}/best-sellers`;
 
-  constructor(private http: HttpClient, private authService: AuthService) { }
+  constructor(private http: HttpClient) { }
 
   getAllProducts(): Observable<Product[]> {
-    const headers = this.authService.userAuthorizationHeaders();
-    return this.http.get<Product[]>(this._productsUrl, { headers });
+    return this.http.get<Product[]>(this._productsUrl);
   }
 
   getBestSellerProducts(): Observable<BestSellerProduct[]> {
-    const headers = this.authService.userAuthorizationHeaders();
-    return this.http.get<BestSellerProduct[]>(this._bestSellersUrl, { headers });
+    return this.http.get<BestSellerProduct[]>(this._bestSellersUrl);
   }
 
   addProduct(newProduct: Product): Observable<Product> {
-    const headers = this.authService.userAuthorizationHeaders();
-    return this.http.post<Product>(this._productsUrl, newProduct, { headers });
+    return this.http.post<Product>(this._productsUrl, newProduct);
   }
 
   updateProduct(product: Product): Observable<Product> {
-    const headers = this.authService.userAuthorizationHeaders();
-    return this.http.put<Product>(`${this._productsUrl}/edit`, product, { headers });
+    return this.http.put<Product>(`${this._productsUrl}/edit`, product);
   }
 
   deleteProduct(productID: string): Observable<void> {
-    const headers = this.authService.userAuthorizationHeaders();
-    return this.http.delete<void>(`${this._productsUrl}/${productID}/delete`, { headers });
+    return this.http.delete<void>(`${this._productsUrl}/${productID}/delete`);
   }
 }

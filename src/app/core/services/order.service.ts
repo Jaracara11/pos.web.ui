@@ -3,6 +3,7 @@ import { Observable, BehaviorSubject, tap } from 'rxjs';
 import { RecentOrder } from '../../shared/interfaces/recent-order.interface';
 import { filter } from 'rxjs/operators';
 import { OrderRepository } from '../repositories/order.repository';
+import { ProductService } from '../services/product.service';
 import { OrderInfo } from '../../shared/interfaces/oder-info.interface';
 
 @Injectable({
@@ -12,7 +13,7 @@ export class OrderService {
   private recentOrdersSubject = new BehaviorSubject<RecentOrder[] | null>(null);
   private totalSalesSubject = new BehaviorSubject<number | null>(null);
 
-  constructor(private orderRepository: OrderRepository) { }
+  constructor(private orderRepository: OrderRepository, private productService: ProductService) { }
 
   getRecentOrders(): Observable<RecentOrder[]> {
     if (this.recentOrdersSubject.value === null) {
@@ -41,6 +42,7 @@ export class OrderService {
       tap(() => {
         this.refreshOrders();
         this.refreshSales();
+        this.productService.refreshProducts();
       })
     );
   }
