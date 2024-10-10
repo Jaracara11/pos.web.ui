@@ -1,8 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { BestSellerProduct } from '../../../shared/interfaces/best-seller-product.interface';
 import { ProductService } from '../../services/product.service';
-import { HttpErrorResponse } from '@angular/common/http';
-import { SwalAlertService } from '../../services/swal-alert.service';
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
@@ -16,10 +14,7 @@ export class BestSellerProductsComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
   bestSellerProducts: BestSellerProduct[] = [];
 
-  constructor(
-    private productService: ProductService,
-    private swalAlertService: SwalAlertService
-  ) { }
+  constructor(private productService: ProductService) { }
 
   ngOnInit(): void {
     this.loadBestSellerProducts();
@@ -33,13 +28,8 @@ export class BestSellerProductsComponent implements OnInit, OnDestroy {
   private loadBestSellerProducts(): void {
     this.productService.getBestSellerProducts()
       .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (response: BestSellerProduct[]) => {
-          this.bestSellerProducts = response;
-        },
-        error: (error: HttpErrorResponse) => {
-          this.swalAlertService.swalValidationErrorAlert(error);
-        }
+      .subscribe((response: BestSellerProduct[]) => {
+        this.bestSellerProducts = response;
       });
   }
 }

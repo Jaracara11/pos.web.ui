@@ -1,8 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { OrderService } from '../../services/order.service';
-import { SwalAlertService } from '../../services/swal-alert.service';
-import { HttpErrorResponse } from '@angular/common/http';
 import { CurrencyPipe } from '@angular/common';
 
 @Component({
@@ -16,10 +14,7 @@ export class SalesOfTheDayComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
   salesOfTheDay = 0;
 
-  constructor(
-    private orderService: OrderService,
-    private swalAlertService: SwalAlertService
-  ) { }
+  constructor(private orderService: OrderService) { }
 
   ngOnInit(): void {
     this.loadTotalSalesOfTheDay();
@@ -33,13 +28,8 @@ export class SalesOfTheDayComponent implements OnInit, OnDestroy {
   private loadTotalSalesOfTheDay(): void {
     this.orderService.getTotalSalesOfTheDay()
       .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (response: number) => {
-          this.salesOfTheDay = response;
-        },
-        error: (error: HttpErrorResponse) => {
-          this.swalAlertService.swalValidationErrorAlert(error);
-        }
+      .subscribe((response: number) => {
+        this.salesOfTheDay = response;
       });
   }
 }

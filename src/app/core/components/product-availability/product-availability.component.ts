@@ -2,8 +2,6 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { Product } from '../../../shared/interfaces/product.interface';
 import { ProductService } from '../../services/product.service';
-import { SwalAlertService } from '../../services/swal-alert.service';
-import { HttpErrorResponse } from '@angular/common/http';
 import { NgClass } from '@angular/common';
 
 @Component({
@@ -17,10 +15,7 @@ export class ProductAvailabilityComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
   lowStockProducts: Product[] = [];
 
-  constructor(
-    private productService: ProductService,
-    private swalAlertService: SwalAlertService
-  ) { }
+  constructor(private productService: ProductService) { }
 
   ngOnInit(): void {
     this.loadAllProducts();
@@ -47,13 +42,8 @@ export class ProductAvailabilityComponent implements OnInit, OnDestroy {
   private loadAllProducts(): void {
     this.productService.getAllProducts()
       .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (response: Product[]) => {
-          this.lowStockProducts = this.getLowStockProducts(response);
-        },
-        error: (error: HttpErrorResponse) => {
-          this.swalAlertService.swalValidationErrorAlert(error);
-        }
+      .subscribe((response: Product[]) => {
+        this.lowStockProducts = this.getLowStockProducts(response);
       });
   }
 

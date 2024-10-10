@@ -2,8 +2,6 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { RecentOrder } from '../../../shared/interfaces/recent-order.interface';
 import { OrderService } from '../../services/order.service';
-import { SwalAlertService } from '../../services/swal-alert.service';
-import { HttpErrorResponse } from '@angular/common/http';
 import { RouterLink } from '@angular/router';
 import { CurrencyPipe, DatePipe } from '@angular/common';
 
@@ -18,10 +16,7 @@ export class RecentOrdersComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
   recentOrders: RecentOrder[] = [];
 
-  constructor(
-    private orderService: OrderService,
-    private swalAlertService: SwalAlertService
-  ) { }
+  constructor(private orderService: OrderService) { }
 
   ngOnInit(): void {
     this.loadRecentOrders();
@@ -35,13 +30,8 @@ export class RecentOrdersComponent implements OnInit, OnDestroy {
   private loadRecentOrders(): void {
     this.orderService.getRecentOrders()
       .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (response: RecentOrder[]) => {
-          this.recentOrders = response;
-        },
-        error: (error: HttpErrorResponse) => {
-          this.swalAlertService.swalValidationErrorAlert(error);
-        }
+      .subscribe((response: RecentOrder[]) => {
+        this.recentOrders = response;
       });
   }
 }

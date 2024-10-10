@@ -6,11 +6,10 @@ import { AuthService } from '../../core/services/auth.service';
 import { Router } from '@angular/router';
 import { SwalAlertService } from '../../core/services/swal-alert.service';
 import { UserInfo } from '../../shared/interfaces/user-Info.interface';
-import { HttpErrorResponse } from '@angular/common/http';
 import { LoadingSpinnerComponent } from '../../core/components/loading-spinner/loading-spinner.component';
-import { LoadingService } from '../../core/services/loading.service';
-import { finalize, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
+import { LoadingService } from '../../core/services/loading.service';
 
 @Component({
   selector: 'app-auth',
@@ -48,17 +47,10 @@ export class AuthComponent {
       return;
     }
 
-    this.loadingService.setLoadingState(true);
-
-    this.authService.signIn(this.authForm.value).pipe(
-      finalize(() => this.loadingService.setLoadingState(false))
-    ).subscribe({
+    this.authService.signIn(this.authForm.value).subscribe({
       next: (response: UserInfo) => {
         localStorage.setItem('user', JSON.stringify(response));
         this.router.navigateByUrl('');
-      },
-      error: (error: HttpErrorResponse) => {
-        this.swalAlertService.swalValidationErrorAlert(error);
       }
     });
   }
