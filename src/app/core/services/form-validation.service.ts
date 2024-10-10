@@ -38,7 +38,6 @@ export class FormValidationService {
       productName: this.getRequiredField(3, 50),
       productDescription: ['', [Validators.maxLength(100)]],
       productStock: [0, [Validators.required, Validators.min(0)]],
-      productQuantity: [0, [Validators.min(0)]],
       productCost: [0, [Validators.required, Validators.min(0.01)]],
       productPrice: [0, [Validators.required, Validators.min(0.01)]],
       productCategory: [null, [Validators.required, this.categorySelectedValidator()]],

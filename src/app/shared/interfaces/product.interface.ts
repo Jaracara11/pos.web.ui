@@ -7,6 +7,5 @@ export interface Product {
   productStock: number;
   productCost: number;
   productPrice: number;
-  productQuantity?: number;
   productCategory: Category;
 }

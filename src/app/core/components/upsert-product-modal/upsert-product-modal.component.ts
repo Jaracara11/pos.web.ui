@@ -80,14 +80,12 @@ export class UpsertProductModalComponent implements OnInit, OnDestroy {
         productCategory: selectedCategory,
         productStock: selectedProduct.productStock,
         productCost: selectedProduct.productCost,
-        productPrice: selectedProduct.productPrice,
-        productQuantity: selectedProduct.productQuantity || 0
+        productPrice: selectedProduct.productPrice
       });
     } else {
       productIdField?.enable();
       this.productUpsertForm.patchValue({
-        productCategory: this.defaultCategory,
-        productQuantity: 0
+        productCategory: this.defaultCategory
       });
     }
 
