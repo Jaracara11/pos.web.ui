@@ -1,31 +1,34 @@
-import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../environments/environment';
 import { Injectable } from '@angular/core';
-import { Observable, shareReplay } from 'rxjs';
-import { AuthService } from './auth.service';
+import { Observable, BehaviorSubject, tap } from 'rxjs';
+import { CategoryRepository } from '../repositories/category.repository';
 import { Category } from '../../shared/interfaces/category.interface';
+import { filter } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CategoryService {
-  private _categoriesUrl = `${environment.apiUrl}/categories`;
+  private categoriesSubject = new BehaviorSubject<Category[] | null>(null);
+  private categoryChangeSubject = new BehaviorSubject<void>(undefined);
 
-  private categoriesCache$: Observable<Category[]> | null = null;
-
-  constructor(private http: HttpClient, private authService: AuthService) { }
+  constructor(private categoryRepository: CategoryRepository) { }
 
   getAllCategories(): Observable<Category[]> {
-    if (!this.categoriesCache$) {
-      const headers = this.authService.userAuthorizationHeaders();
-      this.categoriesCache$ = this.http.get<Category[]>(this._categoriesUrl, { headers }).pipe(
-        shareReplay(1)
-      );
+    if (this.categoriesSubject.value === null) {
+      this.categoryRepository.getAllCategories().pipe(
+        tap((categories) => this.categoriesSubject.next(categories))
+      ).subscribe();
     }
-    return this.categoriesCache$;
+    return this.categoriesSubject.asObservable().pipe(
+      filter((categories): categories is Category[] => categories !== null)
+    );
   }
-  
+
   clearCategoriesCache(): void {
-    this.categoriesCache$ = null;
+    this.categoriesSubject.next(null);
+  }
+
+  onCategoryChange(): Observable<void> {
+    return this.categoryChangeSubject.asObservable();
   }
 }

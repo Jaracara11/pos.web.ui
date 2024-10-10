@@ -1,66 +1,63 @@
-import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../environments/environment';
 import { Injectable } from '@angular/core';
-import { Observable, shareReplay, tap, Subject } from 'rxjs';
-import { AuthService } from './auth.service';
+import { Observable, BehaviorSubject, tap } from 'rxjs';
 import { RecentOrder } from '../../shared/interfaces/recent-order.interface';
+import { filter } from 'rxjs/operators';
+import { OrderRepository } from '../repositories/order.repository';
 import { OrderInfo } from '../../shared/interfaces/oder-info.interface';
+import { ProductService } from '../services/product.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class OrderService {
-  private _ordersUrl = `${environment.apiUrl}/orders`;
-  private _recentOrdersUrl = `${this._ordersUrl}/recent-orders`;
-  private _salesTodayUrl = `${this._ordersUrl}/sales-today`;
-
-  private recentOrdersCache$: Observable<RecentOrder[]> | null = null;
-  private totalSalesCache$: Observable<number> | null = null;
-  private orderChangeSubject = new Subject<void>();
+  private recentOrdersSubject = new BehaviorSubject<RecentOrder[] | null>(null);
+  private totalSalesSubject = new BehaviorSubject<number | null>(null);
+  private orderChangeSubject = new BehaviorSubject<void>(undefined);
 
   constructor(
-    private http: HttpClient,
-    private authService: AuthService
+    private orderRepository: OrderRepository,
+    private productService: ProductService
   ) { }
 
   getRecentOrders(): Observable<RecentOrder[]> {
-    if (!this.recentOrdersCache$) {
-      const headers = this.authService.userAuthorizationHeaders();
-      this.recentOrdersCache$ = this.http.get<RecentOrder[]>(this._recentOrdersUrl, { headers }).pipe(
-        shareReplay(1)
-      );
+    if (this.recentOrdersSubject.value === null) {
+      this.orderRepository.getRecentOrders().pipe(
+        tap((orders) => this.recentOrdersSubject.next(orders))
+      ).subscribe();
     }
-    return this.recentOrdersCache$;
+    return this.recentOrdersSubject.asObservable().pipe(
+      filter((orders): orders is RecentOrder[] => orders !== null)
+    );
   }
 
   getTotalSalesOfTheDay(): Observable<number> {
-    if (!this.totalSalesCache$) {
-      const headers = this.authService.userAuthorizationHeaders();
-      this.totalSalesCache$ = this.http.get<number>(this._salesTodayUrl, { headers }).pipe(
-        shareReplay(1)
-      );
+    if (this.totalSalesSubject.value === null) {
+      this.orderRepository.getTotalSalesOfTheDay().pipe(
+        tap((sales) => this.totalSalesSubject.next(sales))
+      ).subscribe();
     }
-    return this.totalSalesCache$;
+    return this.totalSalesSubject.asObservable().pipe(
+      filter((sales): sales is number => sales !== null)
+    );
   }
 
   getOrderByID(orderID: string): Observable<OrderInfo> {
-    const headers = this.authService.userAuthorizationHeaders();
-    return this.http.get<OrderInfo>(`${this._ordersUrl}/${orderID}`, { headers });
+    return this.orderRepository.getOrderByID(orderID);
   }
 
   cancelOrder(orderID: string): Observable<string> {
-    const headers = this.authService.userAuthorizationHeaders();
-    return this.http.post<string>(`${this._ordersUrl}/${orderID}/cancel`, {}, { headers }).pipe(
+    return this.orderRepository.cancelOrder(orderID).pipe(
       tap(() => {
         this.clearOrdersCache();
+        this.productService.productsSubject.next(null);
         this.orderChangeSubject.next();
       })
     );
   }
 
   clearOrdersCache(): void {
-    this.recentOrdersCache$ = null;
-    this.totalSalesCache$ = null;
+    this.recentOrdersSubject.next(null);
+    this.totalSalesSubject.next(null);
   }
 
   onOrderChange(): Observable<void> {

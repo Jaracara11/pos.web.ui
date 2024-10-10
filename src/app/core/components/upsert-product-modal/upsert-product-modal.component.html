@@ -89,7 +89,7 @@
       </button>
 
       @if (product) {
-      <button type="submit" class="btn btn-danger" (click)="onDelete()"><i
+      <button type="submit" class="btn btn-danger" (click)="onDelete()" [disabled]="(isSubmitting$ | async)"><i
           class="bi bi-exclamation-circle"></i>&nbsp;Delete</button>
       }
     </div>
