@@ -26,7 +26,7 @@ export class UpsertProductModalComponent implements OnInit, OnDestroy {
   modalRef: NgbModalRef | undefined;
   productUpsertForm: FormGroup;
   product: Product | null = null;
-  defaultCategory: Category = { categoryID: 0, categoryName: 'Select a Category...' }
+  defaultCategory: Category = { categoryID: 0, categoryName: 'Select a Category...' };
 
   constructor(
     private modalService: NgbModal,
@@ -93,9 +93,8 @@ export class UpsertProductModalComponent implements OnInit, OnDestroy {
     this.modalRef = this.modalService.open(this.upsertProductModal, modalOptions);
   }
 
-  onSubmit(): void {
+  async onSubmit(): Promise<void> {
     if (this.productUpsertForm.invalid) {
-      this.swalAlertService.swalAlertWithTitle('Form Invalid', 'Please check the form fields for errors.', 'error');
       return;
     }
 
@@ -106,40 +105,33 @@ export class UpsertProductModalComponent implements OnInit, OnDestroy {
       'Are you sure you want to update this product?' :
       'Are you sure you want to create this new product?';
 
-    this.swalAlertService.swalConfirmationAlert(confirmTitle, 'Confirm', 'warning')
-      .then((isConfirmed: boolean) => {
-        if (isConfirmed) {
-          const request = this.product ?
-            this.productService.updateProduct(productData) :
-            this.productService.addProduct(productData);
+    const isConfirmed = await this.swalAlertService.swalConfirmationAlert(confirmTitle, 'Confirm', 'warning');
 
-          request.pipe(takeUntil(this.destroy$)).subscribe({
-            next: () => {
-              const successMessage = this.product ? 'Product updated successfully' : 'Product created successfully';
-              this.swalAlertService.swalMessageAlert(successMessage, 'success');
-              this.productUpsertForm.reset();
-              this.modalRef?.close();
-            }
-          });
-        }
+    if (isConfirmed) {
+      const request = this.product ?
+        this.productService.updateProduct(productData) :
+        this.productService.addProduct(productData);
+
+      request.pipe(takeUntil(this.destroy$)).subscribe(() => {
+        const successMessage = this.product ? 'Product updated successfully' : 'Product created successfully';
+        this.swalAlertService.swalMessageAlert(successMessage, 'success');
+        this.productUpsertForm.reset();
+        this.modalRef?.close();
       });
+    }
   }
 
-  onDelete(): void {
+  async onDelete(): Promise<void> {
     if (!this.product?.productID) return;
 
     const confirmTitle = 'Are you sure you want to delete this product?';
+    const isConfirmed = await this.swalAlertService.swalConfirmationAlert(confirmTitle, 'Confirm', 'warning');
 
-    this.swalAlertService.swalConfirmationAlert(confirmTitle, 'Confirm', 'warning')
-      .then((isConfirmed: boolean) => {
-        if (isConfirmed && this.product?.productID) {
-          this.productService.deleteProduct(this.product.productID).pipe(takeUntil(this.destroy$)).subscribe({
-            next: () => {
-              this.swalAlertService.swalMessageAlert('Product deleted successfully', 'info');
-              this.modalRef?.close();
-            }
-          });
-        }
+    if (isConfirmed && this.product?.productID) {
+      this.productService.deleteProduct(this.product.productID).pipe(takeUntil(this.destroy$)).subscribe(() => {
+        this.swalAlertService.swalMessageAlert('Product deleted successfully', 'info');
+        this.modalRef?.close();
       });
+    }
   }
 }

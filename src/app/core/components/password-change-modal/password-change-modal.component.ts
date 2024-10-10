@@ -9,7 +9,6 @@ import { LoadingSpinnerComponent } from '../loading-spinner/loading-spinner.comp
 import { UserService } from '../../services/user.service';
 import { PasswordChange } from '../../../shared/interfaces/password-change.interface';
 import { UserInfo } from '../../../shared/interfaces/user-Info.interface';
-import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { SwalAlertService } from '../../services/swal-alert.service';
 
@@ -32,7 +31,6 @@ export class PasswordChangeModalComponent {
   };
 
   modalRef: NgbModalRef | undefined;
-
   passwordChangeForm: FormGroup;
 
   constructor(
@@ -55,7 +53,7 @@ export class PasswordChangeModalComponent {
     const errorType = this.passwordChangeForm.errors ? Object.keys(this.passwordChangeForm.errors)[0] : null;
 
     const errorMessages: Record<string, string> = {
-      passwordsMismatch: 'New password do not match.',
+      passwordsMismatch: 'New password does not match.',
       newPasswordSameAsOld: 'New password cannot be the same as the old password.'
     };
 
@@ -73,45 +71,42 @@ export class PasswordChangeModalComponent {
     this.modalRef.result.then(() => this.passwordChangeForm.reset(), () => this.passwordChangeForm.reset());
   }
 
-  onSubmit(): void {
+  async onSubmit(): Promise<void> {
     if (this.passwordChangeForm.invalid) {
       this.swalAlertService.swalAlertWithTitle('Form Invalid', 'Please check the form fields for errors.', 'error');
       return;
     }
 
-    this.swalAlertService.swalConfirmationAlert(
+    const isConfirmed = await this.swalAlertService.swalConfirmationAlert(
       'Are you sure you want to change your password?',
       'Yes, change it',
-      'warning')
-      .then((isConfirmed) => {
-        if (isConfirmed) {
-          const userData: PasswordChange = {
-            username: this.user.username,
-            oldpassword: this.passwordChangeForm.value.oldPassword,
-            newPassword: this.passwordChangeForm.value.newPassword
-          };
+      'warning'
+    );
 
-          this.loadingService.setLoadingState(true);
+    if (isConfirmed) {
+      const userData: PasswordChange = {
+        username: this.user.username,
+        oldpassword: this.passwordChangeForm.value.oldPassword,
+        newPassword: this.passwordChangeForm.value.newPassword
+      };
 
-          this.userService.changeUserPassword(userData).pipe(
-            finalize(() => {
-              this.loadingService.setLoadingState(false);
-              this.modalRef?.close();
-            })
-          ).subscribe({
-            next: () => {
-              localStorage.removeItem('user');
-              this.swalAlertService.swalAlertWithTitle(
-                'Password changed successfully!',
-                'Please sign in again.',
-                'info'
-              ).then(() => this.router.navigateByUrl('/auth'));
-            },
-            error: (error: HttpErrorResponse) => {
-              this.swalAlertService.swalValidationErrorAlert(error);
-            }
-          });
+      this.loadingService.setLoadingState(true);
+
+      this.userService.changeUserPassword(userData).pipe(
+        finalize(() => {
+          this.loadingService.setLoadingState(false);
+          this.modalRef?.close();
+        })
+      ).subscribe({
+        next: () => {
+          localStorage.removeItem('user');
+          this.swalAlertService.swalAlertWithTitle(
+            'Password changed successfully!',
+            'Please sign in again.',
+            'info'
+          ).then(() => this.router.navigateByUrl('/auth'));
         }
       });
+    }
   }
 }

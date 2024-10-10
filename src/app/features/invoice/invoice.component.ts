@@ -2,7 +2,6 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { OrderInfo } from '../../shared/interfaces/oder-info.interface';
 import { OrderService } from '../../core/services/order.service';
-import { HttpErrorResponse } from '@angular/common/http';
 import { SwalAlertService } from '../../core/services/swal-alert.service';
 import { RecentOrder } from '../../shared/interfaces/recent-order.interface';
 import { ActivatedRoute } from '@angular/router';
@@ -37,24 +36,20 @@ export class InvoiceComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  cancelOrder(): void {
+  async cancelOrder(): Promise<void> {
     const confirmTitle = 'Are you sure you want to cancel this order?';
 
-    this.swalAlertService.swalConfirmationAlert(confirmTitle, 'Confirm', 'warning')
-      .then((isConfirmed: boolean) => {
-        if (isConfirmed && this.orderId) {
-          this.orderService.cancelOrder(this.orderId).pipe(
-            takeUntil(this.destroy$)
-          ).subscribe({
-            next: () => {
-              this.swalAlertService.swalMessageAlert('Order cancelled successfully', 'info');
-            },
-            error: (error: HttpErrorResponse) => {
-              this.swalAlertService.swalValidationErrorAlert(error);
-            }
-          });
+    const isConfirmed = await this.swalAlertService.swalConfirmationAlert(confirmTitle, 'Confirm', 'warning');
+
+    if (isConfirmed && this.orderId) {
+      this.orderService.cancelOrder(this.orderId).pipe(
+        takeUntil(this.destroy$)
+      ).subscribe({
+        next: () => {
+          this.swalAlertService.swalMessageAlert('Order cancelled successfully', 'info');
         }
       });
+    }
   }
 
   printInvoice(): void {
@@ -76,9 +71,6 @@ export class InvoiceComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (response: OrderInfo) => {
           this.orderInfo = this.parseOrderInfo(response);
-        },
-        error: (error: HttpErrorResponse) => {
-          this.swalAlertService.swalValidationErrorAlert(error);
         }
       });
   }

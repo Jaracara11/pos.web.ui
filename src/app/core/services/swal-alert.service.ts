@@ -6,7 +6,7 @@ import { HttpErrorResponse } from '@angular/common/http';
   providedIn: 'root',
 })
 export class SwalAlertService {
-  SwalObj = Swal.mixin({
+  private SwalObj = Swal.mixin({
     customClass: {
       confirmButton: 'btn btn-warning m-3',
       cancelButton: 'btn btn-outline-dark',
@@ -32,23 +32,20 @@ export class SwalAlertService {
     });
   }
 
-  swalConfirmationAlert(title: string, buttonText: string, alertType: SweetAlertIcon): Promise<boolean> {
-    return this.SwalObj.fire({
+  async swalConfirmationAlert(title: string, buttonText: string, alertType: SweetAlertIcon): Promise<boolean> {
+    const result: SweetAlertResult = await this.SwalObj.fire({
       icon: alertType,
       title: title,
       showCancelButton: true,
       confirmButtonText: `<strong>${buttonText}</strong>`,
-      denyButtonText: 'Cancel'
-    }).then((result: SweetAlertResult) => {
-      return result.isConfirmed || false;
-    }).catch(() => {
-      return false;
+      denyButtonText: 'Cancel',
     });
+    return result.isConfirmed || false;
   }
 
   swalValidationErrorAlert(error: HttpErrorResponse): void {
     const errorTitle = error?.error?.title || 'Error';
-    const errorMessages: string[] = this.extractErrorMessages(error);
+    const errorMessages: string[] = this.extractSpecificErrorMessages(error, "product");
 
     const message = errorMessages.length
       ? errorMessages.map(msg => `<small>${msg}</small>`).join('<br>')
@@ -57,21 +54,16 @@ export class SwalAlertService {
     this.swalAlertWithTitle(errorTitle, message, 'error');
   }
 
-  private extractErrorMessages(error: HttpErrorResponse): string[] {
+  private extractSpecificErrorMessages(error: HttpErrorResponse, field: string): string[] {
     const messages: string[] = [];
 
-    if (error.error && typeof error.error.errors === 'object') {
-      for (const key in error.error.errors) {
-        if (error.error.errors[key]) {
-          messages.push(...error.error.errors[key]);
-        }
+    if (error.error?.errors && typeof error.error.errors === 'object') {
+      if (error.error.errors[field] && Array.isArray(error.error.errors[field])) {
+        messages.push(...error.error.errors[field]);
+      } else if (error.error.errors[field]) {
+        messages.push(error.error.errors[field]);
       }
     }
-
-    if (messages.length === 0 && error.error?.message) {
-      messages.push(error.error.message);
-    }
-
     return messages;
   }
 }
