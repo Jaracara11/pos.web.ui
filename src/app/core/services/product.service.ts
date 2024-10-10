@@ -9,7 +9,6 @@ import { BestSellerProduct } from '../../shared/interfaces/best-seller-product.i
   providedIn: 'root'
 })
 export class ProductService {
-  private productChangeSubject = new BehaviorSubject<void>(undefined);
   public productsSubject = new BehaviorSubject<Product[] | null>(null);
 
   constructor(private productRepository: ProductRepository) { }
@@ -32,28 +31,25 @@ export class ProductService {
 
   addProduct(newProduct: Product): Observable<Product> {
     return this.productRepository.addProduct(newProduct).pipe(
-      tap(() => this.clearProductsCache())
+      tap(() => this.refreshProducts())
     );
   }
 
   updateProduct(product: Product): Observable<Product> {
     return this.productRepository.updateProduct(product).pipe(
-      tap(() => this.clearProductsCache())
+      tap(() => this.refreshProducts())
     );
   }
 
   deleteProduct(productID: string): Observable<void> {
     return this.productRepository.deleteProduct(productID).pipe(
-      tap(() => this.clearProductsCache())
+      tap(() => this.refreshProducts())
     );
   }
 
-  clearProductsCache(): void {
-    this.productsSubject.next(null);
-    this.productChangeSubject.next();
-  }
-
-  onProductChange(): Observable<void> {
-    return this.productChangeSubject.asObservable();
+  refreshProducts(): void {
+    this.productRepository.getAllProducts().subscribe(products => {
+      this.productsSubject.next(products);
+    });
   }
 }

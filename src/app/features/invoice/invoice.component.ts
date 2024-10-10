@@ -5,7 +5,7 @@ import { OrderService } from '../../core/services/order.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { SwalAlertService } from '../../core/services/swal-alert.service';
 import { RecentOrder } from '../../shared/interfaces/recent-order.interface';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { AsyncPipe, CurrencyPipe, DatePipe } from '@angular/common';
 import { OrderProduct } from '../../shared/interfaces/order-product.interface';
 
@@ -25,8 +25,7 @@ export class InvoiceComponent implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private swalAlertService: SwalAlertService,
-    private orderService: OrderService,
-    private router: Router
+    private orderService: OrderService
   ) { }
 
   ngOnInit() {

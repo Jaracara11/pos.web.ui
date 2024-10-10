@@ -4,7 +4,6 @@ import { RecentOrder } from '../../shared/interfaces/recent-order.interface';
 import { filter } from 'rxjs/operators';
 import { OrderRepository } from '../repositories/order.repository';
 import { OrderInfo } from '../../shared/interfaces/oder-info.interface';
-import { ProductService } from '../services/product.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,18 +11,12 @@ import { ProductService } from '../services/product.service';
 export class OrderService {
   private recentOrdersSubject = new BehaviorSubject<RecentOrder[] | null>(null);
   private totalSalesSubject = new BehaviorSubject<number | null>(null);
-  private orderChangeSubject = new BehaviorSubject<void>(undefined);
 
-  constructor(
-    private orderRepository: OrderRepository,
-    private productService: ProductService
-  ) { }
+  constructor(private orderRepository: OrderRepository) { }
 
   getRecentOrders(): Observable<RecentOrder[]> {
     if (this.recentOrdersSubject.value === null) {
-      this.orderRepository.getRecentOrders().pipe(
-        tap((orders) => this.recentOrdersSubject.next(orders))
-      ).subscribe();
+      return this.refreshOrders();
     }
     return this.recentOrdersSubject.asObservable().pipe(
       filter((orders): orders is RecentOrder[] => orders !== null)
@@ -32,9 +25,7 @@ export class OrderService {
 
   getTotalSalesOfTheDay(): Observable<number> {
     if (this.totalSalesSubject.value === null) {
-      this.orderRepository.getTotalSalesOfTheDay().pipe(
-        tap((sales) => this.totalSalesSubject.next(sales))
-      ).subscribe();
+      return this.refreshSales();
     }
     return this.totalSalesSubject.asObservable().pipe(
       filter((sales): sales is number => sales !== null)
@@ -48,19 +39,21 @@ export class OrderService {
   cancelOrder(orderID: string): Observable<string> {
     return this.orderRepository.cancelOrder(orderID).pipe(
       tap(() => {
-        this.clearOrdersCache();
-        this.productService.productsSubject.next(null);
-        this.orderChangeSubject.next();
+        this.refreshOrders();
+        this.refreshSales();
       })
     );
   }
 
-  clearOrdersCache(): void {
-    this.recentOrdersSubject.next(null);
-    this.totalSalesSubject.next(null);
+  private refreshOrders(): Observable<RecentOrder[]> {
+    return this.orderRepository.getRecentOrders().pipe(
+      tap(orders => this.recentOrdersSubject.next(orders))
+    );
   }
 
-  onOrderChange(): Observable<void> {
-    return this.orderChangeSubject.asObservable();
+  private refreshSales(): Observable<number> {
+    return this.orderRepository.getTotalSalesOfTheDay().pipe(
+      tap(sales => this.totalSalesSubject.next(sales))
+    );
   }
 }

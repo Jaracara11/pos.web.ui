@@ -4,8 +4,6 @@ import { RouterLink } from '@angular/router';
 import { ProductService } from '../../core/services/product.service';
 import { Product } from '../../shared/interfaces/product.interface';
 import { Subject, takeUntil } from 'rxjs';
-import { HttpErrorResponse } from '@angular/common/http';
-import { SwalAlertService } from '../../core/services/swal-alert.service';
 import { AsyncPipe, CurrencyPipe } from '@angular/common';
 import { SearchInputComponent } from '../../core/components/search-input/search-input.component';
 import { UpsertProductModalComponent } from '../../core/components/upsert-product-modal/upsert-product-modal.component';
@@ -31,8 +29,7 @@ export class InventoryComponent implements OnInit, OnDestroy {
   constructor(
     private authService: AuthService,
     private productService: ProductService,
-    private categoryService: CategoryService,
-    private swalAlertService: SwalAlertService
+    private categoryService: CategoryService
   ) {
     this.validateRolePermission = this.authService.validateUserRolePermission(['Admin', 'Manager']);
   }
@@ -61,39 +58,19 @@ export class InventoryComponent implements OnInit, OnDestroy {
   }
 
   private loadProducts(): void {
-    this.fetchProducts();
-
-    this.productService.onProductChange()
+    this.productService.productsSubject
       .pipe(takeUntil(this.destroy$))
-      .subscribe(() => {
-        this.fetchProducts();
-      });
-  }
-
-  private fetchProducts(): void {
-    this.productService.getAllProducts()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (response: Product[]) => {
-          this.products = response;
-          this.filteredProducts = this.products;
-        },
-        error: (error: HttpErrorResponse) => {
-          this.swalAlertService.swalValidationErrorAlert(error);
-        }
+      .subscribe(products => {
+        this.products = products || [];
+        this.filteredProducts = this.products;
       });
   }
 
   private loadCategories(): void {
     this.categoryService.getAllCategories()
       .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (response: Category[]) => {
-          this.categories = response;
-        },
-        error: (error: HttpErrorResponse) => {
-          this.swalAlertService.swalValidationErrorAlert(error);
-        }
+      .subscribe(categories => {
+        this.categories = categories;
       });
   }
 }
