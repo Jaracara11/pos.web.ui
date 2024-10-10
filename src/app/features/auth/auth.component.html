@@ -1,7 +1,4 @@
 <form [formGroup]="authForm" class="auth-card" (ngSubmit)="onSubmit()">
-  @if (isSubmitting$ | async) {
-  <app-loading-spinner></app-loading-spinner>
-  } @else {
   <div class="card">
     <div class="card-body">
       <h5 class="card-title">Point Of Sale Web</h5>
@@ -14,10 +11,9 @@
       <small class="text-danger">
         {{ getAuthErrorMessage("password") }}
       </small>
-      <button type="submit" class="btn btn-dark" [disabled]="authForm.invalid">
+      <button type="submit" class="btn btn-dark" [disabled]="authForm.invalid || (isLoading$ | async)">
         Sign in
       </button>
     </div>
   </div>
-  }
 </form>

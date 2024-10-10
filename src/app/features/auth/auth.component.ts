@@ -20,7 +20,7 @@ import { AsyncPipe } from '@angular/common';
   styleUrl: './auth.component.css',
 })
 export class AuthComponent {
-  isSubmitting$: Observable<boolean>;
+  isLoading$: Observable<boolean>;
   authForm: FormGroup;
   user: UserAuth = {
     username: '',
@@ -34,7 +34,7 @@ export class AuthComponent {
     private loadingService: LoadingService,
     private swalAlertService: SwalAlertService,
   ) {
-    this.isSubmitting$ = loadingService.getLoadingState;
+    this.isLoading$ = loadingService.getLoadingState;
     this.authForm = this.formValidationService.createAuthForm();
   }
 

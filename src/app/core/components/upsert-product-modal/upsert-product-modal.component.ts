@@ -7,8 +7,9 @@ import { SwalAlertService } from '../../services/swal-alert.service';
 import { AsyncPipe, CommonModule } from '@angular/common';
 import { Category } from '../../../shared/interfaces/category.interface';
 import { ProductService } from '../../services/product.service';
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { LoadingService } from '../../services/loading.service';
 
 @Component({
   selector: 'app-upsert-product-modal',
@@ -19,6 +20,7 @@ import { takeUntil } from 'rxjs/operators';
 })
 export class UpsertProductModalComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
+  isLoading$: Observable<boolean>;
   @ViewChild('upsertProductModal') upsertProductModal!: TemplateRef<unknown>;
   @Input() categories: Category[] = [];
   modalRef: NgbModalRef | undefined;
@@ -30,9 +32,11 @@ export class UpsertProductModalComponent implements OnInit, OnDestroy {
     private modalService: NgbModal,
     private formValidationService: FormValidationService,
     private swalAlertService: SwalAlertService,
-    private productService: ProductService
+    private productService: ProductService,
+    private loadingService: LoadingService
   ) {
     this.productUpsertForm = this.formValidationService.upsertProductForm();
+    this.isLoading$ = this.loadingService.getLoadingState;
   }
 
   ngOnInit(): void {

@@ -2,9 +2,6 @@
   <div class="modal-body modal-sm">
     <form [formGroup]="productUpsertForm" (ngSubmit)="onSubmit()">
       <h5 class="title">{{product ? 'Edit Product' : 'Add New Product'}}</h5>
-      @if (isSubmitting$ | async) {
-      <app-loading-spinner></app-loading-spinner>
-      } @else {
       <div>
         <div class="product-input">
           @if (product) {
@@ -80,16 +77,15 @@
           </small>
         </div>
       </div>
-      }
     </form>
     <div>
       <button type="submit" class="btn btn-dark" (click)="onSubmit()"
-        [disabled]="!productUpsertForm.dirty || (isSubmitting$ | async)">
+        [disabled]="!productUpsertForm.dirty || (isLoading$ | async)">
         <i class="bi bi-database"></i>&nbsp;{{ product ? 'Update' : 'Save' }}
       </button>
 
       @if (product) {
-      <button type="submit" class="btn btn-danger" (click)="onDelete()" [disabled]="(isSubmitting$ | async)"><i
+      <button type="submit" class="btn btn-danger" (click)="onDelete()" [disabled]="(isLoading$ | async)"><i
           class="bi bi-exclamation-circle"></i>&nbsp;Delete</button>
       }
     </div>

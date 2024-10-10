@@ -22,6 +22,7 @@ import { SwalAlertService } from '../../services/swal-alert.service';
 })
 export class PasswordChangeModalComponent {
   @ViewChild('changePasswordModal') changePasswordModal!: TemplateRef<unknown>;
+  isLoading$: Observable<boolean>;
   @Input() user: UserInfo = {
     username: '',
     name: '',
@@ -31,7 +32,7 @@ export class PasswordChangeModalComponent {
   };
 
   modalRef: NgbModalRef | undefined;
-  isSubmitting$: Observable<boolean>;
+
   passwordChangeForm: FormGroup;
 
   constructor(
@@ -42,8 +43,8 @@ export class PasswordChangeModalComponent {
     private swalAlertService: SwalAlertService,
     private router: Router
   ) {
+    this.isLoading$ = loadingService.getLoadingState;
     this.passwordChangeForm = this.formValidationService.createPasswordChangeForm();
-    this.isSubmitting$ = loadingService.getLoadingState;
   }
 
   getPasswordErrorMessage(fieldName: string): string | null {

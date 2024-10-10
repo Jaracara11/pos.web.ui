@@ -18,7 +18,7 @@ import { PasswordChangeModalComponent } from '../password-change-modal/password-
 export class SidebarComponent {
   @ViewChild(PasswordChangeModalComponent) passwordChangeModal!: PasswordChangeModalComponent;
   validateRolePermission: boolean;
-  user: UserInfo;
+  user: UserInfo | null;
   passwordChangeForm: FormGroup;
 
   constructor(

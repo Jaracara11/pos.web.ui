@@ -1,52 +1,49 @@
 import { Injectable } from '@angular/core';
-import { environment } from '../../../environments/environment';
-import { HttpClient } from '@angular/common/http';
+import { Observable, BehaviorSubject } from 'rxjs';
+import { tap } from 'rxjs/operators';
+import { UserRepository } from '../repositories/user.repository';
 import { UserAuth } from '../../shared/interfaces/user-auth.interface';
 import { UserInfo } from '../../shared/interfaces/user-Info.interface';
-import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private _usersUrl = `${environment.apiUrl}/users/auth`;
+  private userSubject = new BehaviorSubject<UserInfo | null>(null);
 
-  constructor(private http: HttpClient) { }
+  constructor(private userRepository: UserRepository) { }
 
   signIn(user: UserAuth): Observable<UserInfo> {
-    return this.http.post<UserInfo>(this._usersUrl, user);
+    return this.userRepository.signIn(user).pipe(
+      tap((userInfo) => {
+        this.userSubject.next(userInfo);
+        localStorage.setItem('user', JSON.stringify(userInfo));
+      })
+    );
   }
 
   signOut(): void {
     localStorage.removeItem('user');
+    this.userSubject.next(null);
   }
 
   isUserAuth(): boolean {
-    const userData = localStorage.getItem('user');
-
-    if (!userData) { return false; }
-
-    const user: UserInfo = JSON.parse(userData);
+    const user = this.getAuthInfo();
+    if (!user) {
+      return false;
+    }
 
     const decodedToken = JSON.parse(atob(user.token.split('.')[1]));
-
-    if (decodedToken.exp > Date.now() / 1000) { return true; }
-
-    return false;
+    return decodedToken.exp > Date.now() / 1000;
   }
 
-  getAuthInfo(): UserInfo {
+  getAuthInfo(): UserInfo | null {
     const userData = localStorage.getItem('user');
     return userData ? JSON.parse(userData) : null;
   }
 
   validateUserRolePermission(roles: string[]): boolean {
-    const userDataStr = localStorage.getItem('user');
-
-    if (!userDataStr) { return false; }
-
-    const userData: UserInfo = JSON.parse(userDataStr);
-
-    return roles.includes(userData.role);
+    const user = this.getAuthInfo();
+    return user ? roles.includes(user.role) : false;
   }
 }
