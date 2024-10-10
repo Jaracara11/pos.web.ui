@@ -1,34 +1,18 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
-import { SidebarComponent } from './core/components/sidebar/sidebar.component';
-import { Subscription } from 'rxjs';
+import { Component } from '@angular/core';
+import { Observable } from 'rxjs';
+import { LoadingService } from './core/services/loading.service';
+import { LoadingSpinnerComponent } from './core/components/loading-spinner/loading-spinner.component';
+import { RouterOutlet } from '@angular/router';
+import { AsyncPipe } from '@angular/common';
+import { LayoutComponent } from './core/components/layout/layout.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, SidebarComponent],
+  imports: [RouterOutlet, LayoutComponent],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css',
+  styleUrl: './app.component.css'
 })
-export class AppComponent implements OnInit, OnDestroy {
-  private _routerSub$ = Subscription.EMPTY;
-  isSidebarVisible = true;
-
-  constructor(private router: Router) { }
-
-  ngOnInit(): void {
-    this.toggleSidebarVisibility();
-  }
-
-  ngOnDestroy(): void {
-    this._routerSub$.unsubscribe();
-  }
-
-  private toggleSidebarVisibility(): void {
-    this._routerSub$ = this.router.events.subscribe((event) => {
-      if (event instanceof NavigationEnd) {
-        this.isSidebarVisible = !event.url.includes('/auth');
-      }
-    });
-  }
+export class AppComponent {
+  constructor() { }
 }
