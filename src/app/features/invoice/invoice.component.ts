@@ -7,7 +7,6 @@ import { SwalAlertService } from '../../core/services/swal-alert.service';
 import { RecentOrder } from '../../shared/interfaces/recent-order.interface';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AsyncPipe, CurrencyPipe, DatePipe } from '@angular/common';
-import { ProductService } from '../../core/services/product.service';
 import { OrderProduct } from '../../shared/interfaces/order-product.interface';
 
 @Component({
@@ -27,7 +26,6 @@ export class InvoiceComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private swalAlertService: SwalAlertService,
     private orderService: OrderService,
-    private productService: ProductService,
     private router: Router
   ) { }
 
@@ -47,16 +45,15 @@ export class InvoiceComponent implements OnInit, OnDestroy {
       .then((isConfirmed: boolean) => {
         if (isConfirmed && this.orderId) {
           this.orderService.cancelOrder(this.orderId).pipe(
-            takeUntil(this.destroy$),
-            tap(() =>
-              this.productService.clearCacheAndNotify())).subscribe({
-                next: () => {
-                  this.swalAlertService.swalMessageAlert('Order cancelled successfully', 'info');
-                },
-                error: (error: HttpErrorResponse) => {
-                  this.swalAlertService.swalValidationErrorAlert(error);
-                }
-              });
+            takeUntil(this.destroy$)
+          ).subscribe({
+            next: () => {
+              this.swalAlertService.swalMessageAlert('Order cancelled successfully', 'info');
+            },
+            error: (error: HttpErrorResponse) => {
+              this.swalAlertService.swalValidationErrorAlert(error);
+            }
+          });
         }
       });
   }

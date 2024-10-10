@@ -1,9 +1,7 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { tap, filter } from 'rxjs/operators';
-import { environment } from '../../../environments/environment';
-import { AuthService } from './auth.service';
+import { ProductRepository } from '../repositories/product.repository';
 import { Product } from '../../shared/interfaces/product.interface';
 import { BestSellerProduct } from '../../shared/interfaces/best-seller-product.interface';
 
@@ -11,15 +9,10 @@ import { BestSellerProduct } from '../../shared/interfaces/best-seller-product.i
   providedIn: 'root'
 })
 export class ProductService {
-  private _productsUrl = `${environment.apiUrl}/products`;
-  private _bestSellersUrl = `${this._productsUrl}/best-sellers`;
   private productChangeSubject = new BehaviorSubject<void>(undefined);
   public productsSubject = new BehaviorSubject<Product[] | null>(null);
 
-  constructor(
-    private http: HttpClient,
-    private authService: AuthService
-  ) { }
+  constructor(private productRepository: ProductRepository) { }
 
   getAllProducts(): Observable<Product[]> {
     if (this.productsSubject.value) {
@@ -28,45 +21,34 @@ export class ProductService {
       ) as Observable<Product[]>;
     }
 
-    const headers = this.authService.userAuthorizationHeaders();
-    return this.http.get<Product[]>(this._productsUrl, { headers }).pipe(
+    return this.productRepository.getAllProducts().pipe(
       tap(products => this.productsSubject.next(products))
     );
   }
 
   getBestSellerProducts(): Observable<BestSellerProduct[]> {
-    const headers = this.authService.userAuthorizationHeaders();
-    return this.http.get<BestSellerProduct[]>(this._bestSellersUrl, { headers });
+    return this.productRepository.getBestSellerProducts();
   }
 
   addProduct(newProduct: Product): Observable<Product> {
-    const headers = this.authService.userAuthorizationHeaders();
-    return this.http.post<Product>(this._productsUrl, newProduct, { headers }).pipe(
-      tap(() => {
-        this.clearCacheAndNotify();
-      })
+    return this.productRepository.addProduct(newProduct).pipe(
+      tap(() => this.clearProductsCache())
     );
   }
 
   updateProduct(product: Product): Observable<Product> {
-    const headers = this.authService.userAuthorizationHeaders();
-    return this.http.put<Product>(`${this._productsUrl}/edit`, product, { headers }).pipe(
-      tap(() => {
-        this.clearCacheAndNotify();
-      })
+    return this.productRepository.updateProduct(product).pipe(
+      tap(() => this.clearProductsCache())
     );
   }
 
   deleteProduct(productID: string): Observable<void> {
-    const headers = this.authService.userAuthorizationHeaders();
-    return this.http.delete<void>(`${this._productsUrl}/${productID}/delete`, { headers }).pipe(
-      tap(() => {
-        this.clearCacheAndNotify();
-      })
+    return this.productRepository.deleteProduct(productID).pipe(
+      tap(() => this.clearProductsCache())
     );
   }
 
-  clearCacheAndNotify(): void {
+  clearProductsCache(): void {
     this.productsSubject.next(null);
     this.productChangeSubject.next();
   }
