@@ -1,6 +1,10 @@
 <div class="row h-100">
   @if (isSidebarVisible) {
-  <div class="col-auto"><app-sidebar></app-sidebar></div>
+  <aside class="col-auto">
+    <app-sidebar></app-sidebar>
+  </aside>
   }
-  <div class="col"><router-outlet></router-outlet></div>
+  <main class="col">
+    <router-outlet></router-outlet>
+  </main>
 </div>
