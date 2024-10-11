@@ -44,26 +44,7 @@ export class SwalAlertService {
   }
 
   swalValidationErrorAlert(error: HttpErrorResponse): void {
-    const errorTitle = error?.error?.title || 'Error';
-    const errorMessages: string[] = this.extractSpecificErrorMessages(error, "product");
-
-    const message = errorMessages.length
-      ? errorMessages.map(msg => `<small>${msg}</small>`).join('<br>')
-      : 'An unknown error occurred.';
-
-    this.swalAlertWithTitle(errorTitle, message, 'error');
-  }
-
-  private extractSpecificErrorMessages(error: HttpErrorResponse, field: string): string[] {
-    const messages: string[] = [];
-
-    if (error.error?.errors && typeof error.error.errors === 'object') {
-      if (error.error.errors[field] && Array.isArray(error.error.errors[field])) {
-        messages.push(...error.error.errors[field]);
-      } else if (error.error.errors[field]) {
-        messages.push(error.error.errors[field]);
-      }
-    }
-    return messages;
+    const message = error.error?.Message || 'An unknown error occurred.';
+    this.swalAlertWithTitle('Error', message, 'error');
   }
 }
