@@ -97,6 +97,13 @@ export class UpsertProductModalComponent implements OnInit, OnDestroy {
       return;
     }
 
+    const selectedCategory = this.productUpsertForm.get('productCategory')?.value;
+
+    if (selectedCategory.categoryID === 0) {
+      await this.swalAlertService.swalMessageAlert('Please select a valid category.', 'warning');
+      return;
+    }
+
     const productData: Product = { ...this.productUpsertForm.value };
     productData.productID = this.productUpsertForm.get('productID')?.value;
 
