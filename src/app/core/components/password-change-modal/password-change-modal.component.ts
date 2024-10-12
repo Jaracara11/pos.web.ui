@@ -90,11 +90,8 @@ export class PasswordChangeModalComponent {
         newPassword: this.passwordChangeForm.value.newPassword
       };
 
-      this.loadingService.setLoadingState(true);
-
       this.userService.changeUserPassword(userData).pipe(
         finalize(() => {
-          this.loadingService.setLoadingState(false);
           this.modalRef?.close();
         })
       ).subscribe({
