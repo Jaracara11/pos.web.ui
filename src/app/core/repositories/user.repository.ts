@@ -10,7 +10,7 @@ import { UserInfo } from '../../shared/interfaces/user-Info.interface';
   providedIn: 'root',
 })
 export class UserRepository {
-  private _usersUrl = `${environment.apiUrl}/users`;
+  private _usersUrl = `${environment.apiUrl}/user`;
 
   constructor(private http: HttpClient) { }
 

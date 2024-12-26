@@ -44,7 +44,7 @@ export class SwalAlertService {
   }
 
   swalValidationErrorAlert(error: HttpErrorResponse): void {
-    const message = error.error?.Message || 'An unknown error occurred.';
+    const message = error.error?.message || 'An unknown error occurred.';
     this.swalAlertWithTitle('Error', message, 'error');
   }
 }

@@ -6,6 +6,7 @@ import {
   ValidationErrors,
   AbstractControl,
   ValidatorFn,
+  FormControl,
 } from '@angular/forms';
 
 @Injectable({
@@ -37,9 +38,9 @@ export class FormValidationService {
       productID: ['', [Validators.minLength(3), Validators.maxLength(50)]],
       productName: this.getRequiredField(3, 50),
       productDescription: ['', [Validators.maxLength(100)]],
-      productStock: [0, [Validators.required, Validators.min(0)]],
-      productCost: [0, [Validators.required, Validators.min(0.01)]],
-      productPrice: [0, [Validators.required, Validators.min(0.01)]],
+      productStock: [0, [Validators.required, Validators.min(0), this.numericValidator()]],
+      productCost: [0, [Validators.required, Validators.min(0.01), this.numericValidator()]],
+      productPrice: [0, [Validators.required, Validators.min(0.01), this.numericValidator()]],
       productCategory: [null, [Validators.required, this.categorySelectedValidator()]],
     });
   }
@@ -47,6 +48,7 @@ export class FormValidationService {
   getFieldErrorMessage(form: FormGroup, fieldName: string): string | null {
     const field = form.get(fieldName);
     if (field && this.isFieldInvalid(field)) {
+      console.log(field.errors)
       const error = Object.keys(field.errors || {})[0];
       return this.getErrorMessage(fieldName, error, field.errors?.[error]);
     }
@@ -55,16 +57,21 @@ export class FormValidationService {
 
   private getErrorMessage(fieldName: string, errorType: string, errorValue?: ValidationErrors): string {
     const errorMessages: Record<string, string> = {
-      required: `${fieldName} is required.`,
-      minlength: `${fieldName} cannot have less than ${errorValue?.['requiredLength']} characters.`,
-      maxlength: `${fieldName} cannot exceed ${errorValue?.['requiredLength']} characters.`,
-      min: `${fieldName} cannot be a negative number.`,
+      required: `${this.formatFieldName(fieldName)} is required.`,
+      minlength: `${this.formatFieldName(fieldName)} cannot have less than ${errorValue?.['requiredLength']} characters.`,
+      maxlength: `${this.formatFieldName(fieldName)} cannot exceed ${errorValue?.['requiredLength']} characters.`,
+      min: `${this.formatFieldName(fieldName)} must be at least ${errorValue?.['min']}.`,
+      invalidNumber: `${this.formatFieldName(fieldName)} must be a valid number.`,
     };
     return errorMessages[errorType] || '';
   }
 
-  private getRequiredField(minLength: number, maxLength: number) {
-    return ['', [Validators.required, Validators.minLength(minLength), Validators.maxLength(maxLength)]];
+  private getRequiredField(minLength: number, maxLength: number): FormControl {
+    return this.formBuilder.control('', Validators.compose([
+      Validators.required,
+      Validators.minLength(minLength),
+      Validators.maxLength(maxLength)
+    ]));
   }
 
   private isFieldInvalid(field: AbstractControl): boolean {
@@ -89,5 +96,24 @@ export class FormValidationService {
     return (control: AbstractControl): ValidationErrors | null => {
       return control.value ? null : { required: true };
     };
+  }
+
+  private numericValidator(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      return isNaN(Number(control.value)) ? { invalidNumber: true } : null;
+    };
+  }
+
+  private formatFieldName(fieldName: string): string {
+    const fieldNames: Record<string, string> = {
+      productID: 'Product ID',
+      productName: 'Product Name',
+      productDescription: 'Product Description',
+      productStock: 'Product Stock',
+      productCost: 'Product Cost',
+      productPrice: 'Product Price',
+      productCategory: 'Product Category',
+    };
+    return fieldNames[fieldName] || fieldName;
   }
 }
