@@ -12,11 +12,10 @@ import { takeUntil } from 'rxjs/operators';
 import { LoadingService } from '../../services/loading.service';
 
 @Component({
-  selector: 'app-upsert-product-modal',
-  standalone: true,
-  imports: [FormsModule, ReactiveFormsModule, AsyncPipe, CommonModule],
-  templateUrl: './upsert-product-modal.component.html',
-  styleUrl: './upsert-product-modal.component.css'
+    selector: 'app-upsert-product-modal',
+    imports: [FormsModule, ReactiveFormsModule, AsyncPipe, CommonModule],
+    templateUrl: './upsert-product-modal.component.html',
+    styleUrl: './upsert-product-modal.component.css'
 })
 export class UpsertProductModalComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();

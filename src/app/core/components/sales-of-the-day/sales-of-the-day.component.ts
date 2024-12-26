@@ -4,11 +4,10 @@ import { OrderService } from '../../services/order.service';
 import { CurrencyPipe } from '@angular/common';
 
 @Component({
-  selector: 'app-sales-of-the-day',
-  standalone: true,
-  imports: [CurrencyPipe],
-  templateUrl: './sales-of-the-day.component.html',
-  styleUrl: './sales-of-the-day.component.css'
+    selector: 'app-sales-of-the-day',
+    imports: [CurrencyPipe],
+    templateUrl: './sales-of-the-day.component.html',
+    styleUrl: './sales-of-the-day.component.css'
 })
 export class SalesOfTheDayComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();

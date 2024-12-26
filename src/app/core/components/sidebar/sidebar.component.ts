@@ -9,11 +9,10 @@ import { LoadingSpinnerComponent } from '../loading-spinner/loading-spinner.comp
 import { PasswordChangeModalComponent } from '../password-change-modal/password-change-modal.component';
 
 @Component({
-  selector: 'app-sidebar',
-  standalone: true,
-  imports: [RouterLink, RouterLinkActive, FormsModule, ReactiveFormsModule, LoadingSpinnerComponent, PasswordChangeModalComponent, AsyncPipe],
-  templateUrl: './sidebar.component.html',
-  styleUrl: './sidebar.component.css',
+    selector: 'app-sidebar',
+    imports: [RouterLink, RouterLinkActive, FormsModule, ReactiveFormsModule, LoadingSpinnerComponent, PasswordChangeModalComponent, AsyncPipe],
+    templateUrl: './sidebar.component.html',
+    styleUrl: './sidebar.component.css'
 })
 export class SidebarComponent {
   @ViewChild(PasswordChangeModalComponent) passwordChangeModal!: PasswordChangeModalComponent;

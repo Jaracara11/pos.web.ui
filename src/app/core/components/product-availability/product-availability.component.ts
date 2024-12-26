@@ -5,11 +5,10 @@ import { ProductService } from '../../services/product.service';
 import { NgClass } from '@angular/common';
 
 @Component({
-  selector: 'app-product-availability',
-  standalone: true,
-  imports: [NgClass],
-  templateUrl: './product-availability.component.html',
-  styleUrl: './product-availability.component.css'
+    selector: 'app-product-availability',
+    imports: [NgClass],
+    templateUrl: './product-availability.component.html',
+    styleUrl: './product-availability.component.css'
 })
 export class ProductAvailabilityComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();

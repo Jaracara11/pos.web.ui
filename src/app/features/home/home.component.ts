@@ -5,10 +5,9 @@ import { ProductAvailabilityComponent } from '../../core/components/product-avai
 import { SalesOfTheDayComponent } from '../../core/components/sales-of-the-day/sales-of-the-day.component';
 
 @Component({
-  selector: 'app-home',
-  standalone: true,
-  imports: [BestSellerProductsComponent, RecentOrdersComponent, ProductAvailabilityComponent, SalesOfTheDayComponent],
-  templateUrl: './home.component.html',
-  styleUrl: './home.component.css',
+    selector: 'app-home',
+    imports: [BestSellerProductsComponent, RecentOrdersComponent, ProductAvailabilityComponent, SalesOfTheDayComponent],
+    templateUrl: './home.component.html',
+    styleUrl: './home.component.css'
 })
 export class HomeComponent { }

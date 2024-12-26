@@ -11,11 +11,10 @@ import { Category } from '../../shared/interfaces/category.interface';
 import { CategoryService } from '../../core/services/category.service';
 
 @Component({
-  selector: 'app-inventory',
-  standalone: true,
-  imports: [RouterLink, CurrencyPipe, SearchInputComponent, UpsertProductModalComponent],
-  templateUrl: './inventory.component.html',
-  styleUrl: './inventory.component.css'
+    selector: 'app-inventory',
+    imports: [RouterLink, CurrencyPipe, SearchInputComponent, UpsertProductModalComponent],
+    templateUrl: './inventory.component.html',
+    styleUrl: './inventory.component.css'
 })
 export class InventoryComponent implements OnInit, OnDestroy {
   @ViewChild(UpsertProductModalComponent) upsertProductModal!: UpsertProductModalComponent;

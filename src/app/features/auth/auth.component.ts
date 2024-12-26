@@ -12,11 +12,10 @@ import { AsyncPipe } from '@angular/common';
 import { LoadingService } from '../../core/services/loading.service';
 
 @Component({
-  selector: 'app-auth',
-  standalone: true,
-  imports: [FormsModule, ReactiveFormsModule, LoadingSpinnerComponent, AsyncPipe],
-  templateUrl: './auth.component.html',
-  styleUrl: './auth.component.css',
+    selector: 'app-auth',
+    imports: [FormsModule, ReactiveFormsModule, LoadingSpinnerComponent, AsyncPipe],
+    templateUrl: './auth.component.html',
+    styleUrl: './auth.component.css'
 })
 export class AuthComponent {
   isLoading$: Observable<boolean>;

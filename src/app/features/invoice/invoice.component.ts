@@ -9,11 +9,10 @@ import { AsyncPipe, CurrencyPipe, DatePipe } from '@angular/common';
 import { OrderProduct } from '../../shared/interfaces/order-product.interface';
 
 @Component({
-  selector: 'app-invoice',
-  standalone: true,
-  imports: [AsyncPipe, CurrencyPipe, DatePipe],
-  templateUrl: './invoice.component.html',
-  styleUrl: './invoice.component.css'
+    selector: 'app-invoice',
+    imports: [AsyncPipe, CurrencyPipe, DatePipe],
+    templateUrl: './invoice.component.html',
+    styleUrl: './invoice.component.css'
 })
 export class InvoiceComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();

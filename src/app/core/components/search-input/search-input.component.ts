@@ -3,11 +3,10 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'app-search-input',
-  standalone: true,
-  imports: [NgClass, FormsModule],
-  templateUrl: './search-input.component.html',
-  styleUrl: './search-input.component.css'
+    selector: 'app-search-input',
+    imports: [NgClass, FormsModule],
+    templateUrl: './search-input.component.html',
+    styleUrl: './search-input.component.css'
 })
 export class SearchInputComponent<T> {
   @Input() items: T[] = [];

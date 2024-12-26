@@ -6,11 +6,10 @@ import { RouterLink } from '@angular/router';
 import { CurrencyPipe, DatePipe } from '@angular/common';
 
 @Component({
-  selector: 'app-recent-orders',
-  standalone: true,
-  imports: [RouterLink, CurrencyPipe, DatePipe],
-  templateUrl: './recent-orders.component.html',
-  styleUrl: './recent-orders.component.css'
+    selector: 'app-recent-orders',
+    imports: [RouterLink, CurrencyPipe, DatePipe],
+    templateUrl: './recent-orders.component.html',
+    styleUrl: './recent-orders.component.css'
 })
 export class RecentOrdersComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();

@@ -4,11 +4,10 @@ import { ProductService } from '../../services/product.service';
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
-  selector: 'app-best-seller-products',
-  standalone: true,
-  imports: [],
-  templateUrl: './best-seller-products.component.html',
-  styleUrl: './best-seller-products.component.css'
+    selector: 'app-best-seller-products',
+    imports: [],
+    templateUrl: './best-seller-products.component.html',
+    styleUrl: './best-seller-products.component.css'
 })
 export class BestSellerProductsComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();

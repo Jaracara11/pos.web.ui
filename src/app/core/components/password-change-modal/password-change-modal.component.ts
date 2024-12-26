@@ -13,11 +13,10 @@ import { Router } from '@angular/router';
 import { SwalAlertService } from '../../services/swal-alert.service';
 
 @Component({
-  selector: 'app-password-change-modal',
-  standalone: true,
-  imports: [LoadingSpinnerComponent, FormsModule, ReactiveFormsModule, AsyncPipe],
-  templateUrl: './password-change-modal.component.html',
-  styleUrl: './password-change-modal.component.css'
+    selector: 'app-password-change-modal',
+    imports: [LoadingSpinnerComponent, FormsModule, ReactiveFormsModule, AsyncPipe],
+    templateUrl: './password-change-modal.component.html',
+    styleUrl: './password-change-modal.component.css'
 })
 export class PasswordChangeModalComponent {
   @ViewChild('changePasswordModal') changePasswordModal!: TemplateRef<unknown>;

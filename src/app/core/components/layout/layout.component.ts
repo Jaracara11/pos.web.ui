@@ -4,11 +4,10 @@ import { SidebarComponent } from '../sidebar/sidebar.component';
 import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'app-layout',
-  standalone: true,
-  imports: [RouterOutlet, SidebarComponent],
-  templateUrl: './layout.component.html',
-  styleUrl: './layout.component.css'
+    selector: 'app-layout',
+    imports: [RouterOutlet, SidebarComponent],
+    templateUrl: './layout.component.html',
+    styleUrl: './layout.component.css'
 })
 export class LayoutComponent implements OnInit, OnDestroy {
   private _routerSub$: Subscription;;
