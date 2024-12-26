@@ -5,14 +5,14 @@ import { OrderService } from '../../core/services/order.service';
 import { SwalAlertService } from '../../core/services/swal-alert.service';
 import { RecentOrder } from '../../shared/interfaces/recent-order.interface';
 import { ActivatedRoute } from '@angular/router';
-import { AsyncPipe, CurrencyPipe, DatePipe } from '@angular/common';
+import { CurrencyPipe, DatePipe } from '@angular/common';
 import { OrderProduct } from '../../shared/interfaces/order-product.interface';
 
 @Component({
-    selector: 'app-invoice',
-    imports: [AsyncPipe, CurrencyPipe, DatePipe],
-    templateUrl: './invoice.component.html',
-    styleUrl: './invoice.component.css'
+  selector: 'app-invoice',
+  imports: [CurrencyPipe, DatePipe],
+  templateUrl: './invoice.component.html',
+  styleUrl: './invoice.component.css'
 })
 export class InvoiceComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();

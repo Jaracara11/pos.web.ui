@@ -6,14 +6,13 @@ import { AuthService } from '../../core/services/auth.service';
 import { Router } from '@angular/router';
 import { SwalAlertService } from '../../core/services/swal-alert.service';
 import { UserInfo } from '../../shared/interfaces/user-Info.interface';
-import { LoadingSpinnerComponent } from '../../core/components/loading-spinner/loading-spinner.component';
 import { Observable } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { LoadingService } from '../../core/services/loading.service';
 
 @Component({
     selector: 'app-auth',
-    imports: [FormsModule, ReactiveFormsModule, LoadingSpinnerComponent, AsyncPipe],
+    imports: [FormsModule, ReactiveFormsModule, AsyncPipe],
     templateUrl: './auth.component.html',
     styleUrl: './auth.component.css'
 })

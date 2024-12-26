@@ -5,7 +5,6 @@ import { finalize, Observable } from 'rxjs';
 import { FormValidationService } from '../../services/form-validation.service';
 import { LoadingService } from '../../services/loading.service';
 import { AsyncPipe } from '@angular/common';
-import { LoadingSpinnerComponent } from '../loading-spinner/loading-spinner.component';
 import { UserService } from '../../services/user.service';
 import { PasswordChange } from '../../../shared/interfaces/password-change.interface';
 import { UserInfo } from '../../../shared/interfaces/user-Info.interface';
@@ -13,10 +12,10 @@ import { Router } from '@angular/router';
 import { SwalAlertService } from '../../services/swal-alert.service';
 
 @Component({
-    selector: 'app-password-change-modal',
-    imports: [LoadingSpinnerComponent, FormsModule, ReactiveFormsModule, AsyncPipe],
-    templateUrl: './password-change-modal.component.html',
-    styleUrl: './password-change-modal.component.css'
+  selector: 'app-password-change-modal',
+  imports: [FormsModule, ReactiveFormsModule, AsyncPipe],
+  templateUrl: './password-change-modal.component.html',
+  styleUrl: './password-change-modal.component.css'
 })
 export class PasswordChangeModalComponent {
   @ViewChild('changePasswordModal') changePasswordModal!: TemplateRef<unknown>;
