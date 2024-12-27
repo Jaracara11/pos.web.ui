@@ -8,7 +8,8 @@
     },
     "schematicCollections": [
       "@angular-eslint/schematics"
-    ]
+    ],
+    "analytics": false
   },
   "projects": {
     "pos.web.ui": {
@@ -58,7 +59,7 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "600kB",
+                  "maximumWarning": "800kB",
                   "maximumError": "1MB"
                 },
                 {

@@ -9,7 +9,7 @@ import { environment } from '../../../environments/environment';
   providedIn: 'root'
 })
 export class ProductRepository {
-  private _productsUrl = `${environment.apiUrl}/products`;
+  private _productsUrl = `${environment.apiUrl}/product`;
   private _bestSellersUrl = `${this._productsUrl}/best-sellers`;
 
   constructor(private http: HttpClient) { }
@@ -30,7 +30,7 @@ export class ProductRepository {
     return this.http.put<Product>(`${this._productsUrl}/edit`, updatedProduct);
   }
 
-  deleteProduct(productID: string): Observable<void> {
+  deleteProduct(productID: number): Observable<void> {
     return this.http.delete<void>(`${this._productsUrl}/${productID}/delete`);
   }
 }

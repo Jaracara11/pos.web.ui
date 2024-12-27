@@ -11,10 +11,10 @@ import { Category } from '../../shared/interfaces/category.interface';
 import { CategoryService } from '../../core/services/category.service';
 
 @Component({
-    selector: 'app-inventory',
-    imports: [RouterLink, CurrencyPipe, SearchInputComponent, UpsertProductModalComponent],
-    templateUrl: './inventory.component.html',
-    styleUrl: './inventory.component.css'
+  selector: 'app-inventory',
+  imports: [RouterLink, CurrencyPipe, SearchInputComponent, UpsertProductModalComponent],
+  templateUrl: './inventory.component.html',
+  styleUrl: './inventory.component.css'
 })
 export class InventoryComponent implements OnInit, OnDestroy {
   @ViewChild(UpsertProductModalComponent) upsertProductModal!: UpsertProductModalComponent;
@@ -34,8 +34,8 @@ export class InventoryComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.loadProducts();
     this.loadCategories();
+    this.loadProducts();
   }
 
   ngOnDestroy(): void {
@@ -48,12 +48,20 @@ export class InventoryComponent implements OnInit, OnDestroy {
   }
 
   getSearchProperty(item: Product): string {
-    return `${item.productName} ${item.productDescription} ${item.productCategory.categoryName}`;
+    return `${item.productName} ${item.productDescription} ${item.productCategory?.categoryName}`;
   }
 
   openUpsertProductModal(product?: Product): void {
     this.selectedProduct = product ? { ...product } : null;
     this.upsertProductModal.openModal(this.selectedProduct, this.categories);
+  }
+
+  private loadCategories(): void {
+    this.categoryService.getAllCategories()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(categories => {
+        this.categories = categories;
+      });
   }
 
   private loadProducts(): void {
@@ -64,13 +72,5 @@ export class InventoryComponent implements OnInit, OnDestroy {
         this.filteredProducts = this.products;
       });
     this.productService.getAllProducts().subscribe();
-  }
-
-  private loadCategories(): void {
-    this.categoryService.getAllCategories()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(categories => {
-        this.categories = categories;
-      });
   }
 }

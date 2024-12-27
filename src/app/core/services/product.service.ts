@@ -41,7 +41,7 @@ export class ProductService {
     );
   }
 
-  deleteProduct(productID: string): Observable<void> {
+  deleteProduct(productID: number): Observable<void> {
     return this.productRepository.deleteProduct(productID).pipe(
       tap(() => this.refreshProducts())
     );

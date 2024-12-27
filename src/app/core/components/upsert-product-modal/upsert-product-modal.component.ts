@@ -69,7 +69,7 @@ export class UpsertProductModalComponent implements OnInit, OnDestroy {
     if (selectedProduct) {
       productIdField?.disable();
       const selectedCategory = categoriesList.find(category =>
-        category.categoryID === selectedProduct.productCategory.categoryID
+        category.categoryID === selectedProduct.productCategory?.categoryID
       );
 
       this.productUpsertForm.patchValue({
