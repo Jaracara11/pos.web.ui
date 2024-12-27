@@ -38,40 +38,68 @@ export class FormValidationService {
       productID: ['', [Validators.minLength(3), Validators.maxLength(50)]],
       productName: this.getRequiredField(3, 50),
       productDescription: ['', [Validators.maxLength(100)]],
-      productStock: [0, [Validators.required, Validators.min(0), this.numericValidator()]],
-      productCost: [0, [Validators.required, Validators.min(0.01), this.numericValidator()]],
-      productPrice: [0, [Validators.required, Validators.min(0.01), this.numericValidator()]],
-      productCategory: [null, [Validators.required, this.categorySelectedValidator()]],
+      productStock: [
+        0,
+        [Validators.required, Validators.min(0), this.numericValidator()],
+      ],
+      productCost: [
+        0,
+        [Validators.required, Validators.min(0.01), this.numericValidator()],
+      ],
+      productPrice: [
+        0,
+        [Validators.required, Validators.min(0.01), this.numericValidator()],
+      ],
+      productCategory: [
+        null,
+        [Validators.required, this.categorySelectedValidator()],
+      ],
     });
   }
 
   getFieldErrorMessage(form: FormGroup, fieldName: string): string | null {
     const field = form.get(fieldName);
+
     if (field && this.isFieldInvalid(field)) {
-      console.log(field.errors)
       const error = Object.keys(field.errors || {})[0];
+
       return this.getErrorMessage(fieldName, error, field.errors?.[error]);
     }
     return null;
   }
 
-  private getErrorMessage(fieldName: string, errorType: string, errorValue?: ValidationErrors): string {
+  private getErrorMessage(
+    fieldName: string,
+    errorType: string,
+    errorValue?: ValidationErrors
+  ): string {
     const errorMessages: Record<string, string> = {
       required: `${this.formatFieldName(fieldName)} is required.`,
-      minlength: `${this.formatFieldName(fieldName)} cannot have less than ${errorValue?.['requiredLength']} characters.`,
-      maxlength: `${this.formatFieldName(fieldName)} cannot exceed ${errorValue?.['requiredLength']} characters.`,
-      min: `${this.formatFieldName(fieldName)} must be at least ${errorValue?.['min']}.`,
+      minlength: `${this.formatFieldName(
+        fieldName
+      )} cannot have less than ${errorValue?.['requiredLength']} characters.`,
+      maxlength: `${this.formatFieldName(
+        fieldName
+      )} cannot exceed ${errorValue?.['requiredLength']} characters.`,
+      min: `${this.formatFieldName(fieldName)} must be at least ${errorValue?.['min']
+        }.`,
       invalidNumber: `${this.formatFieldName(fieldName)} must be a valid number.`,
+      passwordsMismatch: `Passwords do not match.`,
+      newPasswordSameAsOld: `New password cannot be the same as the old password.`,
     };
+
     return errorMessages[errorType] || '';
   }
 
   private getRequiredField(minLength: number, maxLength: number): FormControl {
-    return this.formBuilder.control('', Validators.compose([
-      Validators.required,
-      Validators.minLength(minLength),
-      Validators.maxLength(maxLength)
-    ]));
+    return this.formBuilder.control(
+      '',
+      Validators.compose([
+        Validators.required,
+        Validators.minLength(minLength),
+        Validators.maxLength(maxLength),
+      ])
+    );
   }
 
   private isFieldInvalid(field: AbstractControl): boolean {
@@ -86,7 +114,9 @@ export class FormValidationService {
 
       const errors: ValidationErrors = {};
       if (newPassword !== repeatNewPassword) errors['passwordsMismatch'] = true;
-      if (oldPassword && newPassword === oldPassword) errors['newPasswordSameAsOld'] = true;
+
+      if (oldPassword && newPassword === oldPassword)
+        errors['newPasswordSameAsOld'] = true;
 
       return Object.keys(errors).length ? errors : null;
     };
