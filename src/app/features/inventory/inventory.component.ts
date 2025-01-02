@@ -9,6 +9,7 @@ import { SearchInputComponent } from '../../core/components/search-input/search-
 import { UpsertProductModalComponent } from '../../core/components/upsert-product-modal/upsert-product-modal.component';
 import { Category } from '../../shared/interfaces/category.interface';
 import { CategoryService } from '../../core/services/category.service';
+import { mapProduct } from '../../shared/utils/product-mapper';
 
 @Component({
   selector: 'app-inventory',
@@ -68,9 +69,13 @@ export class InventoryComponent implements OnInit, OnDestroy {
     this.productService.productsSubject
       .pipe(takeUntil(this.destroy$))
       .subscribe(products => {
-        this.products = products || [];
+        if (products) {
+          this.products = products.map(product => mapProduct(product, this.categories));
+        }
+
         this.filteredProducts = this.products;
       });
+
     this.productService.getAllProducts().subscribe();
   }
 }
