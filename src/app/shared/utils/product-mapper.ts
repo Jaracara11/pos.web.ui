@@ -2,7 +2,7 @@ import { Category } from '../interfaces/category.interface';
 import { Product } from '../interfaces/product.interface';
 import { DEFAULT_CATEGORY } from './constants';
 
-export const mapProduct = (product: any, categories: Category[]): Product => ({
+export const mapProduct = (product: Product, categories: Category[]): Product => ({
   productID: product.productID ?? 0,
   productName: product.productName ?? 'Unknown Product',
   productDescription: product.productDescription ?? '',

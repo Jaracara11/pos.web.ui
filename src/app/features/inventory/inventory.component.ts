@@ -69,7 +69,7 @@ export class InventoryComponent implements OnInit, OnDestroy {
     this.productService.productsSubject
       .pipe(takeUntil(this.destroy$))
       .subscribe(products => {
-        if (products) {
+        if (products?.length) {
           this.products = products.map(product => mapProduct(product, this.categories));
         }
 
