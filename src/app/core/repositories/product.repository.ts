@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { Product } from '../../shared/interfaces/product.interface';
 import { BestSellerProduct } from '../../shared/interfaces/best-seller-product.interface';
 import { environment } from '../../../environments/environment';
+import { ProductApiResponse } from '../../shared/interfaces/product-api-response.interface';
+import { mapProductListResponse } from '../../shared/utils/product-mapper';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +17,9 @@ export class ProductRepository {
   constructor(private http: HttpClient) { }
 
   getAllProducts(): Observable<Product[]> {
-    return this.http.get<Product[]>(this._productsUrl);
+    return this.http.get<ProductApiResponse[]>(this._productsUrl).pipe(
+      map(products => mapProductListResponse(products))
+    );
   }
 
   getBestSellerProducts(): Observable<BestSellerProduct[]> {

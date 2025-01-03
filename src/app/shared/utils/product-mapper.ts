@@ -1,16 +1,19 @@
-import { Category } from '../interfaces/category.interface';
-import { Product } from '../interfaces/product.interface';
-import { DEFAULT_CATEGORY } from './constants';
+import { ProductApiResponse } from "../interfaces/product-api-response.interface";
+import { Product } from "../interfaces/product.interface";
 
-export const mapProduct = (product: Product, categories: Category[]): Product => ({
-  productID: product.productID ?? 0,
-  productName: product.productName ?? 'Unknown Product',
-  productDescription: product.productDescription ?? '',
-  productStock: product.productStock ?? 0,
-  productCost: product.productCost ?? 0,
-  productPrice: product.productPrice ?? 0,
-  categoryID: product.categoryID,
-  productCategory: categories.find(
-    category => category.categoryID === product.categoryID) || DEFAULT_CATEGORY,
-  discount: product.discount ?? 0,
-});
+export const mapProductListResponse = (products: ProductApiResponse[]): Product[] => {
+  return products.map((item): Product => ({
+    productID: item.productID,
+    productName: item.productName,
+    productDescription: item.productDescription,
+    productStock: item.productStock,
+    productCost: item.productCost,
+    productPrice: item.productPrice,
+    categoryID: item.categoryID,
+    productCategory: {
+      categoryID: item.categoryID,
+      categoryName: item.productCategoryName,
+    },
+    discount: item.discount
+  }));
+};

@@ -39,7 +39,7 @@
           <td>{{product.productDescription}}</td>
           <td>{{product.productStock}}</td>
           <td>{{product.productPrice | currency}}</td>
-          <td>{{product.productCategory?.categoryName}}</td>
+          <td>{{product.productCategory.categoryName}}</td>
           <td>@if (validateRolePermission) {
             <button class="btn btn-outline-dark" (click)="openUpsertProductModal(product)">
               <i class="bi bi-pencil"></i>&nbsp;
