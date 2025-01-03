@@ -22,7 +22,6 @@ export class PasswordChangeModalComponent {
   isLoading$: Observable<boolean>;
   @Input() user: UserInfo = {
     username: '',
-    name: '',
     email: '',
     role: '',
     token: ''

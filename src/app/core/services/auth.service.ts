@@ -29,11 +29,13 @@ export class AuthService {
 
   isUserAuth(): boolean {
     const user = this.getAuthInfo();
+
     if (!user) {
       return false;
     }
 
     const decodedToken = JSON.parse(atob(user.token.split('.')[1]));
+
     return decodedToken.exp > Date.now() / 1000;
   }
 
