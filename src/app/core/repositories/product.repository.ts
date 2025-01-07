@@ -5,7 +5,7 @@ import { Product } from '../../shared/interfaces/product.interface';
 import { BestSellerProduct } from '../../shared/interfaces/best-seller-product.interface';
 import { environment } from '../../../environments/environment';
 import { ProductApiResponse } from '../../shared/interfaces/product-api-response.interface';
-import { mapProductListResponse } from '../../shared/utils/product-mapper';
+import { mapProductListResponse, mapProductToApiRequest } from '../../shared/utils/product-mapper';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +18,7 @@ export class ProductRepository {
 
   getAllProducts(): Observable<Product[]> {
     return this.http.get<ProductApiResponse[]>(this._productsUrl).pipe(
-      map(products => mapProductListResponse(products))
+      map(mapProductListResponse)
     );
   }
 
@@ -27,14 +27,20 @@ export class ProductRepository {
   }
 
   addProduct(newProduct: Product): Observable<Product> {
-    return this.http.post<Product>(this._productsUrl, newProduct);
+    const apiRequest = mapProductToApiRequest(newProduct);
+    return this.http.post<ProductApiResponse>(this._productsUrl, apiRequest).pipe(
+      map(response => mapProductListResponse([response])[0])
+    );
   }
 
   updateProduct(updatedProduct: Product): Observable<Product> {
-    return this.http.put<Product>(`${this._productsUrl}/edit`, updatedProduct);
+    const apiRequest = mapProductToApiRequest(updatedProduct);
+    return this.http.put<ProductApiResponse>(`${this._productsUrl}/${updatedProduct.productID}`, apiRequest).pipe(
+      map(response => mapProductListResponse([response])[0])
+    );
   }
 
   deleteProduct(productID: number): Observable<void> {
-    return this.http.delete<void>(`${this._productsUrl}/${productID}/delete`);
+    return this.http.delete<void>(`${this._productsUrl}/${productID}`);
   }
 }

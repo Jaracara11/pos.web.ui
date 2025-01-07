@@ -1,3 +1,4 @@
+import { ProductApiRequest } from "../interfaces/product-api-request.interface";
 import { ProductApiResponse } from "../interfaces/product-api-response.interface";
 import { Product } from "../interfaces/product.interface";
 
@@ -16,4 +17,16 @@ export const mapProductListResponse = (products: ProductApiResponse[]): Product[
     },
     discount: item.discount
   }));
+};
+
+export const mapProductToApiRequest = (product: Product): ProductApiRequest => {
+  return {
+    productID: product.productID ?? 0,
+    productName: product.productName,
+    productDescription: product.productDescription,
+    productCost: product.productCost,
+    productPrice: product.productPrice,
+    categoryID: product.categoryID,
+    discount: product.discount
+  };
 };
