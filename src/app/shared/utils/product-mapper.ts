@@ -23,10 +23,10 @@ export const mapProductToApiRequest = (product: Product): ProductApiRequest => {
     productID: product.productID ?? 0,
     productName: product.productName,
     productDescription: product.productDescription,
-    productCost: product.productCost,
-    productPrice: product.productPrice,
-    productStock: product.productStock,
+    productCost: product.productCost ?? 0,
+    productPrice: product.productPrice ?? 0,
+    productStock: product.productStock ?? 0,
     categoryID: product.productCategory.categoryID ?? 0,
-    discount: product.discount
+    discount: product.discount ?? 0
   };
 };

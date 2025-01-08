@@ -6,17 +6,15 @@
         <div class="product-input">
           @if (product) {
           <label class="modal-label" for="productID">Product ID</label>
-          }
           <input class="form-control" type="number" placeholder="Product ID" formControlName="productID"
             autocomplete="off" />
           <small class="text-danger">
             {{ getProductErrorMessage("productID") }}
           </small>
+          }
         </div>
         <div class="product-input">
-          @if (product) {
           <label class="modal-label" for="productName">Product Name</label>
-          }
           <input class="form-control" type="text" placeholder="Product Name" formControlName="productName"
             autocomplete="off" />
           <small class="text-danger">
@@ -24,9 +22,7 @@
           </small>
         </div>
         <div class="product-input">
-          @if (product) {
           <label class="modal-label" for="productDescription">Product Description</label>
-          }
           <input class="form-control" type="text" placeholder="Product Description" formControlName="productDescription"
             autocomplete="off" />
           <small class="text-danger">
@@ -34,9 +30,7 @@
           </small>
         </div>
         <div class="product-input">
-          @if (product) {
           <label class="modal-label" for="productCategory">Product Category</label>
-          }
           <select class="form-select" formControlName="productCategory">
             @for (category of categories; track category.categoryID) {
             <option [ngValue]="category">{{ category.categoryName }}</option>
@@ -47,9 +41,7 @@
           </small>
         </div>
         <div class="product-input">
-          @if (product) {
           <label class="modal-label" for="productStock">Product Stock</label>
-          }
           <input class="form-control" type="number" placeholder="Product Stock" formControlName="productStock"
             autocomplete="off" />
           <small class="text-danger">
@@ -57,9 +49,7 @@
           </small>
         </div>
         <div class="product-input">
-          @if (product) {
           <label class="modal-label" for="productCost">Product Cost</label>
-          }
           <input class="form-control" type="number" placeholder="Product Cost" formControlName="productCost"
             autocomplete="off" />
           <small class="text-danger">
@@ -67,9 +57,7 @@
           </small>
         </div>
         <div class="product-input">
-          @if (product) {
           <label class="modal-label" for="productPrice">Product Price</label>
-          }
           <input class="form-control" type="number" placeholder="Product Price" formControlName="productPrice"
             autocomplete="off" />
           <small class="text-danger">
@@ -77,9 +65,7 @@
           </small>
         </div>
         <div class="product-input">
-          @if (product) {
           <label class="modal-label" for="discount">Discount</label>
-          }
           <input class="form-control" type="number" placeholder="Discount" formControlName="discount"
             autocomplete="off" />
           <small class="text-danger">
@@ -90,7 +76,7 @@
     </form>
     <div>
       <button type="submit" class="btn btn-dark" (click)="onSubmit()"
-        [disabled]="!productUpsertForm.dirty || (isLoading$ | async)">
+        [disabled]="!productUpsertForm.valid || (isLoading$ | async)">
         <i class="bi bi-database"></i>&nbsp;{{ product ? 'Update' : 'Save' }}
       </button>
 
