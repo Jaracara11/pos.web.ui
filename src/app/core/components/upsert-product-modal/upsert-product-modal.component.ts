@@ -50,6 +50,10 @@ export class UpsertProductModalComponent implements OnInit, OnDestroy {
     }
   }
 
+  isSubmitDisabled(): boolean {
+    return (!this.productUpsertForm.valid || !this.productUpsertForm.dirty);
+  }
+
   getProductErrorMessage(fieldName: string): string | null {
     return this.formValidationService.getFieldErrorMessage(this.productUpsertForm, fieldName);
   }
@@ -59,7 +63,7 @@ export class UpsertProductModalComponent implements OnInit, OnDestroy {
 
     const modalOptions: NgbModalOptions = {
       centered: true,
-      size: 'md',
+      size: 'lg',
       windowClass: 'modal-centered'
     };
 
