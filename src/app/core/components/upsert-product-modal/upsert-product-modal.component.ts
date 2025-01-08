@@ -12,10 +12,10 @@ import { takeUntil } from 'rxjs/operators';
 import { LoadingService } from '../../services/loading.service';
 
 @Component({
-    selector: 'app-upsert-product-modal',
-    imports: [FormsModule, ReactiveFormsModule, AsyncPipe, CommonModule],
-    templateUrl: './upsert-product-modal.component.html',
-    styleUrl: './upsert-product-modal.component.css'
+  selector: 'app-upsert-product-modal',
+  imports: [FormsModule, ReactiveFormsModule, AsyncPipe, CommonModule],
+  templateUrl: './upsert-product-modal.component.html',
+  styleUrl: './upsert-product-modal.component.css'
 })
 export class UpsertProductModalComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
@@ -79,7 +79,8 @@ export class UpsertProductModalComponent implements OnInit, OnDestroy {
         productCategory: selectedCategory,
         productStock: selectedProduct.productStock,
         productCost: selectedProduct.productCost,
-        productPrice: selectedProduct.productPrice
+        productPrice: selectedProduct.productPrice,
+        discount: selectedProduct.discount
       });
     } else {
       productIdField?.enable();
@@ -106,7 +107,9 @@ export class UpsertProductModalComponent implements OnInit, OnDestroy {
     const productData: Product = { ...this.productUpsertForm.value };
     productData.productID = this.productUpsertForm.get('productID')?.value;
 
-    const confirmTitle = this.product ? 'Are you sure you want to update this product?' : 'Are you sure you want to create this new product?';
+    const confirmTitle = this.product
+      ? 'Are you sure you want to update this product?'
+      : 'Are you sure you want to create this new product?';
 
     const isConfirmed = await this.swalAlertService.swalConfirmationAlert(confirmTitle, 'Confirm', 'warning');
 

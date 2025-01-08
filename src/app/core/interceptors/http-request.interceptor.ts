@@ -6,7 +6,7 @@ import {
   HttpErrorResponse
 } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { catchError, tap, finalize } from 'rxjs/operators';
+import { catchError, finalize } from 'rxjs/operators';
 import { inject } from '@angular/core';
 import { LoadingService } from '../services/loading.service';
 import { SwalAlertService } from '../services/swal-alert.service';
@@ -42,7 +42,6 @@ export const httpRequestInterceptor: HttpInterceptorFn =
         }
 
         swalAlertService.swalValidationErrorAlert(error);
-
         console.error('HTTP Error:', error);
 
         return throwError(() => new Error(errorMessage));

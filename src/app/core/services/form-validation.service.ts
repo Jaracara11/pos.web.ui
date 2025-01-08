@@ -35,7 +35,7 @@ export class FormValidationService {
 
   upsertProductForm(): FormGroup {
     return this.formBuilder.group({
-      productID: ['', [Validators.minLength(3), Validators.maxLength(50)]],
+      productID: [0, [Validators.required, Validators.min(0), this.numericValidator()]],
       productName: this.getRequiredField(3, 50),
       productDescription: ['', [Validators.maxLength(100)]],
       productStock: [
@@ -49,6 +49,10 @@ export class FormValidationService {
       productPrice: [
         0,
         [Validators.required, Validators.min(0.01), this.numericValidator()],
+      ],
+      discount: [
+        0,
+        [Validators.min(0.00), this.numericValidator()],
       ],
       productCategory: [
         null,
@@ -143,6 +147,7 @@ export class FormValidationService {
       productCost: 'Product Cost',
       productPrice: 'Product Price',
       productCategory: 'Product Category',
+      discount: 'Discount'
     };
     return fieldNames[fieldName] || fieldName;
   }

@@ -7,7 +7,7 @@
           @if (product) {
           <label class="modal-label" for="productID">Product ID</label>
           }
-          <input class="form-control" type="text" placeholder="Product ID" formControlName="productID"
+          <input class="form-control" type="number" placeholder="Product ID" formControlName="productID"
             autocomplete="off" />
           <small class="text-danger">
             {{ getProductErrorMessage("productID") }}
@@ -74,6 +74,16 @@
             autocomplete="off" />
           <small class="text-danger">
             {{ getProductErrorMessage("productPrice") }}
+          </small>
+        </div>
+        <div class="product-input">
+          @if (product) {
+          <label class="modal-label" for="discount">Discount</label>
+          }
+          <input class="form-control" type="number" placeholder="Discount" formControlName="discount"
+            autocomplete="off" />
+          <small class="text-danger">
+            {{ getProductErrorMessage("discount") }}
           </small>
         </div>
       </div>

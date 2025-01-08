@@ -25,6 +25,7 @@ export const mapProductToApiRequest = (product: Product): ProductApiRequest => {
     productDescription: product.productDescription,
     productCost: product.productCost,
     productPrice: product.productPrice,
+    productStock: product.productStock,
     categoryID: product.productCategory.categoryID ?? 0,
     discount: product.discount
   };

@@ -4,6 +4,7 @@ export interface ProductApiRequest {
   productDescription: string;
   productCost: number;
   productPrice: number;
+  productStock: number;
   categoryID: number;
   discount: number;
 }
