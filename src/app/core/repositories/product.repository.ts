@@ -26,18 +26,14 @@ export class ProductRepository {
     return this.http.get<BestSellerProduct[]>(this._bestSellersUrl);
   }
 
-  addProduct(newProduct: Product): Observable<Product> {
-    const apiRequest = mapProductToApiRequest(newProduct);
-    return this.http.post<ProductApiResponse>(this._productsUrl, apiRequest).pipe(
-      map(response => mapProductListResponse([response])[0])
-    );
+  addProduct(newProduct: Product): Observable<void> {
+    const payload = mapProductToApiRequest(newProduct);
+    return this.http.post<void>(this._productsUrl, payload);
   }
 
-  updateProduct(updatedProduct: Product): Observable<Product> {
-    const apiRequest = mapProductToApiRequest(updatedProduct);
-    return this.http.put<ProductApiResponse>(`${this._productsUrl}/${updatedProduct.productID}`, apiRequest).pipe(
-      map(response => mapProductListResponse([response])[0])
-    );
+  updateProduct(updatedProduct: Product): Observable<void> {
+    const payload = mapProductToApiRequest(updatedProduct);
+    return this.http.put<void>(`${this._productsUrl}/${updatedProduct.productID}`, payload);
   }
 
   deleteProduct(productID: number): Observable<void> {

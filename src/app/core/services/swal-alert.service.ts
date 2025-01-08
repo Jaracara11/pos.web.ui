@@ -32,7 +32,10 @@ export class SwalAlertService {
     });
   }
 
-  async swalConfirmationAlert(title: string, buttonText: string, alertType: SweetAlertIcon): Promise<boolean> {
+  async swalConfirmationAlert(
+    title: string,
+    buttonText: string,
+    alertType: SweetAlertIcon): Promise<boolean> {
     const result: SweetAlertResult = await this.SwalObj.fire({
       icon: alertType,
       title: title,
@@ -40,11 +43,17 @@ export class SwalAlertService {
       confirmButtonText: `<strong>${buttonText}</strong>`,
       denyButtonText: 'Cancel',
     });
+
     return result.isConfirmed || false;
   }
 
   swalValidationErrorAlert(error: HttpErrorResponse): void {
-    const message = error.error?.message || 'An unknown error occurred.';
-    this.swalAlertWithTitle('Error', message, 'error');
+    const problemDetails = error.error;
+    const message =
+      problemDetails?.detail ||
+      (problemDetails?.errors && problemDetails.errors.General?.[0]) ||
+      'An unknown error occurred.';
+
+    this.swalAlertWithTitle(error.statusText, message, 'error');
   }
 }

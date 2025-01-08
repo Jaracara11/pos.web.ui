@@ -7,7 +7,6 @@ export interface Product {
   productStock: number;
   productCost: number;
   productPrice: number;
-  categoryID: number;
   productCategory: Category;
   discount: number;
 }

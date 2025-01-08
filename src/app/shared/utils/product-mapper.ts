@@ -10,7 +10,6 @@ export const mapProductListResponse = (products: ProductApiResponse[]): Product[
     productStock: item.productStock,
     productCost: item.productCost,
     productPrice: item.productPrice,
-    categoryID: item.categoryID,
     productCategory: {
       categoryID: item.categoryID,
       categoryName: item.productCategoryName,
@@ -26,7 +25,7 @@ export const mapProductToApiRequest = (product: Product): ProductApiRequest => {
     productDescription: product.productDescription,
     productCost: product.productCost,
     productPrice: product.productPrice,
-    categoryID: product.categoryID,
+    categoryID: product.productCategory.categoryID ?? 0,
     discount: product.discount
   };
 };

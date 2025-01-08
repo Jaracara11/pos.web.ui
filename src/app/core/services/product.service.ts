@@ -29,13 +29,13 @@ export class ProductService {
     return this.productRepository.getBestSellerProducts();
   }
 
-  addProduct(newProduct: Product): Observable<Product> {
+  addProduct(newProduct: Product): Observable<void> {
     return this.productRepository.addProduct(newProduct).pipe(
       tap(() => this.refreshProducts())
     );
   }
 
-  updateProduct(product: Product): Observable<Product> {
+  updateProduct(product: Product): Observable<void> {
     return this.productRepository.updateProduct(product).pipe(
       tap(() => this.refreshProducts())
     );
