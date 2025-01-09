@@ -38,7 +38,7 @@ export class PasswordChangeModalComponent {
     private swalAlertService: SwalAlertService,
     private router: Router
   ) {
-    this.isLoading$ = loadingService.getLoadingState;
+    this.isLoading$ = this.loadingService.getLoadingState;
     this.passwordChangeForm = this.formValidationService.createPasswordChangeForm();
   }
 

@@ -31,7 +31,7 @@ export class AuthComponent {
     private loadingService: LoadingService,
     private swalAlertService: SwalAlertService,
   ) {
-    this.isLoading$ = loadingService.getLoadingState;
+    this.isLoading$ = this.loadingService.getLoadingState;
     this.authForm = this.formValidationService.createAuthForm();
   }
 
