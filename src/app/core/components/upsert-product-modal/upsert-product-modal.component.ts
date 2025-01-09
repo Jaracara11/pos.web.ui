@@ -54,7 +54,7 @@ export class UpsertProductModalComponent implements OnInit, OnDestroy {
     return (!this.productUpsertForm.valid || !this.productUpsertForm.dirty);
   }
 
-  getProductErrorMessage(fieldName: string): string | null {
+  getProductErrorMessage(fieldName: string): string {
     return this.formValidationService.getFieldErrorMessage(this.productUpsertForm, fieldName);
   }
 
@@ -68,10 +68,9 @@ export class UpsertProductModalComponent implements OnInit, OnDestroy {
     };
 
     this.productUpsertForm.reset();
-    const productIdField = this.productUpsertForm.get('productID');
+    this.productUpsertForm.get('productID')?.disable();
 
     if (selectedProduct) {
-      productIdField?.disable();
       const selectedCategory = categoriesList.find(category =>
         category.categoryID === selectedProduct.productCategory?.categoryID
       );
@@ -87,7 +86,6 @@ export class UpsertProductModalComponent implements OnInit, OnDestroy {
         discount: selectedProduct.discount
       });
     } else {
-      productIdField?.enable();
       this.productUpsertForm.patchValue({
         productCategory: this.defaultCategory
       });

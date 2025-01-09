@@ -1,154 +1,71 @@
 import { Injectable } from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  Validators,
-  ValidationErrors,
-  AbstractControl,
-  ValidatorFn,
-  FormControl,
-} from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ValidatorFn, AbstractControl, ValidationErrors } from '@angular/forms';
 
 @Injectable({
   providedIn: 'root',
 })
 export class FormValidationService {
-  constructor(private formBuilder: FormBuilder) { }
+  constructor(private fb: FormBuilder) { }
 
   createAuthForm(): FormGroup {
-    return this.formBuilder.group({
-      username: this.getRequiredField(3, 25),
-      password: this.getRequiredField(4, 25),
+    return this.fb.group({
+      username: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(25)]],
+      password: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(25)]],
     });
   }
 
   createPasswordChangeForm(): FormGroup {
-    return this.formBuilder.group(
-      {
-        oldPassword: this.getRequiredField(4, 25),
-        newPassword: this.getRequiredField(4, 25),
-        repeatNewPassword: this.getRequiredField(4, 25),
-      },
-      { validators: [this.passwordsMatchValidator()] }
-    );
+    return this.fb.group({
+      oldPassword: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(25)]],
+      newPassword: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(25)]],
+      repeatNewPassword: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(25)]],
+    }, { validators: this.passwordsMatchValidator() });
   }
 
   upsertProductForm(): FormGroup {
-    return this.formBuilder.group({
-      productID: [0, [Validators.required, Validators.min(0), this.numericValidator()]],
-      productName: this.getRequiredField(3, 50),
-      productDescription: ['', [Validators.maxLength(100)]],
-      productStock: [
-        0,
-        [Validators.required, Validators.min(0), this.numericValidator()],
-      ],
-      productCost: [
-        0,
-        [Validators.required, Validators.min(0.01), this.numericValidator()],
-      ],
-      productPrice: [
-        0,
-        [Validators.required, Validators.min(0.01), this.numericValidator()],
-      ],
-      discount: [
-        0,
-        [Validators.min(0.00), this.numericValidator()],
-      ],
-      productCategory: [
-        null,
-        [Validators.required, this.categorySelectedValidator()],
-      ],
+    return this.fb.group({
+      productID: [0, [Validators.required, Validators.min(0)]],
+      productName: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
+      productDescription: ['', Validators.maxLength(100)],
+      productStock: [0, [Validators.required, Validators.min(0)]],
+      productCost: [0, [Validators.required, Validators.min(0.01)]],
+      productPrice: [0, [Validators.required, Validators.min(0.01)]],
+      discount: [0, Validators.min(0.00)],
+      productCategory: [null, Validators.required],
     });
   }
 
-  getFieldErrorMessage(form: FormGroup, fieldName: string): string | null {
+  getFieldErrorMessage(form: FormGroup, fieldName: string): string {
     const field = form.get(fieldName);
 
-    if (field && this.isFieldInvalid(field)) {
-      const error = Object.keys(field.errors || {})[0];
-
-      return this.getErrorMessage(fieldName, error, field.errors?.[error]);
+    if (field && field.touched && field.errors) {
+      return this.getErrorMessage(fieldName, field.errors);
     }
-    return null;
+    return '';
   }
 
-  private getErrorMessage(
-    fieldName: string,
-    errorType: string,
-    errorValue?: ValidationErrors
-  ): string {
-    const errorMessages: Record<string, string> = {
-      required: `${this.formatFieldName(fieldName)} is required.`,
-      minlength: `${this.formatFieldName(
-        fieldName
-      )} cannot have less than ${errorValue?.['requiredLength']} characters.`,
-      maxlength: `${this.formatFieldName(
-        fieldName
-      )} cannot exceed ${errorValue?.['requiredLength']} characters.`,
-      min: `${this.formatFieldName(fieldName)} must be at least ${errorValue?.['min']
-        }.`,
-      invalidNumber: `${this.formatFieldName(fieldName)} must be a valid number.`,
-      passwordsMismatch: `Passwords do not match.`,
-      newPasswordSameAsOld: `New password cannot be the same as the old password.`,
+  private getErrorMessage(fieldName: string, errors: ValidationErrors): string {
+    const messages: Record<string, string> = {
+      required: `${fieldName} is required or it's value is invalid.`,
+      minlength: `${fieldName} should be at least ${errors['minlength']?.requiredLength} characters long.`,
+      maxlength: `${fieldName} cannot exceed ${errors['maxlength']?.requiredLength} characters.`,
+      min: `${fieldName} must be at least ${errors['min']?.min}.`,
+      passwordsMismatch: 'Passwords do not match.',
+      newPasswordSameAsOld: 'New password cannot be the same as the old password.',
     };
 
-    return errorMessages[errorType] || '';
-  }
-
-  private getRequiredField(minLength: number, maxLength: number): FormControl {
-    return this.formBuilder.control(
-      '',
-      Validators.compose([
-        Validators.required,
-        Validators.minLength(minLength),
-        Validators.maxLength(maxLength),
-      ])
-    );
-  }
-
-  private isFieldInvalid(field: AbstractControl): boolean {
-    return field.invalid && (field.dirty || field.touched);
+    return Object.keys(errors).map(key => messages[key] || '').find(Boolean) || '';
   }
 
   private passwordsMatchValidator(): ValidatorFn {
     return (group: AbstractControl): ValidationErrors | null => {
-      const newPassword = group.get('newPassword')?.value;
-      const repeatNewPassword = group.get('repeatNewPassword')?.value;
-      const oldPassword = group.get('oldPassword')?.value;
-
+      const { newPassword, repeatNewPassword, oldPassword } = group.value;
       const errors: ValidationErrors = {};
-      if (newPassword !== repeatNewPassword) errors['passwordsMismatch'] = true;
 
-      if (oldPassword && newPassword === oldPassword)
-        errors['newPasswordSameAsOld'] = true;
+      if (newPassword !== repeatNewPassword) errors['passwordsMismatch'] = true;
+      if (oldPassword && newPassword === oldPassword) errors['newPasswordSameAsOld'] = true;
 
       return Object.keys(errors).length ? errors : null;
     };
-  }
-
-  private categorySelectedValidator(): ValidatorFn {
-    return (control: AbstractControl): ValidationErrors | null => {
-      return control.value ? null : { required: true };
-    };
-  }
-
-  private numericValidator(): ValidatorFn {
-    return (control: AbstractControl): ValidationErrors | null => {
-      return isNaN(Number(control.value)) ? { invalidNumber: true } : null;
-    };
-  }
-
-  private formatFieldName(fieldName: string): string {
-    const fieldNames: Record<string, string> = {
-      productID: 'Product ID',
-      productName: 'Product Name',
-      productDescription: 'Product Description',
-      productStock: 'Product Stock',
-      productCost: 'Product Cost',
-      productPrice: 'Product Price',
-      productCategory: 'Product Category',
-      discount: 'Discount'
-    };
-    return fieldNames[fieldName] || fieldName;
   }
 }
