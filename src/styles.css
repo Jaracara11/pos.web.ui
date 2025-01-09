@@ -1,0 +1,56 @@
+:root {
+  --primary-color: #212529;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+html,
+body {
+  height: 100%;
+  overflow: hidden;
+  margin: 0;
+}
+
+.title {
+  text-align: center;
+  font-weight: bold;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.modal-title {
+  text-align: center;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.modal-label {
+  font-weight: bold;
+  font-size: small;
+  padding: 0.2rem;
+}
+
+@media print {
+  body {
+    visibility: hidden;
+  }
+
+  .sidebar {
+    display: none;
+  }
+}

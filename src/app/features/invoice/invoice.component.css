@@ -1,0 +1,32 @@
+.order-info h5 {
+  font-weight: bold;
+}
+
+.order-info button {
+  margin-top: 1rem;
+  width: 145px;
+}
+
+.order-summary button {
+  margin-top: 1rem;
+  width: 130px;
+}
+
+.order-summary div:nth-child(1) {
+  float: right;
+}
+
+@media print {
+  @page {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+
+  button {
+    display: none;
+  }
+
+  .container-fluid {
+    visibility: visible;
+  }
+}

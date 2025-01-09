@@ -1,0 +1,57 @@
+<div class="container-fluid">
+  <div class="row">
+    <h3 class="title">Products</h3>
+  </div>
+  <div class="row">
+    <div class="col-6">
+      @if (validateRolePermission) {
+      <button class="btn btn-dark" (click)="openUpsertProductModal()">
+        <i class="bi bi-plus-lg"></i>
+        &nbsp;Add New Product
+      </button>
+      }
+      <a class="btn btn-outline-dark" routerLink="/auth"><i class="bi bi-globe"></i>
+        &nbsp;Show All Categories</a>
+    </div>
+    <div class="col-6">
+      <div class="search-input">
+        <app-search-input [items]="products" [searchProperty]="getSearchProperty"
+          (filteredItemsChange)="onFilteredProductsChange($event)"></app-search-input>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <table class="table table-bordered table-hover">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Description</th>
+          <th>Stock</th>
+          <th>Price</th>
+          <th>Category</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (product of filteredProducts; track product.productID) {
+        <tr>
+          <td>{{product.productName}}</td>
+          <td>{{product.productDescription}}</td>
+          <td>{{product.productStock}}</td>
+          <td>{{product.productPrice | currency}}</td>
+          <td>{{product.productCategory.categoryName}}</td>
+          <td>@if (validateRolePermission) {
+            <button class="btn btn-outline-dark" (click)="openUpsertProductModal(product)">
+              <i class="bi bi-pencil"></i>&nbsp;
+              Edit</button>}
+          </td>
+        </tr>}
+        @empty {<small class="text-muted">No products to display</small>}
+      </tbody>
+    </table>
+  </div>
+
+  @if (categories.length) {
+  <app-upsert-product-modal [categories]="categories" />
+  }
+</div>

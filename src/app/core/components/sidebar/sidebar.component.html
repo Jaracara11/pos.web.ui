@@ -1,0 +1,41 @@
+<div class="sidebar bg-dark">
+  <div class="container">
+    <span class="sidebar-title">PointOfSale.Web</span>
+    <hr>
+    @if (user) {
+    <ul class="nav nav-pills flex-column mb-auto">
+      <li class="nav-link"><a routerLinkActive="active" routerLink=""><i class="bi bi-house"></i><span>Home</span></a>
+      </li>
+      <li class="nav-link"><a routerLinkActive="active" routerLink="/auth"><i
+            class="bi bi-cart"></i><span>Orders</span></a></li>
+      <li class="nav-link"><a routerLinkActive="active" routerLink="/auth"><i
+            class="bi bi-cash-coin"></i><span>Sales</span></a></li>
+      <li class="nav-link"><a routerLinkActive="active" routerLink="/inventory"><i
+            class="bi bi-clipboard-check"></i><span>Inventory</span></a></li>
+      @if (validateRolePermission) {
+      <li class="nav-link"><a routerLinkActive="active" routerLink="/auth"><i
+            class="bi bi-person-gear"></i><span>Users</span></a></li>
+      }
+
+      <li class="nav-link user-info">
+        <div class="col">
+          <i class="bi bi-person-circle"></i>
+          <span>{{user.username}}</span>
+        </div>
+        <div class="row">
+          <p>{{user.role}}</p>
+          <div class="options">
+            <p class="btn btn-secondary btn-sm" (click)="signOut()" (keydown.enter)="signOut()" tabindex="0">Sign Out
+            </p>
+            <p class="btn btn-secondary btn-sm" (click)="openChangePasswordModal()"
+              (keydown.enter)="openChangePasswordModal()" tabindex="0">Change Password</p>
+          </div>
+        </div>
+      </li>
+    </ul>
+    }
+  </div>
+</div>
+@if (user) {
+<app-password-change-modal [user]="user"></app-password-change-modal>
+}

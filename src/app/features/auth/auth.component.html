@@ -1,0 +1,19 @@
+<form [formGroup]="authForm" class="auth-card" (ngSubmit)="onSubmit()">
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">Point Of Sale Web</h5>
+      <input class="form-control" type="text" placeholder="Username" formControlName="username" />
+      <small class="text-danger">
+        {{ getAuthErrorMessage("username") }}
+      </small>
+
+      <input class="form-control" type="password" placeholder="Password" formControlName="password" />
+      <small class="text-danger">
+        {{ getAuthErrorMessage("password") }}
+      </small>
+      <button type="submit" class="btn btn-dark" [disabled]="authForm.invalid || (isLoading$ | async)">
+        Sign in
+      </button>
+    </div>
+  </div>
+</form>

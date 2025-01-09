@@ -1,0 +1,22 @@
+<div>
+  <h5 class="title">Products Lowest Availability</h5>
+  <div class="card">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Product</th>
+          <th>Stock</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (product of lowStockProducts; track product.productID) {
+        <tr [ngClass]="getTableRowClass($index)">
+          <td>{{product.productName}}</td>
+          <td>{{product.productStock}} Unit(s)</td>
+        </tr>
+        }
+        @empty {<small class="text-muted">No products to display</small>}
+      </tbody>
+    </table>
+  </div>
+</div>

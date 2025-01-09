@@ -1,0 +1,71 @@
+.sidebar {
+  height: 100%;
+}
+
+.sidebar hr,
+span,
+i {
+  color: #fff;
+}
+
+ul i {
+  margin-right: 0.5rem;
+}
+
+.sidebar-title {
+  font-size: 1.5rem;
+}
+
+.nav-link {
+  font-size: 1.2rem;
+  margin-top: 0.5rem;
+}
+
+.nav-link a {
+  text-decoration: none;
+}
+
+.nav-link:hover {
+  transform: scale(1.1);
+  font-weight: bolder;
+}
+
+.nav-link .active {
+  font-weight: bolder;
+  font-size: 1.5rem;
+}
+
+.user-info {
+  bottom: 0;
+  position: fixed;
+  cursor: pointer;
+}
+
+.user-info:hover {
+  transform: scale(1);
+}
+
+.user-info span {
+  font-size: 1.5rem;
+}
+
+.user-info p {
+  color: #fff;
+  font-size: 16px;
+  margin-left: 1.7rem;
+}
+
+.user-info .options {
+  display: flex;
+  flex-direction: column;
+}
+
+.user-info .options p {
+  margin-left: 0rem;
+  width: 145px;
+}
+
+.user-info .options p:nth-child(1) {
+  margin-top: -0.5rem;
+  margin-bottom: 0.5rem;
+}

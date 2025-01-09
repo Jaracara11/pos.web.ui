@@ -1,0 +1,75 @@
+<div class="container-fluid">
+  <h1 class="title">Thanks for shopping with us!</h1>
+  <div class="card">
+    @if (orderInfo) {
+    <div class="card-body">
+      <h4>Invoice # {{formatOrderID(orderInfo.orderID)}}</h4>
+      <hr>
+      <h5>Order Summary</h5>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>No.</th>
+            <th>Item</th>
+            <th>Price</th>
+            <th>Quantity</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (product of orderInfo.products; track product.productName) {
+          <tr>
+            <td>{{$index + 1}}</td>
+            <td>{{product.productName}}</td>
+            <td>{{product.productPrice | currency}}</td>
+            <td>{{product.productQuantity}} unit(s)</td>
+          </tr>
+          }
+          @empty {<small class="text-muted">No invoice data to display</small>}
+        </tbody>
+      </table>
+      <div class="row">
+        <div class="col-md-6 order-info">
+          <div>
+            <span class="title">Billed by: </span>
+            <span>{{orderInfo.user}}</span>
+          </div>
+          <div>
+            <span class="title">Purchase Date: </span>
+            <span>{{orderInfo.orderDate | date:'yyyy-MM-dd HH:mm'}}</span>
+          </div>
+          @if (orderInfo.orderCancelled) {
+          <div>
+            <h5>ORDER CANCELLED</h5>
+          </div>
+          } @else {
+          <div>
+            <button class="btn btn-danger" (click)="cancelOrder()">
+              <i class="bi bi-exclamation-triangle"></i>&nbsp; Cancel Order</button>
+          </div>
+          }
+        </div>
+        <div class="col-md-6 order-summary">
+          <div class="col">
+            <div>
+              <span class="title">Sub-Total: </span>
+              <span>{{orderInfo.orderSubTotal | currency}}</span>
+            </div>
+            @if (orderInfo.discount) {
+            <div>
+              <span class="title">Discount: </span>
+              <span>-{{orderInfo.discount | currency}}</span>
+            </div>
+            }
+            <div>
+              <span class="title">Total: </span>
+              <span>{{orderInfo.orderTotal | currency}}</span>
+            </div>
+            <button class="btn btn-dark" (click)="printInvoice()">
+              <i class="bi bi-printer"></i>&nbsp; Print</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    }
+  </div>
+</div>
