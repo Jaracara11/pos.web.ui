@@ -41,7 +41,8 @@ export class AuthComponent {
 
   onSubmit(): void {
     if (this.authForm.invalid) {
-      this.swalAlertService.swalAlertWithTitle('Form Invalid', 'Please check the form fields for errors.', 'error');
+      this.swalAlertService.swalAlertWithTitle(
+        'Form Invalid', 'Please check the form fields for errors.', 'error');
       return;
     }
 

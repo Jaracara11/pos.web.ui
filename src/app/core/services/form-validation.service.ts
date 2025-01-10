@@ -9,63 +9,97 @@ export class FormValidationService {
 
   createAuthForm(): FormGroup {
     return this.fb.group({
-      username: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(25)]],
-      password: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(25)]],
+      username: ['', this.commonInputValidators(3, 25)],
+      password: ['', this.commonInputValidators(4, 25)],
     });
   }
 
   createPasswordChangeForm(): FormGroup {
     return this.fb.group({
-      oldPassword: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(25)]],
-      newPassword: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(25)]],
-      repeatNewPassword: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(25)]],
+      oldPassword: ['', this.commonInputValidators(4, 25)],
+      newPassword: ['', this.commonInputValidators(4, 25)],
+      repeatNewPassword: ['', this.commonInputValidators(4, 25)],
     }, { validators: this.passwordsMatchValidator() });
   }
 
   upsertProductForm(): FormGroup {
     return this.fb.group({
-      productID: [0, [Validators.required, Validators.min(0)]],
+      productID: [0, [Validators.required, Validators.min(0), this.integerValidator()]],
       productName: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
       productDescription: ['', Validators.maxLength(100)],
-      productStock: [0, [Validators.required, Validators.min(0)]],
-      productCost: [0, [Validators.required, Validators.min(0.01)]],
-      productPrice: [0, [Validators.required, Validators.min(0.01)]],
-      discount: [0, Validators.min(0.00)],
+      productStock: [0, [Validators.required, Validators.min(0), this.integerValidator()]],
+      productCost: [0, [Validators.required, Validators.min(0), this.currencyValidator()]],
+      productPrice: [0, [Validators.required, Validators.min(0), this.currencyValidator()]],
+      discount: [0, [Validators.min(0), this.currencyValidator()]],
       productCategory: [null, Validators.required],
     });
   }
 
+  private commonInputValidators(minLength: number, maxLength: number): ValidatorFn[] {
+    return [
+      Validators.required,
+      Validators.minLength(minLength),
+      Validators.maxLength(maxLength)
+    ];
+  }
+
+  private integerValidator(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const valid = /^[0-9]*$/.test(control.value);
+      return valid ? null : { integer: true };
+    };
+  }
+
+  private currencyValidator(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const valid = /^[0-9]+(\.[0-9]{1,2})?$/.test(control.value);
+      return valid ? null : { currency: true };
+    };
+  }
+
   getFieldErrorMessage(form: FormGroup, fieldName: string): string {
     const field = form.get(fieldName);
-
-    if (field && field.touched && field.errors) {
-      return this.getErrorMessage(fieldName, field.errors);
+    if (field?.touched) {
+      const errors = field.errors;
+      if (errors) {
+        return Object.keys(errors).map(key => {
+          let message = this.errorMessages[key] || `Invalid ${fieldName}.`;
+          if (typeof errors[key] === 'object') {
+            Object.keys(errors[key]).forEach(subKey => {
+              const errorValue = errors[key][subKey];
+              if (errorValue !== undefined) {
+                message = message.replace(new RegExp(`{{${subKey}}}`, 'g'), String(errorValue));
+              }
+            });
+          }
+          return message;
+        }).join(' ');
+      }
     }
     return '';
   }
 
-  private getErrorMessage(fieldName: string, errors: ValidationErrors): string {
-    const messages: Record<string, string> = {
-      required: `${fieldName} is required or it's value is invalid.`,
-      minlength: `${fieldName} should be at least ${errors['minlength']?.requiredLength} characters long.`,
-      maxlength: `${fieldName} cannot exceed ${errors['maxlength']?.requiredLength} characters.`,
-      min: `${fieldName} must be at least ${errors['min']?.min}.`,
-      passwordsMismatch: 'Passwords do not match.',
-      newPasswordSameAsOld: 'New password cannot be the same as the old password.',
-    };
-
-    return Object.keys(errors).map(key => messages[key] || '').find(Boolean) || '';
-  }
-
   private passwordsMatchValidator(): ValidatorFn {
     return (group: AbstractControl): ValidationErrors | null => {
-      const { newPassword, repeatNewPassword, oldPassword } = group.value;
-      const errors: ValidationErrors = {};
+      const pass = group.get('newPassword')?.value || '';
+      const confirmPass = group.get('repeatNewPassword')?.value || '';
+      const oldPass = group.get('oldPassword')?.value || '';
 
-      if (newPassword !== repeatNewPassword) errors['passwordsMismatch'] = true;
-      if (oldPassword && newPassword === oldPassword) errors['newPasswordSameAsOld'] = true;
-
-      return Object.keys(errors).length ? errors : null;
+      if (pass !== confirmPass) return { passwordsMismatch: true };
+      if (oldPass && pass === oldPass) return { newPasswordSameAsOld: true };
+      return null;
     };
   }
+
+  private errorMessages: Record<string, string> = {
+    'required': 'This field is required.',
+    'minlength': 'Should be at least {{requiredLength}} characters long.',
+    'maxlength': 'Cannot exceed {{requiredLength}} characters.',
+    'min': 'Must be at least {{min}}.',
+    'pattern': 'Only numbers are allowed.',
+    'passwordsMismatch': 'Passwords do not match.',
+    'newPasswordSameAsOld': 'New password cannot be the same as the old password.',
+    'integer': 'Only integers are allowed.',
+    'currency': 'Must be a valid currency amount.'
+  };
 }
