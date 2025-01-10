@@ -113,7 +113,8 @@ export class UpsertProductModalComponent implements OnInit, OnDestroy {
       ? 'Are you sure you want to update this product?'
       : 'Are you sure you want to create this new product?';
 
-    const isConfirmed = await this.swalAlertService.swalConfirmationAlert(confirmTitle, 'Confirm', 'warning');
+    const isConfirmed = await this.swalAlertService.swalConfirmationAlert(
+      confirmTitle, 'Confirm', 'warning');
 
     if (isConfirmed) {
       const request = this.product
@@ -121,7 +122,10 @@ export class UpsertProductModalComponent implements OnInit, OnDestroy {
         : this.productService.addProduct(productData);
 
       request.pipe(takeUntil(this.destroy$)).subscribe(() => {
-        const successMessage = this.product ? 'Product updated successfully' : 'Product created successfully';
+        const successMessage = this.product
+          ? 'Product updated successfully'
+          : 'Product created successfully';
+
         this.swalAlertService.swalMessageAlert(successMessage, 'success');
         this.productUpsertForm.reset();
         this.modalRef?.close();
