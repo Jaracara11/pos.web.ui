@@ -5,14 +5,12 @@
       <div class="row">
         <div class="col-6">
           <div class="product-input">
-            @if (product) {
             <label class="modal-label" for="productID">Product ID</label>
-            <input class="form-control" type="number" placeholder="Product ID" formControlName="productID"
+            <input class="form-control" type="text" placeholder="Product ID" formControlName="productID"
               autocomplete="off" />
             <small class="text-danger">
               {{ getProductErrorMessage("productID") }}
             </small>
-            }
           </div>
           <div class="product-input">
             <label class="modal-label" for="productName">Product Name</label>
@@ -45,7 +43,7 @@
         <div class="col-6">
           <div class="product-input">
             <label class="modal-label" for="productStock">Product Stock</label>
-            <input class="form-control" type="number" placeholder="Product Stock" formControlName="productStock"
+            <input class="form-control" type="text" placeholder="Product Stock" formControlName="productStock"
               autocomplete="off" />
             <small class="text-danger">
               {{ getProductErrorMessage("productStock") }}
@@ -53,7 +51,7 @@
           </div>
           <div class="product-input">
             <label class="modal-label" for="productCost">Product Cost</label>
-            <input class="form-control" type="number" placeholder="Product Cost" formControlName="productCost"
+            <input class="form-control" type="text" placeholder="Product Cost" formControlName="productCost"
               autocomplete="off" />
             <small class="text-danger">
               {{ getProductErrorMessage("productCost") }}
@@ -61,7 +59,7 @@
           </div>
           <div class="product-input">
             <label class="modal-label" for="productPrice">Product Price</label>
-            <input class="form-control" type="number" placeholder="Product Price" formControlName="productPrice"
+            <input class="form-control" type="text" placeholder="Product Price" formControlName="productPrice"
               autocomplete="off" />
             <small class="text-danger">
               {{ getProductErrorMessage("productPrice") }}
@@ -69,7 +67,7 @@
           </div>
           <div class="product-input">
             <label class="modal-label" for="discount">Discount</label>
-            <input class="form-control" type="number" placeholder="Discount" formControlName="discount"
+            <input class="form-control" type="text" placeholder="Discount" formControlName="discount"
               autocomplete="off" />
             <small class="text-danger">
               {{ getProductErrorMessage("discount") }}

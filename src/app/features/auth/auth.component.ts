@@ -11,10 +11,10 @@ import { AsyncPipe } from '@angular/common';
 import { LoadingService } from '../../core/services/loading.service';
 
 @Component({
-    selector: 'app-auth',
-    imports: [FormsModule, ReactiveFormsModule, AsyncPipe],
-    templateUrl: './auth.component.html',
-    styleUrl: './auth.component.css'
+  selector: 'app-auth',
+  imports: [FormsModule, ReactiveFormsModule, AsyncPipe],
+  templateUrl: './auth.component.html',
+  styleUrl: './auth.component.css'
 })
 export class AuthComponent {
   isLoading$: Observable<boolean>;
@@ -31,17 +31,18 @@ export class AuthComponent {
     private loadingService: LoadingService,
     private swalAlertService: SwalAlertService,
   ) {
-    this.isLoading$ = loadingService.getLoadingState;
+    this.isLoading$ = this.loadingService.getLoadingState;
     this.authForm = this.formValidationService.createAuthForm();
   }
 
-  getAuthErrorMessage(fieldName: string): string | null {
+  getAuthErrorMessage(fieldName: string): string {
     return this.formValidationService.getFieldErrorMessage(this.authForm, fieldName);
   }
 
   onSubmit(): void {
     if (this.authForm.invalid) {
-      this.swalAlertService.swalAlertWithTitle('Form Invalid', 'Please check the form fields for errors.', 'error');
+      this.swalAlertService.swalAlertWithTitle(
+        'Form Invalid', 'Please check the form fields for errors.', 'error');
       return;
     }
 
